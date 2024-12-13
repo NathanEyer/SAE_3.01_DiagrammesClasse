@@ -1,4 +1,4 @@
-package diagramme.diag.relations;
+package diagrammes.relations;
 
 public class Implementation implements RelationStrategy {
 

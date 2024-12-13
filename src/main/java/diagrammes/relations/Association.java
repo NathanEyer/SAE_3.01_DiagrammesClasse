@@ -1,4 +1,4 @@
-package diagramme.diag.relations;//package java;
+package diagrammes.relations;//package java;
 //
 //public class Association implements RelationStrategy{
 //

@@ -1,4 +1,4 @@
-package diagramme.diag.classe;
+package diagrammes.classe;
 
 public class Package {
 

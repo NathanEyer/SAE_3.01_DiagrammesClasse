@@ -1,4 +1,4 @@
-package diagramme.diag.classe;
+package diagrammes.classe;
 
 import java.util.List;
 

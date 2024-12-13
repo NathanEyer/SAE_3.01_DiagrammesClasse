@@ -4,8 +4,8 @@ module diagramme.diag {
     requires java.management;
 
 
-    opens diagramme.diag to javafx.fxml;
-    exports diagramme.diag;
-    exports diagramme.diag.classe;
-    opens diagramme.diag.classe to javafx.fxml;
+    opens diagrammes to javafx.fxml;
+    exports diagrammes;
+    exports diagrammes.classe;
+    opens diagrammes.classe to javafx.fxml;
 }

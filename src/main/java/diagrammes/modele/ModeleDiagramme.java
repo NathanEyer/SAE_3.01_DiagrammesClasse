@@ -1,9 +1,9 @@
-package diagramme.diag.modele;
+package diagrammes.modele;
 
-import diagramme.diag.relations.Relation;
-import diagramme.diag.classe.Classe;
-import diagramme.diag.exporter.Exporter;
-import diagramme.diag.vue.Observateur;
+import diagrammes.relations.Relation;
+import diagrammes.classe.Classe;
+import diagrammes.exporter.Exporter;
+import diagrammes.vue.Observateur;
 
 
 public class ModeleDiagramme implements Diagramme, Exporter {

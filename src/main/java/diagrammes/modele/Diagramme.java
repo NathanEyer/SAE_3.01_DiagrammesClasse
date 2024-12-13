@@ -1,6 +1,6 @@
-package diagramme.diag.modele;
+package diagrammes.modele;
 
-import diagramme.diag.vue.Observateur;
+import diagrammes.vue.Observateur;
 
 public interface Diagramme {
     public void enregistrerObservateur(Observateur observateur);

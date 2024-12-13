@@ -1,7 +1,7 @@
-package diagramme.diag.vue;
+package diagrammes.vue;
 
-import diagramme.diag.modele.Diagramme;
-import diagramme.diag.modele.ModeleDiagramme;
+import diagrammes.modele.Diagramme;
+import diagrammes.modele.ModeleDiagramme;
 
 public class VueDiagramme implements Observateur {
     public VueDiagramme(ModeleDiagramme modeleDiagramme) {

@@ -1,6 +1,6 @@
-package diagramme.diag.controleur;
+package diagrammes.controleur;
 
-import diagramme.diag.modele.ModeleDiagramme;
+import diagrammes.modele.ModeleDiagramme;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 

@@ -1,4 +1,4 @@
-package diagramme.diag;
+package diagrammes;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

@@ -1,6 +1,6 @@
-package diagramme.diag.vue;
+package diagrammes.vue;
 
-import diagramme.diag.modele.Diagramme;
+import diagrammes.modele.Diagramme;
 
 public interface Observateur {
     public void actualiser(Diagramme diagramme);

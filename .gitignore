@@ -3,3 +3,13 @@
 out/
 .git/
 module-info.java
+*.class
+*.png
+*.puml
+*.pdf
+*.jar
+*.properties
+*.cmd
+mvnw
+*.xml
+

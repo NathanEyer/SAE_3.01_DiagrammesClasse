@@ -1,13 +1,21 @@
 package diagrammes.modele;
 
 import diagrammes.classe.Classe;
+import diagrammes.classe.Methode;
+import diagrammes.classe.Attribut;
 import diagrammes.relations.Relation;
 import diagrammes.vue.Observateur;
 
+
 import java.io.File;
-import java.nio.file.FileSystems;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  * ModeleDiagramme gère les données et la logique métier du diagramme UML.
@@ -103,16 +111,76 @@ public class ModeleDiagramme implements Diagramme {
             System.out.println("Fichier non trouvé : " + cheminFichier);
             return;
         }
-        System.out.println(cheminFichier);
-        String sep = FileSystems.getDefault().getSeparator();
-        String nomJava = cheminFichier.split(sep)[cheminFichier.split(sep).length - 1];
-        String nom = nomJava.split("\\.")[0];
-        // Exemple simplifié : Ajouter une classe fictive
-        Classe nouvelleClasse = new Classe(nom);
-        addClass(nouvelleClasse);
 
-        System.out.println("Fichier importé avec succès : " + cheminFichier);
+        if (!fichier.getName().endsWith(".java")) {
+            System.out.println("Le fichier sélectionné n'est pas un fichier Java : " + cheminFichier);
+            return;
+        }
+
+        System.out.println("Importation du fichier : " + fichier.getName());
+        analyserFichier(fichier);
     }
+
+    private void analyserFichier(File fichier) {
+        try {
+            // Lire le contenu du fichier
+            List<String> lignes = Files.readAllLines(fichier.toPath(), StandardCharsets.UTF_8);
+            String contenu = String.join("\n", lignes);
+
+            // Extraire le nom de la classe
+            Pattern patternClasse = Pattern.compile("class\\s+(\\w+)");
+            Matcher matcherClasse = patternClasse.matcher(contenu);
+            String nomClasse = matcherClasse.find() ? matcherClasse.group(1) : "ClasseAnonyme";
+
+            // Extraire les attributs
+            Pattern patternAttributs = Pattern.compile("(private|protected|public)\\s+(\\w+)\\s+(\\w+);");
+            Matcher matcherAttributs = patternAttributs.matcher(contenu);
+            List<Attribut> attributs = new ArrayList<>();
+            while (matcherAttributs.find()) {
+                String typeAttribut = matcherAttributs.group(2); // Type de l'attribut
+                String nomAttribut = matcherAttributs.group(3);  // Nom de l'attribut
+                attributs.add(new Attribut(nomAttribut, typeAttribut));
+            }
+
+            // Extraire les méthodes
+            Pattern patternMethodes = Pattern.compile(
+                    "(private|protected|public)\\s+(\\w+)\\s+(\\w+)\\(([^)]*)\\)\\s*\\{?");
+            Matcher matcherMethodes = patternMethodes.matcher(contenu);
+            List<Methode> methodes = new ArrayList<>();
+            while (matcherMethodes.find()) {
+                String typeRetour = matcherMethodes.group(2); // Type de retour
+                String nomMethode = matcherMethodes.group(3); // Nom de la méthode
+                String params = matcherMethodes.group(4);     // Paramètres sous forme de chaîne
+
+                // Traiter les paramètres
+                List<String> listeParametres = new ArrayList<>();
+                if (!params.trim().isEmpty()) {
+                    for (String param : params.split(",")) {
+                        listeParametres.add(param.trim());
+                    }
+                }
+
+                methodes.add(new Methode(nomMethode, typeRetour, listeParametres));
+            }
+
+            // Créer une nouvelle classe avec les attributs et méthodes extraits
+            Classe nouvelleClasse = new Classe(nomClasse);
+            nouvelleClasse.setAttributs(attributs);
+            nouvelleClasse.setMethodes(methodes);
+
+            // Ajouter la classe au modèle
+            addClass(nouvelleClasse);
+
+            System.out.println("Classe analysée : " + nomClasse);
+            System.out.println("Attributs : " + attributs);
+            System.out.println("Méthodes : " + methodes);
+
+        } catch (IOException e) {
+            System.out.println("Erreur lors de la lecture du fichier : " + fichier.getName());
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Exporte le diagramme dans un format spécifique.

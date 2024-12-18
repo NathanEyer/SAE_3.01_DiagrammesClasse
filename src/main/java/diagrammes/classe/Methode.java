@@ -7,4 +7,10 @@ public class Methode {
     String typeRetour;
     List<String> parametres;
 
+    public Methode(String nomMethode, String typeRetour, List<String> parametres) {
+        this.nomMethode = nomMethode;
+        this.typeRetour = typeRetour;
+        this.parametres = parametres;
+    }
+
 }

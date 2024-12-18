@@ -5,6 +5,6 @@ module diagrammes.diag {
     exports diagrammes;
 
 
-    opens diagrammes.diag to javafx.fxml;
-    exports diagrammes.diag;
+    opens diagrammes to javafx.fxml;
+
 }

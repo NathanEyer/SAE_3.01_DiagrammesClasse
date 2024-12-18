@@ -8,6 +8,8 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Screen;
@@ -38,9 +40,14 @@ public class Main extends Application {
         bImport.setId("importerButton");
         bImport.setPrefWidth(150);
 
-        Button bExport = new Button("Exporter");
+        MenuButton bExport = new MenuButton("Exporter");
         bExport.setId("exporterButton");
         bExport.setPrefWidth(150);
+        MenuItem exportUML = new MenuItem("Exporter en UML");
+        MenuItem exportPNG = new MenuItem("Exporter en PNG");
+
+
+        bExport.getItems().addAll(exportUML, exportPNG);
 
         Button bReset = new Button("Réinitialiser");
         bReset.setId("resetButton");
@@ -54,6 +61,8 @@ public class Main extends Application {
 
         Button bCreate = new Button("Créer un nouveau diagramme");
         bCreate.setPrefWidth(300);
+
+
 
 
         // 5. Associer le ControleurImportExport pour les boutons

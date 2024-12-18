@@ -1,28 +1,38 @@
 package diagrammes;
 
+import diagrammes.vue.VueDiagramme;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // Création d'un bouton
-        Button button = new Button("Cliquez-moi !");
-        button.setOnAction(e -> System.out.println("Bouton cliqué !"));
+        Button bImport = new Button("Importer package");
+        Button bCreate = new Button("Créer diagramme");
+        Button bDel = new Button("Réinitialiser");
+        Button bExport = new Button("Exporter package");
+        Label lZone = new Label("Zone d'affichage des diagrammes");
 
-        // Création d'un layout
-        StackPane root = new StackPane();
-        root.getChildren().add(button);
+        bImport.setOnAction(e -> System.out.println("Importer"));
+        bCreate.setOnAction(e -> System.out.println("Créer"));
+        bDel.setOnAction(e -> System.out.println("Réinitialiser"));
+        bExport.setOnAction(e -> System.out.println("Exporter"));
+        lZone.setOnMouseClicked(e -> {System.out.println("Zone");});
 
-        // Création de la scène
-        Scene scene = new Scene(root, 300, 200);
+        VBox root = new VBox();
+        HBox buttons = new HBox();
+        buttons.getChildren().addAll(bImport, bCreate, bDel, bExport);
+        root.getChildren().addAll(buttons, lZone);
 
-        // Configuration de la fenêtre principale
-        primaryStage.setTitle("Test JavaFX");
+        Scene scene = new Scene(root);
+
+        primaryStage.setTitle("Création d'un diagramme");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

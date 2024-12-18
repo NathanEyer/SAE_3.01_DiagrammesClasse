@@ -5,6 +5,7 @@ import diagrammes.relations.Relation;
 import diagrammes.vue.Observateur;
 
 import java.io.File;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,7 +104,7 @@ public class ModeleDiagramme implements Diagramme {
             return;
         }
         System.out.println(cheminFichier);
-        String sep = System.getProperty("file.separator");
+        String sep = FileSystems.getDefault().getSeparator();
         String nomJava = cheminFichier.split("/")[cheminFichier.split(sep).length - 1];
         String nom = nomJava.split("\\.")[0];
         // Exemple simplifié : Ajouter une classe fictive

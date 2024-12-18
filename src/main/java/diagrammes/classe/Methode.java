@@ -13,4 +13,12 @@ public class Methode {
         this.parametres = parametres;
     }
 
+    @Override
+    public String toString() {
+        return "Methode{" +
+                "nomMethode='" + nomMethode + '\'' +
+                ", typeRetour='" + typeRetour + '\'' +
+                ", parametres=" + parametres +
+                '}';
+    }
 }

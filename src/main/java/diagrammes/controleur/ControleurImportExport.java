@@ -1,6 +1,7 @@
 package diagrammes.controleur;
 
 import diagrammes.modele.ModeleDiagramme;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -13,7 +14,7 @@ import java.io.File;
  * ControleurImportExport gère les interactions utilisateur pour l'importation et l'exportation
  * des données du diagramme UML.
  */
-public class ControleurImportExport implements EventHandler<Event> {
+public class ControleurImportExport implements EventHandler<ActionEvent> {
 
     /**
      * Référence au modèle qui contient les données du diagramme.
@@ -42,7 +43,7 @@ public class ControleurImportExport implements EventHandler<Event> {
      * @param event L'événement déclenché par l'utilisateur.
      */
     @Override
-    public void handle(Event event) {
+    public void handle(ActionEvent event) {
         if (event.getSource() instanceof Button button) {
             switch (button.getId()) {
                 case "importerButton":

@@ -6,16 +6,13 @@ import diagrammes.classe.Attribut;
 import diagrammes.relations.Relation;
 import diagrammes.vue.Observateur;
 
+import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 
 /**
  * ModeleDiagramme gère les données et la logique métier du diagramme UML.
@@ -93,7 +90,6 @@ public class ModeleDiagramme implements Diagramme {
     public void deplacerClasseSelectionnee(double x, double y) {
         if (classeSelectionnee != null) {
             System.out.println("Déplacement de la classe : " + classeSelectionnee.getNom());
-            // Logique pour associer les nouvelles coordonnées (à implémenter selon les besoins)
             notifierObservateur();
         } else {
             System.out.println("Aucune classe sélectionnée pour le déplacement.");
@@ -101,86 +97,74 @@ public class ModeleDiagramme implements Diagramme {
     }
 
     /**
-     * Importe un package ou un fichier Java.
-     *
-     * @param cheminFichier Le chemin du fichier ou du package à importer.
+     * Ouvre un explorateur pour sélectionner un fichier .class
+     * et lance l'analyse introspective du fichier.
      */
-    public void importerPackage(String cheminFichier) {
-        File fichier = new File(cheminFichier);
-        if (!fichier.exists()) {
-            System.out.println("Fichier non trouvé : " + cheminFichier);
-            return;
-        }
+    public void importerFichierClass() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Importer un fichier .class");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Fichiers Class", "*.class")
+        );
 
-        if (!fichier.getName().endsWith(".java")) {
-            System.out.println("Le fichier sélectionné n'est pas un fichier Java : " + cheminFichier);
-            return;
-        }
+        File fichierSelectionne = fileChooser.showOpenDialog(null);
+        if (fichierSelectionne != null) {
+            String cheminClasse = fichierSelectionne.getPath()
+                    .replace("\\", ".")
+                    .replace(".class", "")
+                    .replace("src.main.java.", ""); // Adapter le chemin pour la structure des packages
 
-        System.out.println("Importation du fichier : " + fichier.getName());
-        analyserFichier(fichier);
+            analyserFichierClass(cheminClasse);
+        }
     }
 
-    private void analyserFichier(File fichier) {
+    /**
+     * Analyse un fichier .class grâce à l'introspection pour extraire
+     * les attributs et les méthodes.
+     *
+     * @param cheminClasse Le nom complet de la classe (package inclus).
+     */
+    public void analyserFichierClass(String cheminClasse) {
         try {
-            // Lire le contenu du fichier
-            List<String> lignes = Files.readAllLines(fichier.toPath(), StandardCharsets.UTF_8);
-            String contenu = String.join("\n", lignes);
+            // Charger dynamiquement la classe
+            Class<?> classe = Class.forName(cheminClasse);
 
-            // Extraire le nom de la classe
-            Pattern patternClasse = Pattern.compile("class\\s+(\\w+)");
-            Matcher matcherClasse = patternClasse.matcher(contenu);
-            String nomClasse = matcherClasse.find() ? matcherClasse.group(1) : "ClasseAnonyme";
-
-            // Extraire les attributs
-            Pattern patternAttributs = Pattern.compile("(private|protected|public)\\s+(\\w+)\\s+(\\w+);");
-            Matcher matcherAttributs = patternAttributs.matcher(contenu);
-            List<Attribut> attributs = new ArrayList<>();
-            while (matcherAttributs.find()) {
-                String typeAttribut = matcherAttributs.group(2); // Type de l'attribut
-                String nomAttribut = matcherAttributs.group(3);  // Nom de l'attribut
-                attributs.add(new Attribut(nomAttribut, typeAttribut));
-            }
-
-            // Extraire les méthodes
-            Pattern patternMethodes = Pattern.compile(
-                    "(private|protected|public)\\s+(\\w+)\\s+(\\w+)\\(([^)]*)\\)\\s*\\{?");
-            Matcher matcherMethodes = patternMethodes.matcher(contenu);
-            List<Methode> methodes = new ArrayList<>();
-            while (matcherMethodes.find()) {
-                String typeRetour = matcherMethodes.group(2); // Type de retour
-                String nomMethode = matcherMethodes.group(3); // Nom de la méthode
-                String params = matcherMethodes.group(4);     // Paramètres sous forme de chaîne
-
-                // Traiter les paramètres
-                List<String> listeParametres = new ArrayList<>();
-                if (!params.trim().isEmpty()) {
-                    for (String param : params.split(",")) {
-                        listeParametres.add(param.trim());
-                    }
-                }
-
-                methodes.add(new Methode(nomMethode, typeRetour, listeParametres));
-            }
-
-            // Créer une nouvelle classe avec les attributs et méthodes extraits
+            // Obtenir le nom de la classe
+            String nomClasse = classe.getSimpleName();
             Classe nouvelleClasse = new Classe(nomClasse);
-            nouvelleClasse.setAttributs(attributs);
-            nouvelleClasse.setMethodes(methodes);
 
-            // Ajouter la classe au modèle
+            // Obtenir les attributs
+            Field[] fields = classe.getDeclaredFields();
+            for (Field field : fields) {
+                String typeAttribut = field.getType().getSimpleName();
+                String nomAttribut = field.getName();
+                nouvelleClasse.ajouterAttribut(new Attribut(nomAttribut, typeAttribut));
+            }
+
+            // Obtenir les méthodes
+            Method[] methods = classe.getDeclaredMethods();
+            for (Method method : methods) {
+                String typeRetour = method.getReturnType().getSimpleName();
+                String nomMethode = method.getName();
+                List<String> parametres = new ArrayList<>();
+                for (Class<?> paramType : method.getParameterTypes()) {
+                    parametres.add(paramType.getSimpleName());
+                }
+                nouvelleClasse.ajouterMethode(new Methode(nomMethode, typeRetour, parametres));
+            }
+
+            // Ajouter la classe analysée au modèle
             addClass(nouvelleClasse);
 
             System.out.println("Classe analysée : " + nomClasse);
-            System.out.println("Attributs : " + attributs);
-            System.out.println("Méthodes : " + methodes);
+            System.out.println("Attributs : " + nouvelleClasse.getAttributs());
+            System.out.println("Méthodes : " + nouvelleClasse.getMethodes());
 
-        } catch (IOException e) {
-            System.out.println("Erreur lors de la lecture du fichier : " + fichier.getName());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Classe non trouvée : " + cheminClasse);
             e.printStackTrace();
         }
     }
-
 
     /**
      * Exporte le diagramme dans un format spécifique.
@@ -190,19 +174,15 @@ public class ModeleDiagramme implements Diagramme {
      */
     public boolean exporter(String format) {
         System.out.println("Exportation en cours au format : " + format);
-
-        // Exemple simplifié : Simuler une exportation réussie
         if ("PNG".equalsIgnoreCase(format) || "PlantUML".equalsIgnoreCase(format)) {
             System.out.println("Diagramme exporté avec succès !");
             return true;
         }
-
         System.out.println("Format d'exportation non pris en charge : " + format);
         return false;
     }
 
-    // Méthodes du patron Observateur
-
+    // Méthodes pour le patron Observateur
     @Override
     public void enregistrerObservateur(Observateur o) {
         observateurs.add(o);

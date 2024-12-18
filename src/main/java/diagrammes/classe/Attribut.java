@@ -17,4 +17,11 @@ public class Attribut {
         return nomAttribut;
     }
 
+    @Override
+    public String toString() {
+        return "Attribut{" +
+                "nomAttribut='" + nomAttribut + '\'' +
+                ", typeAttribut='" + typeAttribut + '\'' +
+                '}';
+    }
 }

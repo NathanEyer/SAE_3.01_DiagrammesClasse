@@ -1,12 +1,11 @@
 package diagrammes;
 
-import diagrammes.controleur.ControleurDiagramme;
+import diagrammes.controleur.ControleurBoutons;
 import diagrammes.modele.ModeleDiagramme;
 import diagrammes.vue.VueDiagramme;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -20,18 +19,18 @@ public class Main extends Application {
 
         modeleDiagramme.enregistrerObservateur(vueDiagramme);
 
-        ControleurDiagramme controleurDiagramme = new ControleurDiagramme(modeleDiagramme);
+        ControleurBoutons controleurBoutons = new ControleurBoutons(modeleDiagramme);
 
-        Button bImport = new Button("Importer package");
-        Button bCreate = new Button("Créer diagramme");
+        Button bImport = new Button("Importer");
+        Button bCreate = new Button("Créer un nouveau diagramme");
         Button bDel = new Button("Réinitialiser");
-        Button bExport = new Button("Exporter package");
+        Button bExport = new Button("Exporter");
         VueDiagramme lZone = new VueDiagramme(modeleDiagramme);
 
         bImport.setOnAction(e -> System.out.println("Importer"));
-        bCreate.setOnAction(controleurDiagramme);
-        bDel.setOnAction(controleurDiagramme);
-        bExport.setOnAction(controleurDiagramme);
+        bCreate.setOnAction(controleurBoutons);
+        bDel.setOnAction(controleurBoutons);
+        bExport.setOnAction(controleurBoutons);
         lZone.setOnMouseClicked(e -> {System.out.println("Zone");});
 
         HBox buttons = new HBox(bImport, bCreate, bDel, bExport, lZone);

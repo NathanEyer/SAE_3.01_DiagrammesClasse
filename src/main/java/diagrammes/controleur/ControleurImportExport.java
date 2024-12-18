@@ -48,10 +48,19 @@ public class ControleurImportExport implements EventHandler<ActionEvent> {
             switch (button.getId()) {
                 case "importerButton":
                     FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle(fileChooser.getTitle());
+                    fileChooser.setTitle("Importer un fichier .class");
+                    fileChooser.getExtensionFilters().add(
+                            new FileChooser.ExtensionFilter("Fichiers Class", "*.class")
+                    );
+
                     File fichier = fileChooser.showOpenDialog(primaryStage);
                     if (fichier != null) {
-                        modele.importerPackage(fichier.getAbsolutePath());
+                        String cheminClasse = fichier.getAbsolutePath()
+                                .replace(File.separator, ".")
+                                .replace(".class", "")
+                                .replace("src.main.java.", "");
+
+                        modele.analyserFichierClass(cheminClasse);
                     }
                     break;
 

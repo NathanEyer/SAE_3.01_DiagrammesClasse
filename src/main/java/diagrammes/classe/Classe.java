@@ -76,4 +76,22 @@ public class Classe {
     public List<Methode> getMethodes() {
         return methodes;
     }
+
+    /**
+     * Définit les attributs de la classe.
+     *
+     * @param attributs Liste d'attributs à définir
+     */
+    public void setAttributs(List<Attribut> attributs) {
+        this.attributs = attributs;
+    }
+
+    /**
+     * Définit les méthodes de la classe.
+     *
+     * @param methodes Liste de méthodes à définir
+     */
+    public void setMethodes(List<Methode> methodes) {
+        this.methodes = methodes;
+    }
 }

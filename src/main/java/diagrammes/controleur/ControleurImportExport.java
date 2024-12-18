@@ -48,7 +48,7 @@ public class ControleurImportExport implements EventHandler<ActionEvent> {
             switch (button.getId()) {
                 case "importerButton":
                     FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("Importer un fichier");
+                    fileChooser.setTitle(fileChooser.getTitle());
                     File fichier = fileChooser.showOpenDialog(primaryStage);
                     if (fichier != null) {
                         modele.importerPackage(fichier.getAbsolutePath());

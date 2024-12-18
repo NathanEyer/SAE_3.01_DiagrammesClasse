@@ -102,9 +102,11 @@ public class ModeleDiagramme implements Diagramme {
             System.out.println("Fichier non trouvé : " + cheminFichier);
             return;
         }
-
+        System.out.println(cheminFichier);
+        String nomJava = cheminFichier.split("/")[cheminFichier.split("/").length - 1];
+        String nom = nomJava.split("\\.")[0];
         // Exemple simplifié : Ajouter une classe fictive
-        Classe nouvelleClasse = new Classe("ClasseImportee");
+        Classe nouvelleClasse = new Classe(nom);
         addClass(nouvelleClasse);
 
         System.out.println("Fichier importé avec succès : " + cheminFichier);

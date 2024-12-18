@@ -1,5 +1,6 @@
 package diagrammes.vue;
 
+import diagrammes.Main;
 import diagrammes.modele.Diagramme;
 import diagrammes.modele.ModeleDiagramme;
 import diagrammes.classe.Classe;
@@ -9,6 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -25,7 +27,8 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @param modeleDiagramme Le modèle contenant les données du diagramme.
      */
     public VueDiagramme(ModeleDiagramme modeleDiagramme) {
-        super(800, 600); // Taille par défaut du Canvas
+        super(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
+
         this.modele = modeleDiagramme;
         this.modele.enregistrerObservateur(this);
     }

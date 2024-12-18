@@ -103,7 +103,8 @@ public class ModeleDiagramme implements Diagramme {
             return;
         }
         System.out.println(cheminFichier);
-        String nomJava = cheminFichier.split("/")[cheminFichier.split("/").length - 1];
+        String sep = System.getProperty("file.separator");
+        String nomJava = cheminFichier.split("/")[cheminFichier.split(sep).length - 1];
         String nom = nomJava.split("\\.")[0];
         // Exemple simplifié : Ajouter une classe fictive
         Classe nouvelleClasse = new Classe(nom);

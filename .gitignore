@@ -1,6 +1,5 @@
 *.iml
 .idea/
 out/
-.class
 .git/
 module-info.java

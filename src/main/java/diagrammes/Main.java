@@ -1,5 +1,7 @@
 package diagrammes;
 
+import diagrammes.controleur.ControleurDiagramme;
+import diagrammes.modele.ModeleDiagramme;
 import diagrammes.vue.VueDiagramme;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -13,26 +15,31 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        ModeleDiagramme modeleDiagramme = new ModeleDiagramme();
+        VueDiagramme vueDiagramme = new VueDiagramme(modeleDiagramme);
+
+        modeleDiagramme.enregistrerObservateur(vueDiagramme);
+
+        ControleurDiagramme controleurDiagramme = new ControleurDiagramme(modeleDiagramme);
+
         Button bImport = new Button("Importer package");
         Button bCreate = new Button("Créer diagramme");
         Button bDel = new Button("Réinitialiser");
         Button bExport = new Button("Exporter package");
-        Label lZone = new Label("Zone d'affichage des diagrammes");
+        VueDiagramme lZone = new VueDiagramme(modeleDiagramme);
 
         bImport.setOnAction(e -> System.out.println("Importer"));
-        bCreate.setOnAction(e -> System.out.println("Créer"));
-        bDel.setOnAction(e -> System.out.println("Réinitialiser"));
-        bExport.setOnAction(e -> System.out.println("Exporter"));
+        bCreate.setOnAction(controleurDiagramme);
+        bDel.setOnAction(controleurDiagramme);
+        bExport.setOnAction(controleurDiagramme);
         lZone.setOnMouseClicked(e -> {System.out.println("Zone");});
 
-        VBox root = new VBox();
-        HBox buttons = new HBox();
-        buttons.getChildren().addAll(bImport, bCreate, bDel, bExport);
-        root.getChildren().addAll(buttons, lZone);
+        HBox buttons = new HBox(bImport, bCreate, bDel, bExport, lZone);
+        VBox root = new VBox(buttons, lZone);
 
         Scene scene = new Scene(root);
 
-        primaryStage.setTitle("Création d'un diagramme");
+        primaryStage.setTitle("Diagramme de classe");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

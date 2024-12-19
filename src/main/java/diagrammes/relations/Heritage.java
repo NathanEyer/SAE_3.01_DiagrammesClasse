@@ -14,6 +14,6 @@ public class Heritage implements RelationStrategy {
     }
 
     public static String type(){
-        return "Implementation";
+        return "Heritage";
     }
 }

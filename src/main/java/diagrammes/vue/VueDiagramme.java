@@ -4,10 +4,14 @@ import diagrammes.Main;
 import diagrammes.modele.Diagramme;
 import diagrammes.modele.ModeleDiagramme;
 import diagrammes.classe.Classe;
+import diagrammes.relations.Heritage;
+import diagrammes.relations.Implementation;
 import diagrammes.relations.Relation;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 
 import java.util.List;
@@ -102,14 +106,66 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @param gc       Le contexte graphique.
      * @param relation La relation à dessiner.
      */
-    private void dessinerRelation(GraphicsContext gc, Relation relation) {
-        double startX = 100; // Position fictive pour l'exemple
-        double startY = 100;
-        double endX = 200;
-        double endY = 150;
 
-        gc.setStroke(Color.RED);
-        gc.setLineWidth(2);
-        gc.strokeLine(startX, startY, endX, endY);
+
+    public void actualiser(ModeleDiagramme modele) {
+        this.getChildren().clear();
+        dessinerClasses();
+        dessinerRelations();
+    }
+
+    private void dessinerClasses() {
+        // Logic to draw classes
+    }
+
+    private void dessinerRelations() {
+        for (Relation relation : modele.getRelations()) {
+            dessinerRelation(relation);
+        }
+    }
+
+    private void dessinerRelation(Relation relation) {
+        double startX = getClassePositionX(relation.getDepart());
+        double startY = getClassePositionY(relation.getDepart());
+        double endX = getClassePositionX(relation.getDestination());
+        double endY = getClassePositionY(relation.getDestination());
+
+        Line line = new Line(startX, startY, endX, endY);
+        this.getChildren().add(line);
+
+        if (relation.getType().equals(Heritage.type())) {
+            dessinerFlecheHeritage(endX, endY);
+        } else if (relation.getType().equals(Implementation.type())) {
+            dessinerFlecheImplementation(endX, endY);
+        } else {
+            dessinerFlecheAssociation(endX, endY);
+        }
+    }
+
+    private void dessinerFlecheHeritage(double x, double y) {
+        Polygon arrowHead = new Polygon();
+        arrowHead.getPoints().addAll(x, y, x - 10, y - 5, x - 10, y + 5);
+        this.getChildren().add(arrowHead);
+    }
+
+    private void dessinerFlecheImplementation(double x, double y) {
+        Line dashedLine = new Line(x, y, x - 10, y - 5);
+        dashedLine.getStrokeDashArray().addAll(5.0, 5.0);
+        this.getChildren().add(dashedLine);
+    }
+
+    private void dessinerFlecheAssociation(double x, double y) {
+        Line line = new Line(x, y, x - 10, y - 5);
+        this.getChildren().add(line);
+    }
+
+    private double getClassePositionX(Class classe) {
+        // Logic to get X position of the class
+        return 0;
+    }
+
+    private double getClassePositionY(Class classe) {
+        // Logic to get Y position of the class
+        return 0;
     }
 }

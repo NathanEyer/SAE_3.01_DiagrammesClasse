@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Screen;
@@ -74,6 +75,40 @@ public class Main extends Application {
         HBox buttons = new HBox(100, bImport, bExport, bReset, bCreate);
         buttons.setAlignment(Pos.CENTER);
         buttons.setFillHeight(false);
+
+        String buttonStyle = """
+            -fx-background-color: linear-gradient(to bottom, #ff7e5f, #feb47b);
+            -fx-text-fill: white;
+            -fx-font-size: 14px;
+            -fx-padding: 10px 20px;
+            -fx-border-radius: 10px;
+            -fx-background-radius: 10px;
+        """;
+
+        String pressedStyle = """
+            -fx-background-color: linear-gradient(to bottom, #feb47b, #ff7e5f);
+            -fx-text-fill: white;
+            -fx-font-size: 14px;
+            -fx-padding: 8px 18px; /* Réduction pour simuler une pression */
+            -fx-border-radius: 10px;
+            -fx-background-radius: 10px;
+            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.3, 0, 1);
+        """;
+
+
+        bCreate.setStyle(buttonStyle);
+        bExport.setStyle(buttonStyle);
+        bImport.setStyle(buttonStyle);
+        bReset.setStyle(buttonStyle);
+
+        applyPressEffect(bCreate, buttonStyle, pressedStyle);
+        applyPressEffect(bReset, buttonStyle, pressedStyle);
+        applyPressEffect(bImport, buttonStyle, pressedStyle);
+        bExport.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> bExport.setStyle(pressedStyle));
+        bExport.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> bExport.setStyle(buttonStyle));
+
+
+
         BorderPane root = new BorderPane();
         root.setTop(buttons);
         root.setCenter(vueDiagramme);
@@ -81,9 +116,14 @@ public class Main extends Application {
 
         // 7. Afficher la scène
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
-        primaryStage.setTitle("Test VueDiagramme");
+        primaryStage.setTitle("Application de diagrammes UML");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private void applyPressEffect(Button button, String normalStyle, String pressedStyle) {
+        button.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> button.setStyle(pressedStyle));
+        button.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> button.setStyle(normalStyle));
     }
 
     public static void main(String[] args) {

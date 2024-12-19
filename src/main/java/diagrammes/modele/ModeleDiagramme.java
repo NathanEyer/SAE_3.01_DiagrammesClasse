@@ -3,6 +3,9 @@ package diagrammes.modele;
 import diagrammes.classe.Classe;
 import diagrammes.classe.Methode;
 import diagrammes.classe.Attribut;
+import diagrammes.exporter.Exporter;
+import diagrammes.exporter.ExporterImage;
+import diagrammes.exporter.ExporterUml;
 import diagrammes.relations.Relation;
 import diagrammes.vue.Observateur;
 
@@ -173,13 +176,19 @@ public class ModeleDiagramme implements Diagramme {
      * @return true si l'exportation a réussi, false sinon.
      */
     public boolean exporter(String format) {
-        System.out.println("Exportation en cours au format : " + format);
-        if ("PNG".equalsIgnoreCase(format) || "PlantUML".equalsIgnoreCase(format)) {
-            System.out.println("Diagramme exporté avec succès !");
+        try {
+            Exporter exporter = null;
+            if ("PNG".equalsIgnoreCase(format) ) {
+                exporter = new ExporterImage();
+            }else if("PlantUML".equalsIgnoreCase(format)){
+                exporter = new ExporterUml();
+            }else return false;
+            exporter.exporter("", this);
+            System.out.println("Exportation réussie avec succès !");
             return true;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        System.out.println("Format d'exportation non pris en charge : " + format);
-        return false;
     }
 
     // Méthodes pour le patron Observateur

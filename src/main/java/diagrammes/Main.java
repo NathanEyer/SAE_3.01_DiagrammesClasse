@@ -1,7 +1,7 @@
 package diagrammes;
 
 import diagrammes.controleur.ControleurDiagramme;
-import diagrammes.controleur.ControleurImportExport;
+import diagrammes.controleur.ControleurBoutons;
 import diagrammes.modele.ModeleDiagramme;
 import diagrammes.vue.VueDiagramme;
 import javafx.application.Application;
@@ -17,7 +17,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    public final static double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth();
+    public final static double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth() / 1.5;
     public final static double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getHeight();
 
     @Override
@@ -67,9 +67,9 @@ public class Main extends Application {
 
 
         // 5. Associer le ControleurImportExport pour les boutons
-        ControleurImportExport controleurImportExport = new ControleurImportExport(modele, primaryStage);
-        bImport.setOnAction(controleurImportExport);
-        bExport.setOnAction(controleurImportExport);
+        ControleurBoutons controleurBoutons = new ControleurBoutons(modele, primaryStage);
+        bImport.setOnAction(controleurBoutons);
+        bExport.setOnAction(controleurBoutons);
 
         // 6. Disposition principale
         HBox buttons = new HBox(100, bImport, bExport, bReset, bCreate);

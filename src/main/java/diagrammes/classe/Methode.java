@@ -21,4 +21,8 @@ public class Methode {
                 ", parametres=" + parametres +
                 '}';
     }
+
+    public String getNomMethode() {
+        return nomMethode;
+    }
 }

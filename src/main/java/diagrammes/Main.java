@@ -26,21 +26,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
-        // 1. Initialiser le modèle
         ModeleDiagramme modele = new ModeleDiagramme();
-
-        // 2. Initialiser la VueDiagramme
         VueDiagramme vueDiagramme = new VueDiagramme(modele);
 
-        // 3. Associer le ControleurDiagramme pour gérer les interactions souris
-        ControleurDiagramme controleurDiagramme = new ControleurDiagramme(modele);
-        vueDiagramme.setOnMouseClicked(controleurDiagramme);
-        vueDiagramme.setOnMousePressed(controleurDiagramme);
-        vueDiagramme.setOnMouseDragged(controleurDiagramme);
-        vueDiagramme.setOnMouseReleased(controleurDiagramme);
-
-        // 4. Boutons pour importer, exporter et réinitialiser
         Button bImport = new Button("Importer");
         bImport.setId("importerButton");
         bImport.setPrefWidth(150);
@@ -50,8 +38,6 @@ public class Main extends Application {
         bExport.setPrefWidth(150);
         MenuItem exportUML = new MenuItem("Exporter en UML");
         MenuItem exportPNG = new MenuItem("Exporter en PNG");
-
-
         bExport.getItems().addAll(exportUML, exportPNG);
 
         Button bReset = new Button("Réinitialiser");
@@ -67,15 +53,10 @@ public class Main extends Application {
         Button bCreate = new Button("Créer un nouveau diagramme");
         bCreate.setPrefWidth(300);
 
-
-
-
-        // 5. Associer le ControleurImportExport pour les boutons
         ControleurBoutons controleurBoutons = new ControleurBoutons(modele, primaryStage);
         bImport.setOnAction(controleurBoutons);
         bExport.setOnAction(controleurBoutons);
 
-        // 6. Disposition principale
         HBox buttons = new HBox(100, bImport, bExport, bReset, bCreate);
         buttons.setAlignment(Pos.CENTER);
         buttons.setFillHeight(false);
@@ -99,7 +80,6 @@ public class Main extends Application {
             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.3, 0, 1);
         """;
 
-
         bCreate.setStyle(buttonStyle);
         bExport.setStyle(buttonStyle);
         bImport.setStyle(buttonStyle);
@@ -112,10 +92,8 @@ public class Main extends Application {
         bExport.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> bExport.setStyle(buttonStyle));
 
         BorderPane root = new BorderPane();
-
         root.setTop(buttons);
         root.setCenter(vueDiagramme);
-        root.setStyle("-fx-background-color: #87CEED");
 
         root.setOnDragOver(event -> {
             if (event.getGestureSource() != root && event.getDragboard().hasFiles()) {
@@ -137,7 +115,6 @@ public class Main extends Application {
             event.consume();
         });
 
-        // 7. Afficher la scène
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
         primaryStage.setTitle("Application de diagrammes UML");
         primaryStage.setScene(scene);

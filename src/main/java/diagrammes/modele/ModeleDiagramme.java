@@ -209,7 +209,7 @@ public class ModeleDiagramme implements Diagramme {
             }else if("PlantUML".equalsIgnoreCase(format)){
                 exporter = new ExporterUml();
             }else return false;
-            exporter.exporter("", this);
+            exporter.exporter("", this);                // A COMPLETER !!!!
             System.out.println("Exportation réussie avec succès !");
             return true;
         } catch (Exception e) {

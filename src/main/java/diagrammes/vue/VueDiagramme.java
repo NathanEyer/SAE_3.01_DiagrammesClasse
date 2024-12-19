@@ -1,6 +1,8 @@
 package diagrammes.vue;
 
 import diagrammes.Main;
+import diagrammes.classe.Attribut;
+import diagrammes.classe.Methode;
 import diagrammes.modele.Diagramme;
 import diagrammes.modele.ModeleDiagramme;
 import diagrammes.classe.Classe;
@@ -49,51 +51,75 @@ public class VueDiagramme extends Canvas implements Observateur {
      * Dessine le diagramme UML en fonction des données du modèle.
      */
     public void dessinerDiagramme() {
-        // Obtenir le contexte graphique pour dessiner sur le Canvas
         GraphicsContext gc = this.getGraphicsContext2D();
 
-        // Effacer le Canvas
+        // Effacer le canvas
         gc.clearRect(0, 0, this.getWidth(), this.getHeight());
 
-        // Dessiner les classes
+        // Variables pour le positionnement
+        double x = 50;
+        double y = 50;
+        double spacing = 150;
+
+        // Dessiner chaque classe
         List<Classe> classes = modele.getClasses();
-        for (int i = 0; i < classes.size(); i++) {
-            Classe classe = classes.get(i);
-            double x = 50 + i * 150; // Positionnement simple
-            double y = 100;
-
+        for (Classe classe : classes) {
             dessinerClasse(gc, classe, x, y);
-        }
+            y += spacing; // Décaler verticalement pour la prochaine classe
 
-        // Dessiner les relations (si elles existent dans le modèle)
-        List<Relation> relations = modele.getRelations();
-        for (Relation relation : relations) {
-            dessinerRelation(gc, relation);
+            // Remettre à zéro si dépassement de la hauteur du Canvas
+            if (y + spacing > this.getHeight()) {
+                y = 50;
+                x += 300; // Décaler horizontalement pour une nouvelle colonne
+            }
         }
     }
 
     /**
-     * Dessine une classe UML sur le Canvas.
+     * Dessine une classe UML avec ses attributs et méthodes.
      *
      * @param gc     Le contexte graphique.
      * @param classe La classe à dessiner.
-     * @param x      Coordonnée X de la classe.
-     * @param y      Coordonnée Y de la classe.
+     * @param x      La coordonnée X de la classe.
+     * @param y      La coordonnée Y de la classe.
      */
     private void dessinerClasse(GraphicsContext gc, Classe classe, double x, double y) {
-        double largeur = 100;
-        double hauteur = 50;
+        double largeur = 200;
+        double hauteurNom = 30;
+        double hauteurSection = 20;
+        double padding = 5;
 
-        // Dessiner le rectangle
-        gc.setFill(Color.LIGHTBLUE);
-        gc.fillRect(x, y, largeur, hauteur);
+        // Calculer la hauteur totale
+        double hauteur = hauteurNom + (classe.getAttributs().size() + classe.getMethodes().size()) * hauteurSection;
+
+        // Dessiner le contour de la classe
         gc.setStroke(Color.BLACK);
+        gc.setLineWidth(2);
         gc.strokeRect(x, y, largeur, hauteur);
 
-        // Dessiner le texte
+        // Dessiner la section du nom
+        gc.setFill(Color.LIGHTBLUE);
+        gc.fillRect(x, y, largeur, hauteurNom);
+        gc.setStroke(Color.BLACK);
+        gc.strokeRect(x, y, largeur, hauteurNom);
+
+        // Afficher le nom de la classe
         gc.setFill(Color.BLACK);
         gc.setFont(new Font("Arial", 14));
-        gc.fillText(classe.getNom(), x + 10, y + 25);
+        gc.fillText(classe.getNom(), x + padding, y + hauteurNom - 10);
+
+        // Dessiner les attributs
+        double currentY = y + hauteurNom;
+        for (Attribut attribut : classe.getAttributs()) {
+            gc.fillText("- " + attribut.getNomAttribut() + " : " + attribut.getTypeAttribut(), x + padding, currentY + 15);
+            currentY += hauteurSection;
+        }
+
+        // Dessiner les méthodes
+        for (Methode methode : classe.getMethodes()) {
+            gc.fillText("+ " + methode.getNomMethode() + "()", x + padding, currentY + 15);
+            currentY += hauteurSection;
+        }
     }
 
     /**

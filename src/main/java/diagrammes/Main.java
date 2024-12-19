@@ -1,5 +1,6 @@
 package diagrammes;
 
+import diagrammes.classe.Classe;
 import diagrammes.controleur.ControleurDiagramme;
 import diagrammes.controleur.ControleurBoutons;
 import diagrammes.modele.ModeleDiagramme;
@@ -11,10 +12,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 public class Main extends Application {
     public final static double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth() / 1.5;
@@ -22,21 +26,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
-        // 1. Initialiser le modèle
         ModeleDiagramme modele = new ModeleDiagramme();
-
-        // 2. Initialiser la VueDiagramme
         VueDiagramme vueDiagramme = new VueDiagramme(modele);
 
-        // 3. Associer le ControleurDiagramme pour gérer les interactions souris
-        ControleurDiagramme controleurDiagramme = new ControleurDiagramme(modele);
-        vueDiagramme.setOnMouseClicked(controleurDiagramme);
-        vueDiagramme.setOnMousePressed(controleurDiagramme);
-        vueDiagramme.setOnMouseDragged(controleurDiagramme);
-        vueDiagramme.setOnMouseReleased(controleurDiagramme);
-
-        // 4. Boutons pour importer, exporter et réinitialiser
         Button bImport = new Button("Importer");
         bImport.setId("importerButton");
         bImport.setPrefWidth(150);
@@ -46,8 +38,6 @@ public class Main extends Application {
         bExport.setPrefWidth(150);
         MenuItem exportUML = new MenuItem("Exporter en UML");
         MenuItem exportPNG = new MenuItem("Exporter en PNG");
-
-
         bExport.getItems().addAll(exportUML, exportPNG);
 
         Button bReset = new Button("Réinitialiser");
@@ -63,15 +53,10 @@ public class Main extends Application {
         Button bCreate = new Button("Créer un nouveau diagramme");
         bCreate.setPrefWidth(300);
 
-
-
-
-        // 5. Associer le ControleurImportExport pour les boutons
         ControleurBoutons controleurBoutons = new ControleurBoutons(modele, primaryStage);
         bImport.setOnAction(controleurBoutons);
         bExport.setOnAction(controleurBoutons);
 
-        // 6. Disposition principale
         HBox buttons = new HBox(100, bImport, bExport, bReset, bCreate);
         buttons.setAlignment(Pos.CENTER);
         buttons.setFillHeight(false);
@@ -95,7 +80,6 @@ public class Main extends Application {
             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.3, 0, 1);
         """;
 
-
         bCreate.setStyle(buttonStyle);
         bExport.setStyle(buttonStyle);
         bImport.setStyle(buttonStyle);
@@ -107,14 +91,30 @@ public class Main extends Application {
         bExport.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> bExport.setStyle(pressedStyle));
         bExport.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> bExport.setStyle(buttonStyle));
 
-
-
         BorderPane root = new BorderPane();
         root.setTop(buttons);
         root.setCenter(vueDiagramme);
-        root.setStyle("-fx-background-color: #87CEED");
 
-        // 7. Afficher la scène
+        root.setOnDragOver(event -> {
+            if (event.getGestureSource() != root && event.getDragboard().hasFiles()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            }
+            event.consume();
+        });
+
+        root.setOnDragDropped(event -> {
+            var db = event.getDragboard();
+            if (db.hasFiles()) {
+                for(int i=0; i<db.getFiles().size();i++) {
+                    File file = db.getFiles().get(i);
+                    modele.addClass(new Classe(file.getName()));
+                    System.out.println("Fichier déposé: " + file.getAbsolutePath());
+                }
+            }
+            event.setDropCompleted(true);
+            event.consume();
+        });
+
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
         primaryStage.setTitle("Application de diagrammes UML");
         primaryStage.setScene(scene);

@@ -26,96 +26,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
-        // 1. Initialiser le modèle
         ModeleDiagramme modele = new ModeleDiagramme();
-
-        // 2. Initialiser la VueDiagramme
         VueDiagramme vueDiagramme = new VueDiagramme(modele);
-
-        // 3. Associer le ControleurDiagramme pour gérer les interactions souris
-        ControleurDiagramme controleurDiagramme = new ControleurDiagramme(modele);
-        vueDiagramme.setOnMouseClicked(controleurDiagramme);
-        vueDiagramme.setOnMousePressed(controleurDiagramme);
-        vueDiagramme.setOnMouseDragged(controleurDiagramme);
-        vueDiagramme.setOnMouseReleased(controleurDiagramme);
-
-        // 4. Boutons pour importer, exporter et réinitialiser
-        Button bImport = new Button("Importer");
-        bImport.setId("importerButton");
-        bImport.setPrefWidth(150);
-
-        MenuButton bExport = new MenuButton("Exporter");
-        bExport.setId("exporterButton");
-        bExport.setPrefWidth(150);
-        MenuItem exportUML = new MenuItem("Exporter en UML");
-        MenuItem exportPNG = new MenuItem("Exporter en PNG");
-
-
-        bExport.getItems().addAll(exportUML, exportPNG);
-
-        Button bReset = new Button("Réinitialiser");
-        bReset.setId("resetButton");
-        bReset.setPrefWidth(150);
-        bReset.setOnAction(e -> {
-            System.out.println("Réinitialisation !");
-            modele.getClasses().clear();
-            modele.getRelations().clear();
-            modele.notifierObservateur();
-        });
-
-        Button bCreate = new Button("Créer un nouveau diagramme");
-        bCreate.setPrefWidth(300);
-
-
-
-
-        // 5. Associer le ControleurImportExport pour les boutons
-        ControleurBoutons controleurBoutons = new ControleurBoutons(modele, primaryStage);
-        bImport.setOnAction(controleurBoutons);
-        bExport.setOnAction(controleurBoutons);
-
-        // 6. Disposition principale
-        HBox buttons = new HBox(100, bImport, bExport, bReset, bCreate);
-        buttons.setAlignment(Pos.CENTER);
-        buttons.setFillHeight(false);
-
-        String buttonStyle = """
-            -fx-background-color: linear-gradient(to bottom, #ff7e5f, #feb47b);
-            -fx-text-fill: white;
-            -fx-font-size: 14px;
-            -fx-padding: 10px 20px;
-            -fx-border-radius: 10px;
-            -fx-background-radius: 10px;
-        """;
-
-        String pressedStyle = """
-            -fx-background-color: linear-gradient(to bottom, #feb47b, #ff7e5f);
-            -fx-text-fill: white;
-            -fx-font-size: 14px;
-            -fx-padding: 8px 18px; /* Réduction pour simuler une pression */
-            -fx-border-radius: 10px;
-            -fx-background-radius: 10px;
-            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.3, 0, 1);
-        """;
-
-
-        bCreate.setStyle(buttonStyle);
-        bExport.setStyle(buttonStyle);
-        bImport.setStyle(buttonStyle);
-        bReset.setStyle(buttonStyle);
-
-        applyPressEffect(bCreate, buttonStyle, pressedStyle);
-        applyPressEffect(bReset, buttonStyle, pressedStyle);
-        applyPressEffect(bImport, buttonStyle, pressedStyle);
-        bExport.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> bExport.setStyle(pressedStyle));
-        bExport.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> bExport.setStyle(buttonStyle));
-
         BorderPane root = new BorderPane();
-
-        root.setTop(buttons);
+//        root.setTop(buttons);
         root.setCenter(vueDiagramme);
-        root.setStyle("-fx-background-color: #87CEED");
 
         root.setOnDragOver(event -> {
             if (event.getGestureSource() != root && event.getDragboard().hasFiles()) {
@@ -129,19 +44,52 @@ public class Main extends Application {
             if (db.hasFiles()) {
                 for(int i=0; i<db.getFiles().size();i++) {
                     File file = db.getFiles().get(i);
-                    modele.addClass(new Classe(file.getName()));
-                    System.out.println("Fichier déposé: " + file.getAbsolutePath());
+                    if(file.getName().endsWith(".class")){
+                        modele.addClass(new Classe(file.getName()));
+                        System.out.println("Fichier déposé: " + file.getAbsolutePath());
+                    }
                 }
             }
             event.setDropCompleted(true);
             event.consume();
         });
 
-        // 7. Afficher la scène
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
         primaryStage.setTitle("Application de diagrammes UML");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private void style(Button bCreate, MenuButton bExport, Button bImport, Button bReset) {
+        String buttonStyle = """
+            -fx-background-color: linear-gradient(to bottom, #ff7e5f, #feb47b);
+            -fx-text-fill: white;
+            -fx-font-size: 14px;
+            -fx-padding: 10px 20px;
+            -fx-border-radius: 10px;
+            -fx-background-radius: 10px;
+        """;
+
+        String pressedStyle = """
+            -fx-background-color: linear-gradient(to bottom, #feb47b, #ff7e5f);
+            -fx-text-fill: white;
+            -fx-font-size: 14px;
+            -fx-padding: 8px 18px;
+            -fx-border-radius: 10px;
+            -fx-background-radius: 10px;
+            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.3, 0, 1);
+        """;
+
+        bCreate.setStyle(buttonStyle);
+        bExport.setStyle(buttonStyle);
+        bImport.setStyle(buttonStyle);
+        bReset.setStyle(buttonStyle);
+
+        applyPressEffect(bCreate, buttonStyle, pressedStyle);
+        applyPressEffect(bReset, buttonStyle, pressedStyle);
+        applyPressEffect(bImport, buttonStyle, pressedStyle);
+        bExport.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> bExport.setStyle(pressedStyle));
+        bExport.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> bExport.setStyle(buttonStyle));
     }
 
     private void applyPressEffect(Button button, String normalStyle, String pressedStyle) {
@@ -153,3 +101,39 @@ public class Main extends Application {
         launch(args);
     }
 }
+//
+//
+////
+//Button bImport = new Button("Importer");
+//        bImport.setId("importerButton");
+//        bImport.setPrefWidth(150);
+//
+//MenuButton bExport = new MenuButton("Exporter");
+//        bExport.setId("exporterButton");
+//        bExport.setPrefWidth(150);
+//MenuItem exportUML = new MenuItem("Exporter en UML");
+//MenuItem exportPNG = new MenuItem("Exporter en PNG");
+//        bExport.getItems().addAll(exportUML, exportPNG);
+//
+//Button bReset = new Button("Réinitialiser");
+//        bReset.setId("resetButton");
+//        bReset.setPrefWidth(150);
+//        bReset.setOnAction(e -> {
+//        System.out.println("Réinitialisation !");
+//            modele.getClasses().clear();
+//            modele.getRelations().clear();
+//            modele.notifierObservateur();
+//        });
+//
+//Button bCreate = new Button("Créer un nouveau diagramme");
+//        bCreate.setPrefWidth(300);
+//
+//ControleurBoutons controleurBoutons = new ControleurBoutons(modele, primaryStage);
+//        bImport.setOnAction(controleurBoutons);
+//        bExport.setOnAction(controleurBoutons);
+//
+//HBox buttons = new HBox(100, bImport, bExport, bReset, bCreate);
+//        buttons.setAlignment(Pos.CENTER);
+//        buttons.setFillHeight(false);
+//
+//style(bCreate, bExport, bImport, bReset);

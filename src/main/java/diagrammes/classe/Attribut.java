@@ -24,4 +24,8 @@ public class Attribut {
                 ", typeAttribut='" + typeAttribut + '\'' +
                 '}';
     }
+
+    public String getTypeAttribut() {
+        return typeAttribut;
+    }
 }

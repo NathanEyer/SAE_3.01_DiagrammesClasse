@@ -7,6 +7,7 @@ import diagrammes.exporter.Exporter;
 import diagrammes.exporter.ExporterImage;
 import diagrammes.exporter.ExporterUml;
 import diagrammes.relations.Relation;
+import diagrammes.relations.RelationStrategy;
 import diagrammes.vue.Observateur;
 
 import javafx.stage.FileChooser;
@@ -55,6 +56,31 @@ public class ModeleDiagramme implements Diagramme {
         classes.add(classe);
         notifierObservateur();
     }
+
+    /**
+     * Crée une relation entre deux classes si elles existent
+     * @param nomClasseDepart nom de la classe de départ
+     * @param nomClasseDestination nom de la classe de destination
+     * @param typeRelation type de la relation entre les 2
+     */
+    public void creerRelation(String nomClasseDepart, String nomClasseDestination, RelationStrategy typeRelation) {
+    Classe classeDepart = null;
+    Classe classeDestination = null;
+    for (Classe classe : classes) {
+        if (classe.getNom().equals(nomClasseDepart))
+            classeDepart = classe;
+        if (classe.getNom().equals(nomClasseDestination))
+            classeDestination = classe;
+    }
+
+    if (classeDepart != null && classeDestination != null) {
+        Relation relation = new Relation(classeDepart, classeDestination, typeRelation);
+        addRelation(relation);
+        System.out.println("Relation créée entre " + nomClasseDepart + " et " + nomClasseDestination);
+    } else {
+        System.out.println("Impossible de créer la relation : classes non trouvées.");
+    }
+}
 
     /**
      * Ajoute une relation entre les classes.

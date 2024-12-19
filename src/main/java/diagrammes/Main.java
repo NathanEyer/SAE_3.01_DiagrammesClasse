@@ -81,7 +81,7 @@ public class Main extends Application {
 
         // 7. Afficher la scène
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
-        primaryStage.setTitle("Test VueDiagramme");
+        primaryStage.setTitle("Application de diagrammes UML");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

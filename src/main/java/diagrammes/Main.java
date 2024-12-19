@@ -74,6 +74,25 @@ public class Main extends Application {
         HBox buttons = new HBox(100, bImport, bExport, bReset, bCreate);
         buttons.setAlignment(Pos.CENTER);
         buttons.setFillHeight(false);
+
+        String buttonStyle = """
+            -fx-background-color: linear-gradient(to bottom, #ff7e5f, #feb47b);
+            -fx-text-fill: white;
+            -fx-font-size: 14px;
+            -fx-padding: 10px 20px;
+            -fx-border-radius: 10px;
+            -fx-background-radius: 10px;
+        """;
+
+
+        bCreate.setStyle(buttonStyle);
+        bExport.setStyle(buttonStyle);
+        bImport.setStyle(buttonStyle);
+        bReset.setStyle(buttonStyle);
+
+
+
+
         BorderPane root = new BorderPane();
         root.setTop(buttons);
         root.setCenter(vueDiagramme);

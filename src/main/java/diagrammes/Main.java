@@ -74,6 +74,8 @@ public class Main extends Application {
             }
         });
 
+
+
         // Ajout des éléments au menu Exporter
         menuExporter.getItems().addAll(exporterPng, exporterUml);
         // Ajout des éléments au menu Fichier
@@ -85,6 +87,10 @@ public class Main extends Application {
         // Création des boutons
         Button btnReinitialisation = new Button("Réinitialisation");
         Button btnNouveau = new Button("Nouveau");
+
+        //btnReinitialisation.setOnMouseReleased(e -> {
+            //modele.reinitialiser();
+        //});
 
         // Appliquer les styles aux boutons
         String buttonStyle = """

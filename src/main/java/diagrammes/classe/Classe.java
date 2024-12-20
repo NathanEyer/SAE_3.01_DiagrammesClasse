@@ -24,7 +24,9 @@ public class Classe {
      * @param attribut
      */
     public void ajouterAttribut(Attribut attribut) {
-        attributs.add(attribut);
+        if(attribut != null) {
+            attributs.add(attribut);
+        }
     }
 
     // Méthode qui permet d'enlever un attribut de la liste d'attributs.
@@ -41,7 +43,9 @@ public class Classe {
      * @param methode
      */
     public void ajouterMethode(Methode methode) {
-        methodes.add(methode);
+        if(methode != null){
+            methodes.add(methode);
+        }
     }
     // Méthode qui permet de supprimer une méthode de la liste de méthodes.
 

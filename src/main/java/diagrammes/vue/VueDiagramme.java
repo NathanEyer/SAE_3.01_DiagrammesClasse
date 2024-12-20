@@ -61,16 +61,16 @@ public class VueDiagramme extends Canvas implements Observateur {
         // Variables pour le positionnement
         double x = 50;
         double y = 50;
-        double spacing = 150;
 
         // Dessiner chaque Classe
         List<Classe> classes = modele.getClasses();
         for (Classe classe : classes) {
+            double espace = 30 + (classe.getAttributs().size() + classe.getMethodes().size()) * 20 + 20;
             dessinerClasse(gc, classe, x, y);
-            y += spacing; // Décaler verticalement pour la prochaine Classe
+            y += espace;
 
             // Remettre à zéro si dépassement de la hauteur du Canvas
-            if (y + spacing > this.getHeight()) {
+            if (y + espace > this.getHeight()) {
                 y = 50;
                 x += 300; // Décaler horizontalement pour une nouvelle colonne
             }

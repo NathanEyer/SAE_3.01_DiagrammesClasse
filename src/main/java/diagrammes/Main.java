@@ -64,6 +64,16 @@ public class Main extends Application {
             }
         });
 
+        importer.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Class files (*.class)", "*.class"));
+            fileChooser.setTitle("Sélectionnez un fichier .class");
+            File file = fileChooser.showOpenDialog(primaryStage);
+            if (file != null) {
+                modele.analyserFichierClass(file.getAbsolutePath());
+            }
+        });
+
         // Ajout des éléments au menu Exporter
         menuExporter.getItems().addAll(exporterPng, exporterUml);
         // Ajout des éléments au menu Fichier

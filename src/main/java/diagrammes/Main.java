@@ -34,7 +34,7 @@ public class Main extends Application {
         root.setOnDragDropped(dragDrop::handleDragDropped);
 
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
-        primaryStage.setTitle("Application de diagrammes UML");
+        primaryStage.setTitle("Commencez par ajouter des fichiers .class");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

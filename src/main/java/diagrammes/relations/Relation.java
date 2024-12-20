@@ -13,5 +13,19 @@ public class Relation {
         this.type = type;
     }
 
+    public Classe getDepart() {
+        return depart;
+    }
+
+    public Classe getDestination() {
+        return destination;
+    }
+
+    public RelationStrategy getType() {
+        return type;
+    }
+
+    
+
 
 }

@@ -1,5 +1,6 @@
 package diagrammes;
 
+import diagrammes.controleur.ControleurBoutons;
 import diagrammes.controleur.ControleurDragDrop;
 import diagrammes.fichier.ExporterImage;
 import diagrammes.modele.ModeleDiagramme;
@@ -23,9 +24,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        ModeleDiagramme modele = new ModeleDiagramme();
         BorderPane root = new BorderPane();
+
+        ModeleDiagramme modele = new ModeleDiagramme();
         ControleurDragDrop dragDrop = new ControleurDragDrop(modele);
+        ControleurBoutons controleurBoutons = new ControleurBoutons(modele);
 
         VueDiagramme vueDiagramme = new VueDiagramme(modele);
         modele.enregistrerObservateur(vueDiagramme);
@@ -36,40 +39,45 @@ public class Main extends Application {
 
         // Création de la barre de menu
         MenuBar menuBar = new MenuBar();
-        menuBar.setMinHeight(30); // Set minimum height for the menu bar
-        menuBar.setPrefHeight(30); // Set preferred height for the menu bar
+        menuBar.setMinHeight(30);
+        menuBar.setPrefHeight(30);
 
         // Menu Fichier
         Menu menuFichier = new Menu("Fichier");
         MenuItem importer = new MenuItem("Importer");
+        importer.setId("importerButton");
+        importer.setOnAction(controleurBoutons);
         Menu menuExporter = new Menu("Exporter");
         MenuItem exporterPng = new MenuItem("Exporter en PNG");
+        exporterPng.setId("exporterPngButton");
+        exporterPng.setOnAction(controleurBoutons);
         MenuItem exporterUml = new MenuItem("Exporter en UML");
+        exporterUml.setId("exporterUmlButton");
+        exporterUml.setOnAction(controleurBoutons);
 
-        // Action pour exporter en PNG
-        exporterPng.setOnAction(event -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png"));
-            File file = fileChooser.showSaveDialog(primaryStage);
-            if (file != null) {
-                try {
-                    ExporterImage exporterImage = new ExporterImage();
-                    exporterImage.exporter(file.getAbsolutePath(), vueDiagramme);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        exporterPng.setOnAction(event -> {modele.exporter("PNG");});
+//            FileChooser fileChooser = new FileChooser();
+//            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png"));
+//            File file = fileChooser.showSaveDialog(primaryStage);
+//            if (file != null) {
+//                try {
+//                    ExporterImage exporterImage = new ExporterImage();
+//                    exporterImage.exporter(file.getAbsolutePath(), vueDiagramme);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
 
-        importer.setOnAction(event -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Class files (*.class)", "*.class"));
-            fileChooser.setTitle("Sélectionnez un fichier .class");
-            File file = fileChooser.showOpenDialog(primaryStage);
-            if (file != null) {
-                modele.analyserFichierClass(file.getAbsolutePath());
-            }
-        });
+//        importer.setOnAction(event -> {modele.
+//            FileChooser fileChooser = new FileChooser();
+//            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Class files (*.class)", "*.class"));
+//            fileChooser.setTitle("Sélectionnez un fichier .class");
+//            File file = fileChooser.showOpenDialog(primaryStage);
+//            if (file != null) {
+//                modele.analyserFichierClass(file.getAbsolutePath());
+//            }
+//        });
 
         // Ajout des éléments au menu Exporter
         menuExporter.getItems().addAll(exporterPng, exporterUml);

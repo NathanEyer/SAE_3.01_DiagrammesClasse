@@ -21,5 +21,11 @@ public class Relation {
         return destination;
     }
 
+    public RelationStrategy getType() {
+        return type;
+    }
+
+    
+
 
 }

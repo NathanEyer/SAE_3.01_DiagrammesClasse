@@ -1,15 +1,12 @@
 package diagrammes;
 
-import diagrammes.classe.Classe;
 import diagrammes.controleur.ControleurDragDrop;
-import diagrammes.exporter.ExporterImage;
+import diagrammes.fichier.ExporterImage;
 import diagrammes.modele.ModeleDiagramme;
 import diagrammes.vue.VueDiagramme;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;

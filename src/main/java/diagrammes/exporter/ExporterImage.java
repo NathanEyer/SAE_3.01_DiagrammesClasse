@@ -42,6 +42,7 @@ public class ExporterImage implements Exporter {
         int width = (int) fxImage.getWidth();
         int height = (int) fxImage.getHeight();
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        // Permet de lire les données de couleur d'une image.
         PixelReader pixelReader = fxImage.getPixelReader();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {

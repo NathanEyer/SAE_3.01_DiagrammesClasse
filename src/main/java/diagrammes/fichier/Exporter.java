@@ -1,4 +1,4 @@
-package diagrammes.exporter;
+package diagrammes.fichier;
 
 public interface Exporter {
 

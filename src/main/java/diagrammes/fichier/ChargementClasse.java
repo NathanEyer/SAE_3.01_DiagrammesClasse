@@ -1,4 +1,4 @@
-package diagrammes.exporter;
+package diagrammes.fichier;
 
 import java.io.File;
 import java.io.IOException;

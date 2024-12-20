@@ -1,4 +1,4 @@
-package diagrammes.exporter;
+package diagrammes.fichier;
 
 import javafx.application.Platform;
 import javafx.scene.Node;

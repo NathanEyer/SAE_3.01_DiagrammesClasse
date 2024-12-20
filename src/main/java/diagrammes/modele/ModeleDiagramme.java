@@ -3,10 +3,10 @@ package diagrammes.modele;
 import diagrammes.classe.Classe;
 import diagrammes.classe.Methode;
 import diagrammes.classe.Attribut;
-import diagrammes.exporter.Exporter;
-import diagrammes.exporter.ExporterImage;
-import diagrammes.exporter.ExporterUml;
-import diagrammes.exporter.ChargementClasse;
+import diagrammes.fichier.Exporter;
+import diagrammes.fichier.ExporterImage;
+import diagrammes.fichier.ExporterUml;
+import diagrammes.fichier.ChargementClasse;
 import diagrammes.relations.Relation;
 import diagrammes.vue.Observateur;
 

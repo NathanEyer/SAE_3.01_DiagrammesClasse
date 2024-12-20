@@ -6,8 +6,8 @@ import diagrammes.classe.Attribut;
 import diagrammes.exporter.Exporter;
 import diagrammes.exporter.ExporterImage;
 import diagrammes.exporter.ExporterUml;
+import diagrammes.exporter.ChargementClasse;
 import diagrammes.relations.Relation;
-import diagrammes.relations.RelationStrategy;
 import diagrammes.vue.Observateur;
 
 import javafx.stage.FileChooser;
@@ -15,6 +15,8 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,45 +95,43 @@ public class ModeleDiagramme implements Diagramme {
      */
     public void analyserFichierClass(String cheminClasse) {
         try {
-            // Charger dynamiquement la classe
-            Class<?> classe = Class.forName(cheminClasse);
+            //Charge la bonne classe
+            Path path = Paths.get(cheminClasse);
+            String goodName = ChargementClasse.getGoodName(path);
+            ChargementClasse chargementClasse = new ChargementClasse(path);
+            Class<?> classe = chargementClasse.loadClass(goodName);
+            Classe nouvelleClasse = new Classe(classe.getSimpleName());
 
-            // Obtenir le nom de la classe
-            String nomClasse = classe.getSimpleName();
-            Classe nouvelleClasse = new Classe(nomClasse);
-
-            // Obtenir les attributs
-            Field[] fields = classe.getDeclaredFields();
-            for (Field field : fields) {
-                String typeAttribut = field.getType().getSimpleName();
-                String nomAttribut = field.getName();
-                nouvelleClasse.ajouterAttribut(new Attribut(nomAttribut, typeAttribut));
+            //Ajout des attributs
+            for (Field field : classe.getDeclaredFields()) {
+                nouvelleClasse.ajouterAttribut(
+                        new Attribut(field.getName(), field.getType().getSimpleName())
+                );
             }
 
-            // Obtenir les méthodes
-            Method[] methods = classe.getDeclaredMethods();
-            for (Method method : methods) {
-                String typeRetour = method.getReturnType().getSimpleName();
-                String nomMethode = method.getName();
+            //Ajout des méthodes
+            for (Method method : classe.getDeclaredMethods()) {
                 List<String> parametres = new ArrayList<>();
                 for (Class<?> paramType : method.getParameterTypes()) {
                     parametres.add(paramType.getSimpleName());
                 }
-                nouvelleClasse.ajouterMethode(new Methode(nomMethode, typeRetour, parametres));
+                nouvelleClasse.ajouterMethode(
+                        new Methode(method.getName(), method.getReturnType().getSimpleName(), parametres)
+                );
             }
 
-            // Ajouter la classe analysée au modèle
+            //Ajout de la classe
             addClass(nouvelleClasse);
-
-            System.out.println("Classe analysée : " + nomClasse);
-            System.out.println("Attributs : " + nouvelleClasse.getAttributs());
-            System.out.println("Méthodes : " + nouvelleClasse.getMethodes());
-
+            System.out.println("Classe analysée : " + classe.getSimpleName());
         } catch (ClassNotFoundException e) {
             System.out.println("Classe non trouvée : " + cheminClasse);
             e.printStackTrace();
         }
     }
+
+
+
+
 
     /**
      * Exporte le diagramme dans un format spécifique.

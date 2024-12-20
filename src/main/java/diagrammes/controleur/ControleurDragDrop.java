@@ -45,14 +45,14 @@ public class ControleurDragDrop {
     public void handleDragDropped(DragEvent event) {
         var db = event.getDragboard();
         if (db.hasFiles()) {
-            for(int i=0; i<db.getFiles().size();i++) {
-                File file = db.getFiles().get(i);
-                if(file.getName().endsWith(".class")){
-                    modele.addClass(new Classe(file.getName().split("\\.")[0]));
+            for (File file : db.getFiles()) {
+                if (file.getName().endsWith(".class")) {
+                    modele.analyserFichierClass(file.getAbsolutePath());
                 }
             }
         }
         event.setDropCompleted(true);
         event.consume();
     }
+
 }

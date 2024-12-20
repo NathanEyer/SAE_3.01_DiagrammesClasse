@@ -6,6 +6,8 @@ import diagrammes.classe.Methode;
 import diagrammes.modele.Diagramme;
 import diagrammes.modele.ModeleDiagramme;
 import diagrammes.classe.Classe;
+import diagrammes.relations.Heritage;
+import diagrammes.relations.Implementation;
 import diagrammes.relations.Relation;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -61,11 +63,11 @@ public class VueDiagramme extends Canvas implements Observateur {
         double y = 50;
         double spacing = 150;
 
-        // Dessiner chaque classe
+        // Dessiner chaque Classe
         List<Classe> classes = modele.getClasses();
         for (Classe classe : classes) {
             dessinerClasse(gc, classe, x, y);
-            y += spacing; // Décaler verticalement pour la prochaine classe
+            y += spacing; // Décaler verticalement pour la prochaine Classe
 
             // Remettre à zéro si dépassement de la hauteur du Canvas
             if (y + spacing > this.getHeight()) {
@@ -73,15 +75,18 @@ public class VueDiagramme extends Canvas implements Observateur {
                 x += 300; // Décaler horizontalement pour une nouvelle colonne
             }
         }
+
+        // Dessiner les relations
+        dessinerRelations(gc);
     }
 
     /**
-     * Dessine une classe UML avec ses attributs et méthodes.
+     * Dessine une Classe UML avec ses attributs et méthodes.
      *
      * @param gc     Le contexte graphique.
-     * @param classe La classe à dessiner.
-     * @param x      La coordonnée X de la classe.
-     * @param y      La coordonnée Y de la classe.
+     * @param classe La Classe à dessiner.
+     * @param x      La coordonnée X de la Classe.
+     * @param y      La coordonnée Y de la Classe.
      */
     private void dessinerClasse(GraphicsContext gc, Classe classe, double x, double y) {
         double largeur = 200;
@@ -92,7 +97,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         // Calculer la hauteur totale
         double hauteur = hauteurNom + (classe.getAttributs().size() + classe.getMethodes().size()) * hauteurSection;
 
-        // Dessiner le contour de la classe
+        // Dessiner le contour de la Classe
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(2);
         gc.strokeRect(x, y, largeur, hauteur);
@@ -103,7 +108,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         gc.setStroke(Color.BLACK);
         gc.strokeRect(x, y, largeur, hauteurNom);
 
-        // Afficher le nom de la classe
+        // Afficher le nom de la Classe
         gc.setFill(Color.BLACK);
         gc.setFont(new Font("Arial", 14));
         gc.fillText(classe.getNom(), x + padding, y + hauteurNom - 10);
@@ -123,19 +128,67 @@ public class VueDiagramme extends Canvas implements Observateur {
     }
 
     /**
-     * Dessine une relation entre deux classes sur le Canvas.
+     * Dessine les relations entre les classes.
+     *
+     * @param gc Le contexte graphique.
+     */
+    private void dessinerRelations(GraphicsContext gc) {
+        for (Relation relation : modele.getRelations()) {
+            dessinerRelation(gc, relation);
+        }
+    }
+
+    /**
+     * Dessine une relation entre deux classes.
      *
      * @param gc       Le contexte graphique.
      * @param relation La relation à dessiner.
      */
     private void dessinerRelation(GraphicsContext gc, Relation relation) {
-        double startX = 100; // Position fictive pour l'exemple
-        double startY = 100;
-        double endX = 200;
-        double endY = 150;
+        double startX = getClassePositionX(relation.getDepart());
+        double startY = getClassePositionY(relation.getDepart());
+        double endX = getClassePositionX(relation.getDestination());
+        double endY = getClassePositionY(relation.getDestination());
 
-        gc.setStroke(Color.RED);
-        gc.setLineWidth(2);
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(1);
         gc.strokeLine(startX, startY, endX, endY);
+
+        if (relation.getType() instanceof Heritage) {
+            dessinerFlecheHeritage(gc, endX, endY);
+        } else if (relation.getType() instanceof Implementation) {
+            dessinerFlecheImplementation(gc, endX, endY);
+        } else {
+            dessinerFlecheAssociation(gc, endX, endY);
+        }
+    }
+
+    private void dessinerFlecheHeritage(GraphicsContext gc, double x, double y) {
+        gc.setFill(Color.BLACK);
+        double[] xPoints = {x, x - 10, x - 10};
+        double[] yPoints = {y, y - 5, y + 5};
+        gc.fillPolygon(xPoints, yPoints, xPoints.length);
+    }
+
+    private void dessinerFlecheImplementation(GraphicsContext gc, double x, double y) {
+        gc.setStroke(Color.BLACK);
+        gc.setLineDashes(5);
+        gc.strokeLine(x, y, x - 10, y - 5);
+        gc.setLineDashes(0);
+    }
+
+    private void dessinerFlecheAssociation(GraphicsContext gc, double x, double y) {
+        gc.setStroke(Color.BLACK);
+        gc.strokeLine(x, y, x - 10, y - 5);
+    }
+
+    private double getClassePositionX(Classe classe) {
+        // Logic to get X position of the Classe
+        return 0;
+    }
+
+    private double getClassePositionY(Classe classe) {
+        // Logic to get Y position of the Classe
+        return 0;
     }
 }

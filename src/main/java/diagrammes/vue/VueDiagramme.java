@@ -182,7 +182,6 @@ public class VueDiagramme extends Canvas implements Observateur {
     }
 
     private double getLargeurClasse(Classe classe) {
-        GraphicsContext gc = this.getGraphicsContext2D();
         double maxLength = 0;
 
         Text text = new Text(classe.getNom());
@@ -201,8 +200,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         return maxLength + 20;
     }
 
-//    public double getHauteurClasse(Classe classe) {
-//        GraphicsContext gc = this.getGraphicsContext2D();
-//
-//    }
+    public double getHauteurClasse(Classe classe) {
+        return classe.getAttributs().size() + classe.getMethodes().size() + 20;
+    }
 }

@@ -12,9 +12,8 @@ import diagrammes.relations.Relation;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.util.List;
 
@@ -46,7 +45,6 @@ public class VueDiagramme extends Canvas implements Observateur {
     @Override
     public void actualiser(Diagramme diagramme) {
         if (diagramme instanceof ModeleDiagramme) {
-            System.out.println("Mise à jour de VueDiagramme...");
             dessinerDiagramme();
         }
     }
@@ -91,7 +89,7 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @param y      La coordonnée Y de la Classe.
      */
     private void dessinerClasse(GraphicsContext gc, Classe classe, double x, double y) {
-        double largeur = 200;
+        double largeur = this.getLargeurClasse(classe);
         double hauteurNom = 30;
         double hauteurSection = 20;
         double padding = 5;
@@ -122,6 +120,8 @@ public class VueDiagramme extends Canvas implements Observateur {
             currentY += hauteurSection;
         }
 
+        gc.strokeLine(x, currentY, x + largeur, currentY);
+
         // Dessiner les méthodes
         for (Methode methode : classe.getMethodes()) {
             gc.fillText("+ " + methode.getNomMethode() + "()", x + padding, currentY + 15);
@@ -147,10 +147,7 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @param relation La relation à dessiner.
      */
     private void dessinerRelation(GraphicsContext gc, Relation relation) {
-        double startX = getClassePositionX(relation.getDepart());
-        double startY = getClassePositionY(relation.getDepart());
-        double endX = getClassePositionX(relation.getDestination());
-        double endY = getClassePositionY(relation.getDestination());
+        double startX = 0, startY = 0, endX = 0, endY = 0;
 
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(1);
@@ -184,13 +181,28 @@ public class VueDiagramme extends Canvas implements Observateur {
         gc.strokeLine(x, y, x - 10, y - 5);
     }
 
-    private double getClassePositionX(Classe classe) {
-        // Logic to get X position of the Classe
-        return 0;
+    private double getLargeurClasse(Classe classe) {
+        GraphicsContext gc = this.getGraphicsContext2D();
+        double maxLength = 0;
+
+        Text text = new Text(classe.getNom());
+        maxLength = Math.max(maxLength, text.getLayoutBounds().getWidth());
+
+        for (Attribut attribut : classe.getAttributs()) {
+            text = new Text("- " + attribut.getNomAttribut() + " : " + attribut.getTypeAttribut());
+            maxLength = Math.max(maxLength, text.getLayoutBounds().getWidth());
+        }
+
+        for (Methode methode : classe.getMethodes()) {
+            text = new Text("+ " + methode.getNomMethode() + "()");
+            maxLength = Math.max(maxLength, text.getLayoutBounds().getWidth());
+        }
+
+        return maxLength + 20;
     }
 
-    private double getClassePositionY(Classe classe) {
-        // Logic to get Y position of the Classe
-        return 0;
-    }
+//    public double getHauteurClasse(Classe classe) {
+//        GraphicsContext gc = this.getGraphicsContext2D();
+//
+//    }
 }

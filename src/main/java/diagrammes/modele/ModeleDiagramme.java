@@ -15,10 +15,12 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * ModeleDiagramme gère les données et la logique métier du diagramme UML.
@@ -95,11 +97,12 @@ public class ModeleDiagramme implements Diagramme {
      */
     public void analyserFichierClass(String cheminClasse) {
         try {
-            //Charge la bonne classe
-            Path path = Paths.get(cheminClasse);
-            String goodName = ChargementClasse.getGoodName(path);
-            ChargementClasse chargementClasse = new ChargementClasse(path);
-            Class<?> classe = chargementClasse.loadClass(goodName);
+            URI uri = Paths.get(cheminClasse).toUri();
+            URL classeURL = uri.toURL();
+            URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{classeURL});
+            String goodName = ChargementClasse.getGoodName(Paths.get(cheminClasse));
+            Class<?> classe = urlClassLoader.loadClass(goodName);
+
             Classe nouvelleClasse = new Classe(classe.getSimpleName());
 
             //Ajout des attributs
@@ -126,6 +129,8 @@ public class ModeleDiagramme implements Diagramme {
         } catch (ClassNotFoundException e) {
             System.out.println("Classe non trouvée : " + cheminClasse);
             e.printStackTrace();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
         }
     }
 

@@ -27,7 +27,9 @@ public class ChargementClasse extends ClassLoader {
     @Override
     protected Class<?> findClass(String name){
         try {
-            byte[] classe = Files.readAllBytes(this.path);
+            String pathStr = name.replace(".", File.separator) + ".class";
+            Path classPath = path.resolve(pathStr);
+            byte[] classe = Files.readAllBytes(classPath);
             return defineClass(name, classe, 0, classe.length);
         } catch (IOException e) {
             throw new RuntimeException(e);

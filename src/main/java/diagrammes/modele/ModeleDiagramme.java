@@ -33,9 +33,6 @@ public class ModeleDiagramme implements Diagramme {
     /** Liste des observateurs enregistrés pour être notifiés des changements. */
     private List<Observateur> observateurs;
 
-    /** Classe actuellement sélectionnée. */
-    private Classe classeSelectionnee;
-
     /**
      * Constructeur par défaut.
      * Initialise les listes des classes, relations et observateurs.
@@ -44,7 +41,6 @@ public class ModeleDiagramme implements Diagramme {
         this.classes = new ArrayList<>();
         this.relations = new ArrayList<>();
         this.observateurs = new ArrayList<>();
-        this.classeSelectionnee = null;
     }
 
     /**
@@ -58,31 +54,6 @@ public class ModeleDiagramme implements Diagramme {
     }
 
     /**
-     * Crée une relation entre deux classes si elles existent
-     * @param nomClasseDepart nom de la classe de départ
-     * @param nomClasseDestination nom de la classe de destination
-     * @param typeRelation type de la relation entre les 2
-     */
-    public void creerRelation(String nomClasseDepart, String nomClasseDestination, RelationStrategy typeRelation) {
-    Classe classeDepart = null;
-    Classe classeDestination = null;
-    for (Classe classe : classes) {
-        if (classe.getNom().equals(nomClasseDepart))
-            classeDepart = classe;
-        if (classe.getNom().equals(nomClasseDestination))
-            classeDestination = classe;
-    }
-
-    if (classeDepart != null && classeDestination != null) {
-        Relation relation = new Relation(classeDepart, classeDestination, typeRelation);
-        addRelation(relation);
-        System.out.println("Relation créée entre " + nomClasseDepart + " et " + nomClasseDestination);
-    } else {
-        System.out.println("Impossible de créer la relation : classes non trouvées.");
-    }
-}
-
-    /**
      * Ajoute une relation entre les classes.
      *
      * @param relation La relation à ajouter.
@@ -90,39 +61,6 @@ public class ModeleDiagramme implements Diagramme {
     public void addRelation(Relation relation) {
         relations.add(relation);
         notifierObservateur();
-    }
-
-    /**
-     * Sélectionne une classe en fonction de son nom.
-     *
-     * @param nomClasse Le nom de la classe à sélectionner.
-     */
-    public void selectionnerClasse(String nomClasse) {
-        for (Classe classe : classes) {
-            if (classe.getNom().equals(nomClasse)) {
-                this.classeSelectionnee = classe;
-                System.out.println("Classe sélectionnée : " + classe.getNom());
-                notifierObservateur();
-                return;
-            }
-        }
-        System.out.println("Aucune classe trouvée avec le nom : " + nomClasse);
-    }
-
-    /**
-     * Déplace la classe sélectionnée.
-     * Ici, la logique peut être enrichie avec des métadonnées liées à la position.
-     *
-     * @param x Nouvelle coordonnée X.
-     * @param y Nouvelle coordonnée Y.
-     */
-    public void deplacerClasseSelectionnee(double x, double y) {
-        if (classeSelectionnee != null) {
-            System.out.println("Déplacement de la classe : " + classeSelectionnee.getNom());
-            notifierObservateur();
-        } else {
-            System.out.println("Aucune classe sélectionnée pour le déplacement.");
-        }
     }
 
     /**
@@ -217,7 +155,6 @@ public class ModeleDiagramme implements Diagramme {
         }
     }
 
-    // Méthodes pour le patron Observateur
     @Override
     public void enregistrerObservateur(Observateur o) {
         observateurs.add(o);
@@ -235,20 +172,10 @@ public class ModeleDiagramme implements Diagramme {
         }
     }
 
-    /**
-     * Retourne la liste des classes dans le diagramme.
-     *
-     * @return Liste des classes.
-     */
     public List<Classe> getClasses() {
         return classes;
     }
 
-    /**
-     * Retourne la liste des relations dans le diagramme.
-     *
-     * @return Liste des relations.
-     */
     public List<Relation> getRelations() {
         return relations;
     }

@@ -1,15 +1,9 @@
 package diagrammes.controleur;
 
-import diagrammes.classe.Classe;
 import diagrammes.modele.ModeleDiagramme;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-
 import java.io.File;
-
 
 /**
  * ControleurDragDrop est la classe responsable de gérer les interactions
@@ -18,8 +12,6 @@ import java.io.File;
  *  * dans l'interface graphique.
  */
 public class ControleurDragDrop {
-
-
     /**
      * Référence au modèle qui contient les données du diagramme.
      */
@@ -35,6 +27,10 @@ public class ControleurDragDrop {
         this.modele = modele;
     }
 
+    /**
+     * Quand souris glissé
+     * @param event
+     */
     public void handleDragOver(DragEvent event) {
         if (event.getGestureSource() != event.getSource() && event.getDragboard().hasFiles()) {
             event.acceptTransferModes(TransferMode.COPY);  // Autoriser le mode de transfert
@@ -42,6 +38,10 @@ public class ControleurDragDrop {
         event.consume();
     }
 
+    /**
+     * Quand souris lachée
+     * @param event
+     */
     public void handleDragDropped(DragEvent event) {
         var db = event.getDragboard();
         if (db.hasFiles()) {
@@ -54,5 +54,4 @@ public class ControleurDragDrop {
         event.setDropCompleted(true);
         event.consume();
     }
-
 }

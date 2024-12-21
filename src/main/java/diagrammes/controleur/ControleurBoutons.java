@@ -1,13 +1,11 @@
 package diagrammes.controleur;
 
 import diagrammes.modele.ModeleDiagramme;
+import diagrammes.vue.VueDiagramme;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.stage.FileChooser;
+import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
-
-import java.io.File;
 
 /**
  * ControleurImportExport gère les interactions utilisateur pour l'importation et l'exportation
@@ -19,14 +17,18 @@ public class ControleurBoutons implements EventHandler<ActionEvent> {
      * Référence au modèle qui contient les données du diagramme.
      */
     private final ModeleDiagramme modele;
+    private Stage stage;
+    private VueDiagramme vue;
 
     /**
      * Constructeur du ControleurImportExport.
      *
      * @param modele       Le modèle contenant les données du diagramme.
      */
-    public ControleurBoutons(ModeleDiagramme modele) {
+    public ControleurBoutons(ModeleDiagramme modele, Stage stage, VueDiagramme vue) {
         this.modele = modele;
+        this.stage = stage;
+        this.vue = vue;
     }
 
     /**
@@ -36,37 +38,27 @@ public class ControleurBoutons implements EventHandler<ActionEvent> {
      */
     @Override
     public void handle(ActionEvent event) {
-        if (event.getSource() instanceof Button button) {
-            switch (button.getId()) {
-                case "importerButton":
+        if (event.getSource() instanceof MenuItem control) {
+            switch (control.getText()) {
+                case "Importer":
                     modele.importerFichierClass();
                     break;
-                case "exporterPngButton":
-                    modele.exporter("PNG");
+                case "Exporter en PNG":
+                    modele.exporter(stage, vue, "PNG");
                     break;
-                case "exporterUmlButton":
-                    modele.exporter("UML");
+                case "Exporter en UML":
+                    modele.exporter(stage, vue, "UML");
+                    break;
+                case "Réinitialiser":
+                    modele.reinitialiser();
+                    break;
+                case "Nouveau":
+                    modele.nouveau();
                     break;
                 default:
-                    System.out.println("Bouton inconnu : " + button.getId());
+                    System.out.println("Bouton inconnu : " + control.getId());
             }
         }
-//                    FileChooser fileChooser = new FileChooser();
-//                    fileChooser.setTitle("Importer un fichier .class");
-//                    fileChooser.getExtensionFilters().add(
-//                            new FileChooser.ExtensionFilter("Fichiers Class", "*.class")
-//                    );
-//
-//                    File fichier = fileChooser.showOpenDialog(primaryStage);
-//                    if (fichier != null) {
-//                        String cheminClasse = fichier.getAbsolutePath()
-//                                .replace(File.separator, ".")
-//                                .replace(".class", "")
-//                                .replace("src.main.java.", "");
-//
-//                        modele.analyserFichierClass(cheminClasse);
-//                    }
-//                    break;
     }
 }
 

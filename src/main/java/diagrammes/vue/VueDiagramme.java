@@ -14,7 +14,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
 import java.util.List;
 
 /**
@@ -27,19 +26,16 @@ public class VueDiagramme extends Canvas implements Observateur {
     /**
      * Constructeur de VueDiagramme.
      * Initialise la vue et s'enregistre comme observateur auprès du modèle.
-     *
      * @param modeleDiagramme Le modèle contenant les données du diagramme.
      */
     public VueDiagramme(ModeleDiagramme modeleDiagramme) {
         super(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
-
         this.modele = modeleDiagramme;
         this.modele.enregistrerObservateur(this);
     }
 
     /**
      * Méthode appelée lorsque le modèle est mis à jour.
-     *
      * @param diagramme Le diagramme mis à jour.
      */
     @Override

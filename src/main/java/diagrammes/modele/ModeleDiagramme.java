@@ -5,22 +5,20 @@ import diagrammes.classe.Methode;
 import diagrammes.classe.Attribut;
 import diagrammes.fichier.Exporter;
 import diagrammes.fichier.ExporterImage;
-import diagrammes.fichier.ExporterUml;
 import diagrammes.fichier.ChargementClasse;
+import diagrammes.fichier.ExporterUml;
 import diagrammes.relations.Relation;
 import diagrammes.vue.Observateur;
-
+import diagrammes.vue.VueDiagramme;
 import javafx.stage.FileChooser;
-
+import javafx.stage.Stage;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.*;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * ModeleDiagramme gère les données et la logique métier du diagramme UML.
@@ -28,13 +26,8 @@ import java.util.Objects;
  */
 public class ModeleDiagramme implements Diagramme {
 
-    /** Liste des classes dans le diagramme. */
     private List<Classe> classes;
-
-    /** Liste des relations entre les classes. */
     private List<Relation> relations;
-
-    /** Liste des observateurs enregistrés pour être notifiés des changements. */
     private List<Observateur> observateurs;
 
     /**
@@ -49,7 +42,6 @@ public class ModeleDiagramme implements Diagramme {
 
     /**
      * Ajoute une classe au diagramme.
-     *
      * @param classe La classe à ajouter.
      */
     public void addClass(Classe classe) {
@@ -59,7 +51,6 @@ public class ModeleDiagramme implements Diagramme {
 
     /**
      * Ajoute une relation entre les classes.
-     *
      * @param relation La relation à ajouter.
      */
     public void addRelation(Relation relation) {
@@ -134,9 +125,14 @@ public class ModeleDiagramme implements Diagramme {
         }
     }
 
+    public void reinitialiser(){
+        classes.clear();
+        relations.clear();
+        this.notifierObservateur();
+    }
 
-
-
+    public void nouveau(){
+    }
 
     /**
      * Exporte le diagramme dans un format spécifique.
@@ -144,20 +140,27 @@ public class ModeleDiagramme implements Diagramme {
      * @param format Le format d'exportation (ex : PNG, PlantUML).
      * @return true si l'exportation a réussi, false sinon.
      */
-    public boolean exporter(String format) {
-        try {
-            Exporter exporter = null;
-            if ("PNG".equalsIgnoreCase(format) ) {
-                exporter = new ExporterImage();
-            }else if("PlantUML".equalsIgnoreCase(format)){
-                exporter = new ExporterUml();
-            }else return false;
-            exporter.exporter("", this);                // A COMPLETER !!!!
-            System.out.println("Exportation réussie avec succès !");
-            return true;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    public boolean exporter(Stage stage, VueDiagramme vue, String format) {
+        Exporter export = null;
+        FileChooser fileChooser = new FileChooser();
+        if(format.equalsIgnoreCase("PNG")) {
+            export = new ExporterImage();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png"));
+        }else if(format.equalsIgnoreCase("UML")) {
+            export = new ExporterUml();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("puml files (*.puml)", "*.puml"));
         }
+
+        File file = fileChooser.showSaveDialog(stage);
+        if (file != null) {
+            try {
+                export.exporter(file.getAbsolutePath(), vue);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 
     @Override
@@ -177,9 +180,7 @@ public class ModeleDiagramme implements Diagramme {
         }
     }
 
-    public List<Classe> getClasses() {
-        return classes;
-    }
+    public List<Classe> getClasses() {return classes;}
 
     public List<Relation> getRelations() {
         return relations;

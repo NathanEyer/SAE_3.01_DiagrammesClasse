@@ -9,7 +9,6 @@ import java.nio.file.Path;
  * Chargement du bon nom de classe
  */
 public class ChargementClasse extends ClassLoader {
-    //Chemin absolu
     private final Path path;
 
     /**

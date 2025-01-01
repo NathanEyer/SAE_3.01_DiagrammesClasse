@@ -84,44 +84,46 @@ public class ModeleDiagramme implements Diagramme {
      * Analyse un fichier .class grâce à l'introspection pour extraire
      * les attributs et les méthodes.
      *
-     * @param cheminClasse Le nom complet de la classe (package inclus).
+     * @param cheminFichierClass Le nom complet de la classe (package inclus).
      */
-    public void analyserFichierClass(String cheminClasse) {
+    public void analyserFichierClass(String cheminFichierClass) {
         try {
-            URI uri = Paths.get(cheminClasse).toUri();
-            URL classeURL = uri.toURL();
-            URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{classeURL});
-            String goodName = ChargementClasse.getGoodName(Paths.get(cheminClasse));
-            Class<?> classe = urlClassLoader.loadClass(goodName);
+            File fichierClass = new File(cheminFichierClass);
 
+            // Détecter le dossier parent comme racine
+            File dossierParent = fichierClass.getParentFile();
+            URL dossierParentURL = dossierParent.toURI().toURL();
+
+            // Créer un ClassLoader pour ce dossier
+            URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[]{dossierParentURL});
+
+            // Obtenir le nom complet de la classe
+            String nomClasse = ChargementClasse.getGoodName(fichierClass.toPath());
+
+            // Charger la classe
+            Class<?> classe = urlClassLoader.loadClass(nomClasse);
+
+            // Analyse introspective
             Classe nouvelleClasse = new Classe(classe.getSimpleName());
 
-            //Ajout des attributs
             for (Field field : classe.getDeclaredFields()) {
-                nouvelleClasse.ajouterAttribut(
-                        new Attribut(field.getName(), field.getType().getSimpleName())
-                );
+                nouvelleClasse.ajouterAttribut(new Attribut(field.getName(), field.getType().getSimpleName()));
             }
 
-            //Ajout des méthodes
             for (Method method : classe.getDeclaredMethods()) {
                 List<String> parametres = new ArrayList<>();
                 for (Class<?> paramType : method.getParameterTypes()) {
                     parametres.add(paramType.getSimpleName());
                 }
-                nouvelleClasse.ajouterMethode(
-                        new Methode(method.getName(), method.getReturnType().getSimpleName(), parametres)
-                );
+                nouvelleClasse.ajouterMethode(new Methode(method.getName(), method.getReturnType().getSimpleName(), parametres));
             }
 
-            //Ajout de la classe
+            // Ajouter la classe au modèle
             addClass(nouvelleClasse);
             System.out.println("Classe analysée : " + classe.getSimpleName());
-        } catch (ClassNotFoundException e) {
-            System.out.println("Classe non trouvée : " + cheminClasse);
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'analyse : " + cheminFichierClass);
             e.printStackTrace();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
         }
     }
 

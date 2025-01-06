@@ -10,10 +10,9 @@ import javafx.scene.layout.HBox;
 public class Interface {
 
     /**
-     * Crée la barre de menu avec ses éléments.
-     *
-     * @param controleurBoutons Le contrôleur des boutons pour gérer les actions.
-     * @return Une MenuBar configurée.
+     * Crée la barre de menu avec ses éléments
+     * @param controleurBoutons contrôleur des boutons pour gérer les actions
+     * @return MenuBar configurée
      */
     public static MenuBar createMenuBar(ControleurBoutons controleurBoutons) {
         MenuBar menu = new MenuBar();
@@ -50,8 +49,8 @@ public class Interface {
 
     /**
      * Crée la barre supérieure
-     * @param menuBar
-     * @return
+     * @param menuBar menu
+     * @return XBox
      */
     public static HBox createTopBar(MenuBar menuBar) {
         HBox topBar = new HBox(menuBar);

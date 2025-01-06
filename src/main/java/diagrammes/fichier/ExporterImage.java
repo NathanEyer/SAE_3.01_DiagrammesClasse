@@ -9,10 +9,17 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+/**
+ * Exporte le diagramme au format png
+ */
 public class ExporterImage implements Exporter {
-
+    /**
+     * Méthode en charge de l'exportation
+     * @param chemin String
+     * @param contenu Object
+     */
     @Override
-    public void exporter(String chemin, Object contenu) throws Exception {
+    public void exporter(String chemin, Object contenu) {
         if (!(contenu instanceof Node)) {
             throw new IllegalArgumentException("Le contenu doit être un Node JavaFX.");
         }
@@ -37,6 +44,11 @@ public class ExporterImage implements Exporter {
         });
     }
 
+    /**
+     * Méthode en charge de la création de l'image
+     * @param fxImage WritableImage
+     * @return BufferedImage
+     */
     private BufferedImage convertirImageBuffered(WritableImage fxImage) {
         int width = (int) fxImage.getWidth();
         int height = (int) fxImage.getHeight();

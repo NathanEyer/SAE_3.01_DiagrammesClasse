@@ -12,11 +12,20 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+/**
+ * Launcher de l'application
+ */
 public class Main extends Application {
-    //Tailles de l'écran arrangées pour l'interface
+    /**
+     * Récupère la taille de l'écran de l'utilisateur
+     */
     public final static double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth() / 1.5;
     public final static double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getHeight()*0.95;
 
+    /**
+     * Launcher
+     * @param primaryStage squelette
+     */
     @Override
     public void start(Stage primaryStage) {
         // Initialisations
@@ -49,7 +58,5 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public static void main(String[] args) {launch(args);}
 }

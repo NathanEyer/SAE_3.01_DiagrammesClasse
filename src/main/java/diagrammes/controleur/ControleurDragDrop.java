@@ -6,21 +6,16 @@ import javafx.scene.input.TransferMode;
 import java.io.File;
 
 /**
- * ControleurDragDrop est la classe responsable de gérer les interactions
- *  * entre l'utilisateur, le modèle (ModeleDiagramme) et la vue (VueDiagramme).
- *  * Elle configure les gestionnaires d'événements pour répondre aux actions de l'utilisateur
- *  * dans l'interface graphique.
+ * Gère les interactions de drag and drop
  */
 public class ControleurDragDrop {
     /**
-     * Référence au modèle qui contient les données du diagramme.
+     * Modèle qui contient les données du diagramme.
      */
     private ModeleDiagramme modele;
 
     /**
-     * Constructeur du ControleurDragDrop.
-     * Initialise le contrôleur avec une référence au modèle.
-     *
+     * Construit le contrôleur avec une référence au modèle.
      * @param modele Le modèle contenant les données du diagramme.
      */
     public ControleurDragDrop(ModeleDiagramme modele) {
@@ -28,19 +23,19 @@ public class ControleurDragDrop {
     }
 
     /**
-     * Quand souris glissé
-     * @param event
+     * Méthode de drag (glissement de la souris)
+     * @param event évènement déclenché
      */
     public void handleDragOver(DragEvent event) {
         if (event.getGestureSource() != event.getSource() && event.getDragboard().hasFiles()) {
-            event.acceptTransferModes(TransferMode.COPY);  // Autoriser le mode de transfert
+            event.acceptTransferModes(TransferMode.COPY);
         }
         event.consume();
     }
 
     /**
-     * Quand souris lachée
-     * @param event
+     * Méthode de drop (relachement de la souris)
+     * @param event évènement déclenché
      */
     public void handleDragDropped(DragEvent event) {
         var db = event.getDragboard();

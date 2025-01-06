@@ -17,16 +17,17 @@ import javafx.scene.text.Text;
 import java.util.List;
 
 /**
- * VueDiagramme affiche le diagramme UML à l'utilisateur en utilisant un Canvas.
+ * VueDiagramme affiche le diagramme à l'utilisateur en utilisant un Canvas.
  */
 public class VueDiagramme extends Canvas implements Observateur {
-
+    /**
+     * Diagramme
+     */
     private final ModeleDiagramme modele;
 
     /**
-     * Constructeur de VueDiagramme.
-     * Initialise la vue et s'enregistre comme observateur auprès du modèle.
-     * @param modeleDiagramme Le modèle contenant les données du diagramme.
+     * Initialise le diagramme
+     * @param modeleDiagramme Le modèle contenant les données du diagramme
      */
     public VueDiagramme(ModeleDiagramme modeleDiagramme) {
         super(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
@@ -35,8 +36,8 @@ public class VueDiagramme extends Canvas implements Observateur {
     }
 
     /**
-     * Méthode appelée lorsque le modèle est mis à jour.
-     * @param diagramme Le diagramme mis à jour.
+     * Mise à jour de la vue
+     * @param diagramme diagramme à actualiser
      */
     @Override
     public void actualiser(Diagramme diagramme) {
@@ -46,7 +47,7 @@ public class VueDiagramme extends Canvas implements Observateur {
     }
 
     /**
-     * Dessine le diagramme UML en fonction des données du modèle.
+     * Dessine le diagramme UML en fonction des données du modèle
      */
     public void dessinerDiagramme() {
         GraphicsContext gc = this.getGraphicsContext2D();
@@ -77,12 +78,11 @@ public class VueDiagramme extends Canvas implements Observateur {
     }
 
     /**
-     * Dessine une Classe UML avec ses attributs et méthodes.
-     *
-     * @param gc     Le contexte graphique.
-     * @param classe La Classe à dessiner.
-     * @param x      La coordonnée X de la Classe.
-     * @param y      La coordonnée Y de la Classe.
+     * Dessine une Classe avec ses attributs et méthodes
+     * @param gc contexte graphique
+     * @param classe classe à dessiner
+     * @param x coordonnée X de la Classe
+     * @param y coordonnée Y de la Classe
      */
     private void dessinerClasse(GraphicsContext gc, Classe classe, double x, double y) {
         double largeur = this.getLargeurClasse(classe);
@@ -126,9 +126,8 @@ public class VueDiagramme extends Canvas implements Observateur {
     }
 
     /**
-     * Dessine les relations entre les classes.
-     *
-     * @param gc Le contexte graphique.
+     * Dessine les relations entre les classes
+     * @param gc contexte graphique
      */
     private void dessinerRelations(GraphicsContext gc) {
         for (Relation relation : modele.getRelations()) {
@@ -137,10 +136,9 @@ public class VueDiagramme extends Canvas implements Observateur {
     }
 
     /**
-     * Dessine une relation entre deux classes.
-     *
-     * @param gc       Le contexte graphique.
-     * @param relation La relation à dessiner.
+     * Dessine une relation entre deux classes
+     * @param gc contexte graphique
+     * @param relation relation à dessiner
      */
     private void dessinerRelation(GraphicsContext gc, Relation relation) {
         double startX = 0, startY = 0, endX = 0, endY = 0;
@@ -158,6 +156,12 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
+    /**
+     * Dessine la flèche d'héritage
+     * @param gc contexte graphique
+     * @param x coordonnée X de la Classe
+     * @param y coordonnée Y de la Classe
+     */
     private void dessinerFlecheHeritage(GraphicsContext gc, double x, double y) {
         gc.setFill(Color.BLACK);
         double[] xPoints = {x, x - 10, x - 10};
@@ -165,6 +169,12 @@ public class VueDiagramme extends Canvas implements Observateur {
         gc.fillPolygon(xPoints, yPoints, xPoints.length);
     }
 
+    /**
+     *Dessine la flèche d'implémentation
+     * @param gc contexte graphique
+     * @param x coordonnée X de la Classe
+     * @param y coordonnée Y de la Classe
+     */
     private void dessinerFlecheImplementation(GraphicsContext gc, double x, double y) {
         gc.setStroke(Color.BLACK);
         gc.setLineDashes(5);
@@ -172,11 +182,22 @@ public class VueDiagramme extends Canvas implements Observateur {
         gc.setLineDashes(0);
     }
 
+    /**
+     * Dessine la flèche d'association
+     * @param gc contexte graphique
+     * @param x coordonnée X de la Classe
+     * @param y coordonnée Y de la Classe
+     */
     private void dessinerFlecheAssociation(GraphicsContext gc, double x, double y) {
         gc.setStroke(Color.BLACK);
         gc.strokeLine(x, y, x - 10, y - 5);
     }
 
+    /**
+     * Renvoie la largeur de la classe à dessiner
+     * @param classe classe concernée
+     * @return largeur en px
+     */
     private double getLargeurClasse(Classe classe) {
         double maxLength = 0;
 
@@ -196,6 +217,11 @@ public class VueDiagramme extends Canvas implements Observateur {
         return maxLength + 20;
     }
 
+    /**
+     * Renvoie la hauteur de la classe à dessiner
+     * @param classe classe concernée
+     * @return hauteur en px
+     */
     public double getHauteurClasse(Classe classe) {
         return classe.getAttributs().size() + classe.getMethodes().size() + 20;
     }

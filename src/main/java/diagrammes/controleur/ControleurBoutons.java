@@ -8,22 +8,21 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 
 /**
- * ControleurImportExport gère les interactions utilisateur pour l'importation et l'exportation
- * des données du diagramme UML.
+ * Redirige les actions des boutons vers les méthodes correspondantes
  */
 public class ControleurBoutons implements EventHandler<ActionEvent> {
-
     /**
-     * Référence au modèle qui contient les données du diagramme.
+     * Référence au modèle qui contient les données du diagramme
      */
     private final ModeleDiagramme modele;
     private Stage stage;
     private VueDiagramme vue;
 
     /**
-     * Constructeur du ControleurImportExport.
-     *
-     * @param modele       Le modèle contenant les données du diagramme.
+     * Construit un objet ControleurBoutons
+     * @param modele de l'application
+     * @param stage de l'application
+     * @param vue du diagramme
      */
     public ControleurBoutons(ModeleDiagramme modele, Stage stage, VueDiagramme vue) {
         this.modele = modele;
@@ -32,9 +31,8 @@ public class ControleurBoutons implements EventHandler<ActionEvent> {
     }
 
     /**
-     * Gère les événements déclenchés par l'utilisateur pour l'importation ou l'exportation.
-     *
-     * @param event L'événement déclenché par l'utilisateur.
+     * Gère les événements déclenchés par les boutons
+     * @param event L'événement déclenché par le bouton
      */
     @Override
     public void handle(ActionEvent event) {

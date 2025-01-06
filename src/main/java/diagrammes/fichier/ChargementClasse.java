@@ -9,6 +9,9 @@ import java.nio.file.Path;
  * Chargement du bon nom de classe
  */
 public class ChargementClasse extends ClassLoader {
+    /**
+     * Chemin absolu
+     */
     private final Path path;
 
     /**
@@ -21,7 +24,7 @@ public class ChargementClasse extends ClassLoader {
     /**
      * Cherche la classe
      * @param name nom de la classe
-     * @return
+     * @return Class
      */
     @Override
     protected Class<?> findClass(String name){
@@ -40,26 +43,17 @@ public class ChargementClasse extends ClassLoader {
      * @param path nom absolu
      * @return nom voulu
      */
-    public static String getGoodName(Path fichierClass) {
-        System.out.println(fichierClass);
-        // Vérifiez que le fichier existe
-        if (!fichierClass.toFile().exists()) {
-            throw new IllegalArgumentException("Le fichier n'existe pas : " + fichierClass.toAbsolutePath());
+    public static String getGoodName(Path path) {
+        if (!path.toFile().exists()) {
+            throw new IllegalArgumentException("Le fichier n'existe pas : " + path.toAbsolutePath());
         }
 
-        // Récupérer le dossier parent du fichier .class
-        Path racine = fichierClass.getParent();
+        Path racine = path.getParent();
 
-        // Construire le chemin relatif du fichier à partir de la racine
-        Path cheminRelatif = racine.relativize(fichierClass);
+        Path cheminRelatif = racine.relativize(path);
 
-        // Convertir en nom de classe (format package.ClassName)
         return cheminRelatif.toString()
                 .replace(File.separator, ".") // Convertir les séparateurs de chemin en '.'
                 .replace(".class", "");      // Retirer l'extension .class
     }
-
-
-
-
 }

@@ -16,23 +16,22 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.*;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ModeleDiagramme gère les données et la logique métier du diagramme UML.
- * Il suit le patron Observateur pour notifier les vues des modifications.
+ * Diagramme concret
  */
 public class ModeleDiagramme implements Diagramme {
-
+    /**
+     * Attributs du diagramme
+     */
     private List<Classe> classes;
     private List<Relation> relations;
     private List<Observateur> observateurs;
 
     /**
-     * Constructeur par défaut.
-     * Initialise les listes des classes, relations et observateurs.
+     * Construit un ModeleDiagramme par défaut
      */
     public ModeleDiagramme() {
         this.classes = new ArrayList<>();
@@ -41,8 +40,8 @@ public class ModeleDiagramme implements Diagramme {
     }
 
     /**
-     * Ajoute une classe au diagramme.
-     * @param classe La classe à ajouter.
+     * Ajoute une classe au diagramme
+     * @param classe à ajouter
      */
     public void addClass(Classe classe) {
         classes.add(classe);
@@ -50,8 +49,8 @@ public class ModeleDiagramme implements Diagramme {
     }
 
     /**
-     * Ajoute une relation entre les classes.
-     * @param relation La relation à ajouter.
+     * Ajoute une relation entre les classes
+     * @param relation à ajouter
      */
     public void addRelation(Relation relation) {
         relations.add(relation);
@@ -59,8 +58,8 @@ public class ModeleDiagramme implements Diagramme {
     }
 
     /**
-     * Ouvre un explorateur pour sélectionner un fichier .class
-     * et lance l'analyse introspective du fichier.
+     * Ouvre un explorateur pour sélectionner un fichier class
+     * et lance l'analyse introspective du fichier
      */
     public void importerFichierClass() {
         FileChooser fileChooser = new FileChooser();
@@ -81,9 +80,8 @@ public class ModeleDiagramme implements Diagramme {
     }
 
     /**
-     * Analyse un fichier .class grâce à l'introspection pour extraire
+     * Analyse un fichier class grâce à l'introspection pour extraire
      * les attributs et les méthodes.
-     *
      * @param cheminFichierClass Le nom complet de la classe (package inclus).
      */
     public void analyserFichierClass(String cheminFichierClass) {
@@ -127,6 +125,9 @@ public class ModeleDiagramme implements Diagramme {
         }
     }
 
+    /**
+     * Réinitialise tout le diagramme
+     */
     public void reinitialiser(){
         classes.clear();
         relations.clear();
@@ -138,7 +139,6 @@ public class ModeleDiagramme implements Diagramme {
 
     /**
      * Exporte le diagramme dans un format spécifique.
-     *
      * @param format Le format d'exportation (ex : PNG, PlantUML).
      * @return true si l'exportation a réussi, false sinon.
      */
@@ -165,16 +165,27 @@ public class ModeleDiagramme implements Diagramme {
         return false;
     }
 
+    /**
+     * Permet d'enregistrer un observateur
+     * @param o observateur concerné
+     */
     @Override
     public void enregistrerObservateur(Observateur o) {
         observateurs.add(o);
     }
 
+    /**
+     * Permet de supprimer un observateur
+     * @param o à supprimer
+     */
     @Override
     public void supprimerObservateur(Observateur o) {
         observateurs.remove(o);
     }
 
+    /**
+     * Notifie les observateurs
+     */
     @Override
     public void notifierObservateur() {
         for (Observateur observateur : observateurs) {
@@ -182,8 +193,16 @@ public class ModeleDiagramme implements Diagramme {
         }
     }
 
+    /**
+     * Renvoie la liste des classes
+     * @return liste
+     */
     public List<Classe> getClasses() {return classes;}
 
+    /**
+     * Renvoie la liste des relations
+     * @return liste
+     */
     public List<Relation> getRelations() {
         return relations;
     }

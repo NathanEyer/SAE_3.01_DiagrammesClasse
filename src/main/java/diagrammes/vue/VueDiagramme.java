@@ -11,6 +11,9 @@ import diagrammes.relations.Implementation;
 import diagrammes.relations.Relation;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -45,6 +48,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         this.setOnMousePressed(this::gererMousePressed);
         this.setOnMouseDragged(this::gererMouseDragged);
         this.setOnMouseReleased(this::gererMouseReleased);
+        this.setOnMouseClicked(this::gererClicDroit);
     }
 
     /**
@@ -297,6 +301,38 @@ public class VueDiagramme extends Canvas implements Observateur {
         double hauteurAttributs = classe.getAttributs().size() * 20;
         double hauteurMethodes = classe.getMethodes().size() * 20;
         return hauteurNom + hauteurAttributs + hauteurMethodes + 10; // Ajout d'un padding
+    }
+
+    private void gererClicDroit(MouseEvent event) {
+        if (event.getButton() == MouseButton.SECONDARY) { // Vérifie que c'est un clic droit
+            double mouseX = event.getX();
+            double mouseY = event.getY();
+
+            for (var entry : positionsClasses.entrySet()) {
+                Rectangle rect = entry.getValue();
+                if (rect.contains(mouseX, mouseY)) { // Vérifie si le clic est dans le rectangle
+                    Classe classeCible = entry.getKey();
+
+                    // Créez un menu contextuel
+                    ContextMenu contextMenu = new ContextMenu();
+
+                    // Option "Supprimer"
+                    MenuItem supprimer = new MenuItem("Supprimer");
+                    supprimer.setOnAction(e -> {
+                        modele.getClasses().remove(classeCible); // Supprime la classe du modèle
+                        positionsClasses.remove(classeCible); // Supprime de la vue
+                        dessinerDiagramme(); // Rafraîchit l'affichage
+                    });
+
+                    // Ajoute l'option au menu contextuel
+                    contextMenu.getItems().add(supprimer);
+
+                    // Affiche le menu contextuel
+                    contextMenu.show(this, event.getScreenX(), event.getScreenY());
+                    return; // Stoppe la recherche après avoir trouvé la classe cible
+                }
+            }
+        }
     }
 
 }

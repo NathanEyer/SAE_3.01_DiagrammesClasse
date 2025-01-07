@@ -10,4 +10,8 @@ Itération 3 :
 		
 		- Conversion d'Image : La méthode convertirImageBuffered lit chaque pixel de 			l'image JavaFX et le copie dans une image BufferedImage. Cette opération peut 			être lente pour des images de grande taille.
 
-	- Importation des points classes qui sera de nouveau en itération 4, toujours même 		problèmes
+		- Importation des points classes qui sera de nouveau en itération 4, toujours 			même problèmes
+
+		- Drag and Drop : Amélioration pour l'introspection des packages .class
+
+		

@@ -1,6 +1,7 @@
 package diagrammes;
 
 import diagrammes.controleur.ControleurBoutons;
+import diagrammes.vue.VueDiagramme;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
@@ -65,5 +66,41 @@ public class Interface {
         HBox topBar = new HBox(menuBar);
         topBar.setStyle("-fx-background-color: lightgray;");
         return topBar;
+    }
+
+    public static void ajouterZoomDeplacement(VueDiagramme vue){
+        vue.setOnScroll(event -> {
+            if (event.isControlDown()) {
+                double zoomFactor = 1.05;
+                if (event.getDeltaY() < 0) {
+                    zoomFactor = 0.8;
+                }
+
+                // Appliquer le zoom sur la vue
+                vue.setScaleX(vue.getScaleX() * zoomFactor);
+                vue.setScaleY(vue.getScaleY() * zoomFactor);
+            }
+        });
+
+        vue.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown()) {
+                vue.setStartDragX(event.getSceneX());
+                vue.setStartDragY(event.getSceneY());
+            }
+        });
+
+        vue.setOnMouseDragged(event -> {
+            if (event.isPrimaryButtonDown()) {
+                double deltaX = event.getSceneX() - vue.getStartDragX();
+                double deltaY = event.getSceneY() - vue.getStartDragY();
+
+                // Déplacer la vue
+                vue.setTranslateX(vue.getTranslateX() + deltaX);
+                vue.setTranslateY(vue.getTranslateY() + deltaY);
+
+                vue.setStartDragX(event.getSceneX());
+                vue.setStartDragY(event.getSceneY());
+            }
+        });
     }
 }

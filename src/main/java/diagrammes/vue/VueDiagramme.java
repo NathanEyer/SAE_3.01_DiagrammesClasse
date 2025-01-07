@@ -36,6 +36,8 @@ public class VueDiagramme extends Canvas implements Observateur {
     private double offsetX, offsetY;
     private final HashMap<Classe, Boolean> attributsMasques = new HashMap<>();
     private final HashMap<Classe, Boolean> methodesMasquees = new HashMap<>();
+    private double startDragX;
+    private double startDragY;
 
     /**
      * Initialise le diagramme
@@ -420,5 +422,21 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
 
         return new double[]{closestX, closestY};
+    }
+
+    public double getStartDragX() {
+        return startDragX;
+    }
+
+    public void setStartDragX(double startDragX) {
+        this.startDragX = startDragX;
+    }
+
+    public double getStartDragY() {
+        return startDragY;
+    }
+
+    public void setStartDragY(double startDragY) {
+        this.startDragY = startDragY;
     }
 }

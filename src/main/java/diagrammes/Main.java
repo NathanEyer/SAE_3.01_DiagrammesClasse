@@ -50,6 +50,7 @@ public class Main extends Application {
 
         // Ajout des éléments à la vue principale
         root.setTop(topBar);
+        Interface.ajouterZoomDeplacement(vue);
 
         // Création et affichage de la scène
         Scene scene = new Scene(root, SCREEN_WIDTH / 1.5, SCREEN_HEIGHT * 0.95);

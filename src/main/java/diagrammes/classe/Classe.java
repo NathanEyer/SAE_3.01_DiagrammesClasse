@@ -2,6 +2,7 @@ package diagrammes.classe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Modélise une classe
@@ -99,5 +100,18 @@ public class Classe {
      */
     public void setMethodes(List<Methode> methodes) {
         this.methodes = methodes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Classe classe = (Classe) o;
+        return Objects.equals(nom, classe.nom); // Comparer par le nom ou un autre attribut unique
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nom); // Générer un hashcode basé sur le même attribut que equals
     }
 }

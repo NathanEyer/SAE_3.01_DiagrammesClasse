@@ -39,11 +39,10 @@ public class VueDiagramme extends Canvas implements Observateur {
      * Initialise le diagramme
      * @param modeleDiagramme Le modèle contenant les données du diagramme
      */
-    public VueDiagramme(ModeleDiagramme modeleDiagramme)throws ClassNotFoundException {
+    public VueDiagramme(ModeleDiagramme modeleDiagramme) throws ClassNotFoundException {
         super(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
         this.modele = modeleDiagramme;
         this.modele.enregistrerObservateur(this);
-
 
         this.setOnMousePressed(this::gererMousePressed);
         this.setOnMouseDragged(this::gererMouseDragged);
@@ -56,7 +55,7 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @param diagramme diagramme à actualiser
      */
     @Override
-    public void actualiser(Diagramme diagramme)  {
+    public void actualiser(Diagramme diagramme) {
         if (diagramme instanceof ModeleDiagramme) {
             dessinerDiagramme();
         }
@@ -65,9 +64,7 @@ public class VueDiagramme extends Canvas implements Observateur {
     /**
      * Dessine le diagramme UML en fonction des données du modèle
      */
-    public void dessinerDiagramme()   {
-
-
+    public void dessinerDiagramme() {
         GraphicsContext gc = this.getGraphicsContext2D();
 
         // Effacer le canvas
@@ -114,7 +111,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
-    private void gererMouseDragged(MouseEvent event)   {
+    private void gererMouseDragged(MouseEvent event) {
         if (classeSelectionnee != null) {
             double newX = event.getX() - offsetX;
             double newY = event.getY() - offsetY;
@@ -137,7 +134,6 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @param classe classe à dessiner
      * @param x coordonnée X de la Classe
      * @param y coordonnée Y de la Classe
-     *
      */
     private void dessinerClasse(GraphicsContext gc, Classe classe, double x, double y) {
         double largeur = this.getLargeurClasse(classe);
@@ -180,7 +176,6 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
-
     private boolean estInterface(Classe classe) {
         try {
             Class<?> clas = Class.forName(classe.getNom());
@@ -200,7 +195,9 @@ public class VueDiagramme extends Canvas implements Observateur {
             dessinerFlecheHeritage(gc, relation);
         } else if (relation.getType() instanceof Implementation) {
             dessinerFlecheImplementation(gc, relation);
-        } else dessinerFlecheAssociation(gc, relation);
+        } else {
+            dessinerFlecheAssociation(gc, relation);
+        }
     }
 
     private void dessinerFlecheHeritage(GraphicsContext gc, Relation r) {
@@ -212,16 +209,29 @@ public class VueDiagramme extends Canvas implements Observateur {
 
             double startX = rectSource.getX() + rectSource.getWidth();
             double startY = rectSource.getY() + rectSource.getHeight() / 2;
-            double endX = rectCible.getX() + rectCible.getWidth();
-            double endY = rectCible.getY() + rectCible.getHeight() /2;
+            double endX = rectCible.getX();
+            double endY = rectCible.getY() + rectCible.getHeight() / 2;
 
-            // Dessiner une simple ligne entre les deux coins supérieurs gauche
+            // Dessiner la ligne
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(1);
-            gc.beginPath();
-            gc.moveTo(startX, startY);
-            gc.lineTo(endX, endY);
-            gc.stroke();
+            gc.strokeLine(startX, startY, endX, endY);
+
+            // Dessiner la flèche
+            double arrowLength = 10;
+            double arrowWidth = 5;
+            double angle = Math.atan2(endY - startY, endX - startX);
+            double sin = Math.sin(angle);
+            double cos = Math.cos(angle);
+
+            double x1 = endX - arrowLength * cos + arrowWidth * sin;
+            double y1 = endY - arrowLength * sin - arrowWidth * cos;
+            double x2 = endX - arrowLength * cos - arrowWidth * sin;
+            double y2 = endY - arrowLength * sin + arrowWidth * cos;
+
+            gc.setFill(Color.WHITE);
+            gc.fillPolygon(new double[]{endX, x1, x2}, new double[]{endY, y1, y2}, 3);
+            gc.strokePolygon(new double[]{endX, x1, x2}, new double[]{endY, y1, y2}, 3);
         }
     }
 
@@ -230,19 +240,36 @@ public class VueDiagramme extends Canvas implements Observateur {
         Classe cible = r.getDestination();
 
         if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            System.out.println("2");
             Rectangle rectSource = positionsClasses.get(source);
             Rectangle rectCible = positionsClasses.get(cible);
 
-            double startX = rectSource.getX() + rectSource.getWidth() / 2;
+            double startX = rectSource.getX() + rectSource.getWidth();
             double startY = rectSource.getY() + rectSource.getHeight() / 2;
-            double endX = rectCible.getX() + rectCible.getWidth() / 2;
+            double endX = rectCible.getX();
             double endY = rectCible.getY() + rectCible.getHeight() / 2;
 
-            // Dessiner une simple ligne entre les deux coins supérieurs gauche
+            // Dessiner la ligne en pointillés
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(1);
+            gc.setLineDashes(5);
             gc.strokeLine(startX, startY, endX, endY);
+            gc.setLineDashes(0);
+
+            // Dessiner la flèche
+            double arrowLength = 10;
+            double arrowWidth = 5;
+            double angle = Math.atan2(endY - startY, endX - startX);
+            double sin = Math.sin(angle);
+            double cos = Math.cos(angle);
+
+            double x1 = endX - arrowLength * cos + arrowWidth * sin;
+            double y1 = endY - arrowLength * sin - arrowWidth * cos;
+            double x2 = endX - arrowLength * cos - arrowWidth * sin;
+            double y2 = endY - arrowLength * sin + arrowWidth * cos;
+
+            gc.setFill(Color.WHITE);
+            gc.fillPolygon(new double[]{endX, x1, x2}, new double[]{endY, y1, y2}, 3);
+            gc.strokePolygon(new double[]{endX, x1, x2}, new double[]{endY, y1, y2}, 3);
         }
     }
 
@@ -251,19 +278,33 @@ public class VueDiagramme extends Canvas implements Observateur {
         Classe cible = r.getDestination();
 
         if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            System.out.println("3");
             Rectangle rectSource = positionsClasses.get(source);
             Rectangle rectCible = positionsClasses.get(cible);
 
-            double startX = rectSource.getX() + rectSource.getWidth() / 2;
+            double startX = rectSource.getX() + rectSource.getWidth();
             double startY = rectSource.getY() + rectSource.getHeight() / 2;
-            double endX = rectCible.getX() + rectCible.getWidth() / 2;
+            double endX = rectCible.getX();
             double endY = rectCible.getY() + rectCible.getHeight() / 2;
 
-            // Dessiner une simple ligne entre les deux coins supérieurs gauche
+            // Dessiner la ligne
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(1);
             gc.strokeLine(startX, startY, endX, endY);
+
+            // Dessiner la flèche
+            double arrowLength = 10;
+            double arrowWidth = 5;
+            double angle = Math.atan2(endY - startY, endX - startX);
+            double sin = Math.sin(angle);
+            double cos = Math.cos(angle);
+
+            double x1 = endX - arrowLength * cos + arrowWidth * sin;
+            double y1 = endY - arrowLength * sin - arrowWidth * cos;
+            double x2 = endX - arrowLength * cos - arrowWidth * sin;
+            double y2 = endY - arrowLength * sin + arrowWidth * cos;
+
+            gc.strokeLine(endX, endY, x1, y1);
+            gc.strokeLine(endX, endY, x2, y2);
         }
     }
 
@@ -341,5 +382,4 @@ public class VueDiagramme extends Canvas implements Observateur {
             }
         }
     }
-
 }

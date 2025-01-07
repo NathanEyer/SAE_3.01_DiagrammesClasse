@@ -60,8 +60,8 @@ public class Main extends Application {
 // Utilisation d'un conteneur HBox pour s'assurer du bon alignement
         HBox bottomBar = new HBox(messageLabel);
         bottomBar.setStyle("-fx-background-color: lightgray;"); // Couleur de fond pour correspondre au style global
-        bottomBar.setMinHeight(50); // Fixer une hauteur minimale
-        bottomBar.setPrefHeight(50);
+        bottomBar.setMinHeight(40); // Fixer une hauteur minimale
+        bottomBar.setPrefHeight(40);
         bottomBar.setMaxWidth(Double.MAX_VALUE); // Étendre la barre à toute la largeur
 
 // Ajouter la barre en bas du root

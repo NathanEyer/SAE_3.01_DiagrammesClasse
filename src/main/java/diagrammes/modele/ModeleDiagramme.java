@@ -213,6 +213,13 @@ public class ModeleDiagramme implements Diagramme {
         }
     }
 
+
+    public void ajouterClasse(Classe classe) {
+        classes.add(classe);
+        notifierObservateur(); // Pour mettre à jour la vue
+    }
+    
+    
     /**
      * Renvoie la liste des classes
      * @return liste
@@ -228,10 +235,9 @@ public class ModeleDiagramme implements Diagramme {
     }
 
 
-    public void supprimerClasse(Classe classe) {
-        classes.remove(classe);
-        relations.removeIf(relation ->
-                relation.getDepart().equals(classe) || relation.getDestination().equals(classe)); // Supprimer les relations associées
-        notifierObservateur();
-    }
+
+
+
+
+
 }

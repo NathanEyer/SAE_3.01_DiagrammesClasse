@@ -1,0 +1,9 @@
+Itération 2 :
+
+	- Introspection, Analyse des classes. 
+	Difficultés : Nous n'arrivons pas a lire les .class en dehors du package du projet, c'est donc pour cela que l'introspection est toujours en implémentation dans l'itération 3 voir 4 pour la perfectionner 
+	
+	- Dessin du visuel des classes en version UML
+	Les difficultés ont été de dessiner les visuels pour qu'ils soient parfaits et qu'ils soit adaptables en fonction de la taille des classes.
+
+	- Mise en place patron MVC : Nous avons mis en place le patron avec des SOUT, pour voir si il était fonctionnel. Difficultés : C'était de bien mettre en place le patron et de rien oublier notamment du cote de l'observateur comme notifierObservateur par exemple.

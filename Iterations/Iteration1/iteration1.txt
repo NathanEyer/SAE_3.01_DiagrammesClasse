@@ -1,0 +1,10 @@
+Itération 1 :
+
+	- Mise en place du squelette des classes
+	- Mise en place de la scene JavaFX (VueDiagramme)
+	- Créer les classes pour les différents patrons
+	
+	Difficultés rencontres : Pour cette première itération, nous avons mis en place notre espace de travail, donc nous n'avons pas rencontré de difficultés particulières. Les patrons on été mis en place.
+
+
+

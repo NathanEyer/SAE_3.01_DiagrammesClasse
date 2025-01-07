@@ -123,9 +123,9 @@ public class ModeleDiagramme implements Diagramme {
 
             if (classeParente != null) {
                 Relation relation = new Relation(nouvelleClasse, new Classe(classeParente.getSimpleName()), new Heritage());
+                System.out.println(nouvelleClasse.getNom() + " " + classeParente.getSimpleName());
                 addRelation(relation);
             }
-            System.out.println(getRelations());
             System.out.println("Classe analysée : " + classe.getSimpleName());
         } catch (Exception e) {
             System.out.println("Erreur lors de l'analyse : " + cheminFichierClass);

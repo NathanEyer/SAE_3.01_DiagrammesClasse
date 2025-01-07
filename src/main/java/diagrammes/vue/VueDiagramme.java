@@ -90,7 +90,9 @@ public class VueDiagramme extends Canvas implements Observateur {
             }
         }
 
-        dessinerRelations(gc);
+        for (Relation relation : modele.getRelations()) {
+            dessinerRelation(gc, relation);
+        }
     }
 
     private void gererMousePressed(MouseEvent event) {
@@ -184,73 +186,81 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
-
-    /**
-     * Dessine les relations entre les classes
-     * @param gc contexte graphique
-     */
-    private void dessinerRelations(GraphicsContext gc) {
-        for (Relation relation : modele.getRelations()) {
-            dessinerRelation(gc, relation);
-        }
-    }
-
     /**
      * Dessine une relation entre deux classes
      * @param gc contexte graphique
      * @param relation relation à dessiner
      */
     private void dessinerRelation(GraphicsContext gc, Relation relation) {
-        double startX = 0, startY = 0, endX = 0, endY = 0;
-
-        gc.setStroke(Color.BLACK);
-        gc.setLineWidth(1);
-        gc.strokeLine(startX, startY, endX, endY);
-
         if (relation.getType() instanceof Heritage) {
-            dessinerFlecheHeritage(gc, endX, endY);
+            dessinerFlecheHeritage(gc, relation);
         } else if (relation.getType() instanceof Implementation) {
-            dessinerFlecheImplementation(gc, endX, endY);
-        } else {
-            dessinerFlecheAssociation(gc, endX, endY);
+            dessinerFlecheImplementation(gc, relation);
+        } else dessinerFlecheAssociation(gc, relation);
+    }
+
+    private void dessinerFlecheHeritage(GraphicsContext gc, Relation r) {
+        Classe source = r.getDepart();
+        Classe cible = r.getDestination();
+        if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
+            Rectangle rectSource = positionsClasses.get(source);
+            Rectangle rectCible = positionsClasses.get(cible);
+
+            double startX = rectSource.getX() + rectSource.getWidth();
+            double startY = rectSource.getY() + rectSource.getHeight() / 2;
+            double endX = rectCible.getX() + rectCible.getWidth();
+            double endY = rectCible.getY() + rectCible.getHeight() /2;
+
+            // Dessiner une simple ligne entre les deux coins supérieurs gauche
+            gc.setStroke(Color.BLACK);
+            gc.setLineWidth(1);
+            gc.beginPath();
+            gc.moveTo(startX, startY);
+            gc.lineTo(endX, endY);
+            gc.stroke();
         }
     }
 
-    /**
-     * Dessine la flèche d'héritage
-     * @param gc contexte graphique
-     * @param x coordonnée X de la Classe
-     * @param y coordonnée Y de la Classe
-     */
-    private void dessinerFlecheHeritage(GraphicsContext gc, double x, double y) {
-        gc.setFill(Color.BLACK);
-        double[] xPoints = {x, x - 10, x - 10};
-        double[] yPoints = {y, y - 5, y + 5};
-        gc.fillPolygon(xPoints, yPoints, xPoints.length);
+    private void dessinerFlecheImplementation(GraphicsContext gc, Relation r) {
+        Classe source = r.getDepart();
+        Classe cible = r.getDestination();
+
+        if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
+            System.out.println("2");
+            Rectangle rectSource = positionsClasses.get(source);
+            Rectangle rectCible = positionsClasses.get(cible);
+
+            double startX = rectSource.getX() + rectSource.getWidth() / 2;
+            double startY = rectSource.getY() + rectSource.getHeight() / 2;
+            double endX = rectCible.getX() + rectCible.getWidth() / 2;
+            double endY = rectCible.getY() + rectCible.getHeight() / 2;
+
+            // Dessiner une simple ligne entre les deux coins supérieurs gauche
+            gc.setStroke(Color.BLACK);
+            gc.setLineWidth(1);
+            gc.strokeLine(startX, startY, endX, endY);
+        }
     }
 
-    /**
-     *Dessine la flèche d'implémentation
-     * @param gc contexte graphique
-     * @param x coordonnée X de la Classe
-     * @param y coordonnée Y de la Classe
-     */
-    private void dessinerFlecheImplementation(GraphicsContext gc, double x, double y) {
-        gc.setStroke(Color.BLACK);
-        gc.setLineDashes(5);
-        gc.strokeLine(x, y, x - 10, y - 5);
-        gc.setLineDashes(0);
-    }
+    private void dessinerFlecheAssociation(GraphicsContext gc, Relation r) {
+        Classe source = r.getDepart();
+        Classe cible = r.getDestination();
 
-    /**
-     * Dessine la flèche d'association
-     * @param gc contexte graphique
-     * @param x coordonnée X de la Classe
-     * @param y coordonnée Y de la Classe
-     */
-    private void dessinerFlecheAssociation(GraphicsContext gc, double x, double y) {
-        gc.setStroke(Color.BLACK);
-        gc.strokeLine(x, y, x - 10, y - 5);
+        if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
+            System.out.println("3");
+            Rectangle rectSource = positionsClasses.get(source);
+            Rectangle rectCible = positionsClasses.get(cible);
+
+            double startX = rectSource.getX() + rectSource.getWidth() / 2;
+            double startY = rectSource.getY() + rectSource.getHeight() / 2;
+            double endX = rectCible.getX() + rectCible.getWidth() / 2;
+            double endY = rectCible.getY() + rectCible.getHeight() / 2;
+
+            // Dessiner une simple ligne entre les deux coins supérieurs gauche
+            gc.setStroke(Color.BLACK);
+            gc.setLineWidth(1);
+            gc.strokeLine(startX, startY, endX, endY);
+        }
     }
 
     /**
@@ -283,8 +293,12 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @return hauteur en px
      */
     public double getHauteurClasse(Classe classe) {
-        return classe.getAttributs().size() + classe.getMethodes().size() + 20;
+        double hauteurNom = 30; // Hauteur du titre
+        double hauteurAttributs = classe.getAttributs().size() * 20;
+        double hauteurMethodes = classe.getMethodes().size() * 20;
+        return hauteurNom + hauteurAttributs + hauteurMethodes + 10; // Ajout d'un padding
     }
+
 }
 
 

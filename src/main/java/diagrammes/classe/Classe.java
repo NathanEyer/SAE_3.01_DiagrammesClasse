@@ -3,51 +3,59 @@ package diagrammes.classe;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Modélise une classe
+ */
 public class Classe {
-    // Nom de la classe
+    /**
+     * Attributs d'une classe
+     */
     private String nom;
-    // Liste des attributs de la classe
     private List<Attribut> attributs;
-    // Liste des méthodes de la classe
     private List<Methode> methodes;
 
-    // Constructeur de la classe Classe
+    /**
+     * Construit une classe à partir de son nom
+     * @param nom nom
+     */
     public Classe(String nom) {
         this.nom = nom;
-        this.attributs = new ArrayList<Attribut>();
-        this.methodes = new ArrayList<Methode>();
+        //Initialise des Listes vides
+        this.attributs = new ArrayList<>();
+        this.methodes = new ArrayList<>();
     }
 
-    // Méthode qui permet d'ajouter un attribut à la liste d'attributs
     /**
      * Ajoute un attribut à la liste des attributs.
-     * @param attribut
+     * @param attribut à ajouter
      */
     public void ajouterAttribut(Attribut attribut) {
-        attributs.add(attribut);
+        if(attribut != null) {
+            attributs.add(attribut);
+        }
     }
 
-    // Méthode qui permet d'enlever un attribut de la liste d'attributs.
     /**
      * Supprime un attribut de la liste des attributs
-     * @param attribut
+     * @param attribut à supprimer
      */
     public void supprimerAttribut(Attribut attribut) {
         attributs.remove(attribut);
     }
-    // Méthode qui permet d'ajouter une méthode à la liste de méthodes.
+
     /**
      * Ajoute une méthode à la liste des méthodes
-     * @param methode
+     * @param methode à ajouter
      */
     public void ajouterMethode(Methode methode) {
-        methodes.add(methode);
+        if(methode != null){
+            methodes.add(methode);
+        }
     }
-    // Méthode qui permet de supprimer une méthode de la liste de méthodes.
 
     /**
      * Supprime une méthode de la liste des méthodes
-     * @param methode
+     * @param methode à supprimer
      */
     public void supprimerMethode(Methode methode) {
         methodes.remove(methode);
@@ -63,7 +71,7 @@ public class Classe {
 
     /**
      * Retourne la liste des attributs de la classe
-     * @return
+     * @return List<Attribut>
      */
     public List<Attribut> getAttributs() {
         return attributs;
@@ -71,7 +79,7 @@ public class Classe {
 
     /**
      * Retourne la liste des méthodes de la classe
-     * @return Liste des méthodes de la classe
+     * @return List<Methode>
      */
     public List<Methode> getMethodes() {
         return methodes;
@@ -79,7 +87,6 @@ public class Classe {
 
     /**
      * Définit les attributs de la classe.
-     *
      * @param attributs Liste d'attributs à définir
      */
     public void setAttributs(List<Attribut> attributs) {
@@ -88,7 +95,6 @@ public class Classe {
 
     /**
      * Définit les méthodes de la classe.
-     *
      * @param methodes Liste de méthodes à définir
      */
     public void setMethodes(List<Methode> methodes) {

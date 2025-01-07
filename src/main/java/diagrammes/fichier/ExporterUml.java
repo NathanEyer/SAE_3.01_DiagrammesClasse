@@ -1,11 +1,18 @@
-package diagrammes.exporter;
+package diagrammes.fichier;
 
 import java.io.File;
 import java.io.FileWriter;
 
+/**
+ * Exportation du diagramme en UML
+ */
 public class ExporterUml implements Exporter{
-
-
+    /**
+     * S'occupe d'exporter
+     * @param chemin String
+     * @param contenu Object
+     * @throws Exception erreur
+     */
     @Override
     public void exporter(String chemin, Object contenu) throws Exception {
         if (!(contenu instanceof String)) {

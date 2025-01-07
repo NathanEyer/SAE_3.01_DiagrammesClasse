@@ -1,10 +1,7 @@
 package diagrammes.relations;
 
 public class Heritage implements RelationStrategy {
-
-
     public Heritage() {
-
     }
 
     @Override
@@ -14,6 +11,6 @@ public class Heritage implements RelationStrategy {
     }
 
     public static String type(){
-        return "Implementation";
+        return "Heritage";
     }
 }

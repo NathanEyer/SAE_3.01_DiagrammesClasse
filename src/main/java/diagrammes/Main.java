@@ -1,92 +1,62 @@
 package diagrammes;
 
-import diagrammes.controleur.ControleurDiagramme;
-import diagrammes.controleur.ControleurImportExport;
+import diagrammes.controleur.ControleurBoutons;
+import diagrammes.controleur.ControleurDragDrop;
 import diagrammes.modele.ModeleDiagramme;
 import diagrammes.vue.VueDiagramme;
 import javafx.application.Application;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+/**
+ * Launcher de l'application
+ */
 public class Main extends Application {
-    public final static double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth();
-    public final static double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getHeight();
+    /**
+     * Récupère la taille de l'écran de l'utilisateur
+     */
+    public final static double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth() / 1.5;
+    public final static double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getHeight()*0.95;
 
+    /**
+     * Launcher
+     * @param primaryStage squelette
+     */
     @Override
     public void start(Stage primaryStage) {
-
-        // 1. Initialiser le modèle
+        // Initialisations
         ModeleDiagramme modele = new ModeleDiagramme();
+        VueDiagramme vue = new VueDiagramme(modele);
+        modele.enregistrerObservateur(vue);
 
-        // 2. Initialiser la VueDiagramme
-        VueDiagramme vueDiagramme = new VueDiagramme(modele);
+        ControleurBoutons controleurBoutons = new ControleurBoutons(modele, primaryStage, vue);
+        ControleurDragDrop dragDrop = new ControleurDragDrop(modele);
 
-        // 3. Associer le ControleurDiagramme pour gérer les interactions souris
-        ControleurDiagramme controleurDiagramme = new ControleurDiagramme(modele);
-        vueDiagramme.setOnMouseClicked(controleurDiagramme);
-        vueDiagramme.setOnMousePressed(controleurDiagramme);
-        vueDiagramme.setOnMouseDragged(controleurDiagramme);
-        vueDiagramme.setOnMouseReleased(controleurDiagramme);
-
-        // 4. Boutons pour importer, exporter et réinitialiser
-        Button bImport = new Button("Importer");
-        bImport.setId("importerButton");
-        bImport.setPrefWidth(150);
-
-        MenuButton bExport = new MenuButton("Exporter");
-        bExport.setId("exporterButton");
-        bExport.setPrefWidth(150);
-        MenuItem exportUML = new MenuItem("Exporter en UML");
-        MenuItem exportPNG = new MenuItem("Exporter en PNG");
-
-
-        bExport.getItems().addAll(exportUML, exportPNG);
-
-        Button bReset = new Button("Réinitialiser");
-        bReset.setId("resetButton");
-        bReset.setPrefWidth(150);
-        bReset.setOnAction(e -> {
-            System.out.println("Réinitialisation !");
-            modele.getClasses().clear();
-            modele.getRelations().clear();
-            modele.notifierObservateur();
-        });
-
-        Button bCreate = new Button("Créer un nouveau diagramme");
-        bCreate.setPrefWidth(300);
-
-
-
-
-        // 5. Associer le ControleurImportExport pour les boutons
-        ControleurImportExport controleurImportExport = new ControleurImportExport(modele, primaryStage);
-        bImport.setOnAction(controleurImportExport);
-        bExport.setOnAction(controleurImportExport);
-
-        // 6. Disposition principale
-        HBox buttons = new HBox(100, bImport, bExport, bReset, bCreate);
-        buttons.setAlignment(Pos.CENTER);
-        buttons.setFillHeight(false);
+        // Conteneur principal
         BorderPane root = new BorderPane();
-        root.setTop(buttons);
-        root.setCenter(vueDiagramme);
-        root.setStyle("-fx-background-color: #87CEED");
+        root.getChildren().add(vue);
 
-        // 7. Afficher la scène
+        // Configuration des contrôleurs Drag and Drop
+        root.setOnDragOver(dragDrop::handleDragOver);
+        root.setOnDragDropped(dragDrop::handleDragDropped);
+
+        // Barre de menu et barre supérieure
+        MenuBar menuBar = Interface.createMenuBar(controleurBoutons);
+        HBox topBar = Interface.createTopBar(menuBar);
+
+        // Ajout des éléments à la vue principale
+        root.setTop(topBar);
+
+        // Création et affichage de la scène
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
-        primaryStage.setTitle("Test VueDiagramme");
+        primaryStage.setTitle("Commencez par ajouter des fichiers .class");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public static void main(String[] args) {launch(args);}
 }

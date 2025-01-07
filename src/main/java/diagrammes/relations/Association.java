@@ -1,13 +1,25 @@
-package diagrammes.relations;//package java;
-//
-//public class Association implements RelationStrategy{
-//
-//    public Association() {
-//
-//    }
-//
-//    @Override
-//    public void creerLien() {
-//
-//    }
-//}
+package diagrammes.relations;
+
+public class Association implements RelationStrategy{
+
+   public Association() {}
+
+   @Override
+   /**
+    * Création d'un lien d'association entre les classes.
+    * @return void
+    */
+    public void creerLien() {
+        System.out.println("Création d'un lien d'association entre les classes.");
+        // Logique spécifique pour créer un lien d'association}
+    }
+
+    /**
+     * Retourne le type de la relation
+     * @return String
+     */
+   public static String type(){
+      return "Association";
+   }
+
+}

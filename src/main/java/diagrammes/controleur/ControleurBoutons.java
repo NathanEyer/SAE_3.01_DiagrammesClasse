@@ -1,33 +1,62 @@
 package diagrammes.controleur;
 
 import diagrammes.modele.ModeleDiagramme;
+import diagrammes.vue.VueDiagramme;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
+import javafx.stage.Stage;
 
+/**
+ * Redirige les actions des boutons vers les méthodes correspondantes
+ */
 public class ControleurBoutons implements EventHandler<ActionEvent> {
-    private ModeleDiagramme modele;
+    /**
+     * Référence au modèle qui contient les données du diagramme
+     */
+    private final ModeleDiagramme modele;
+    private Stage stage;
+    private VueDiagramme vue;
 
-    public ControleurBoutons(ModeleDiagramme modele) {
+    /**
+     * Construit un objet ControleurBoutons
+     * @param modele de l'application
+     * @param stage de l'application
+     * @param vue du diagramme
+     */
+    public ControleurBoutons(ModeleDiagramme modele, Stage stage, VueDiagramme vue) {
         this.modele = modele;
+        this.stage = stage;
+        this.vue = vue;
     }
 
+    /**
+     * Gère les événements déclenchés par les boutons
+     * @param event L'événement déclenché par le bouton
+     */
     @Override
     public void handle(ActionEvent event) {
-        Button b = (Button) event.getSource();
-        switch(b.getText()){
-            case "Importer":
-                System.out.println("importer");
-                break;
-            case "Créer un nouveau diagramme":
-                System.out.println("créer");
-                break;
-            case "Réinitialiser":
-                System.out.println("réinitialiser");
-                break;
-            case "Exporter":
-                System.out.println("Exporter");
-                break;
+        if (event.getSource() instanceof MenuItem control) {
+            switch (control.getText()) {
+                case "Importer":
+                    modele.importerFichierClass();
+                    break;
+                case "Exporter en PNG":
+                    modele.exporter(stage, vue, "PNG");
+                    break;
+                case "Exporter en UML":
+                    modele.exporter(stage, vue, "UML");
+                    break;
+                case "Réinitialiser":
+                    modele.reinitialiser();
+                    break;
+                case "Nouveau":
+                    modele.nouveau();
+                    break;
+                default:
+                    System.out.println("Bouton inconnu : " + control.getId());
+            }
         }
     }
 }
+

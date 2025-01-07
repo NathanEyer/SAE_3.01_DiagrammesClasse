@@ -45,4 +45,8 @@ public class Methode {
     public String getNomMethode() {
         return nomMethode;
     }
+
+    public String getTypeRetour() { return typeRetour; }
+
+    public List<String> getParametres() { return parametres; }
 }

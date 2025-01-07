@@ -286,5 +286,3 @@ public class VueDiagramme extends Canvas implements Observateur {
         return classe.getAttributs().size() + classe.getMethodes().size() + 20;
     }
 }
-
-

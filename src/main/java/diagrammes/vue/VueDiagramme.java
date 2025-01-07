@@ -180,7 +180,6 @@ public class VueDiagramme extends Canvas implements Observateur {
             Class<?> clas = Class.forName(classe.getNom());
             return clas.isInterface();
         } catch (ClassNotFoundException e) {
-            System.err.println("Classe non trouvée : " + classe.getNom());
             return false;
         }
     }

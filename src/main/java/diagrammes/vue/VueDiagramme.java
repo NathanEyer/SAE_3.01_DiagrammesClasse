@@ -19,6 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +38,8 @@ public class VueDiagramme extends Canvas implements Observateur {
     private double offsetX, offsetY;
     private final HashMap<Classe, Boolean> attributsMasques = new HashMap<>();
     private final HashMap<Classe, Boolean> methodesMasquees = new HashMap<>();
+    private final Label messageLabel;
+
 
     /**
      * Initialise le diagramme
@@ -44,6 +48,7 @@ public class VueDiagramme extends Canvas implements Observateur {
     public VueDiagramme(ModeleDiagramme modeleDiagramme) throws ClassNotFoundException {
         super(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
         this.modele = modeleDiagramme;
+        this.messageLabel = new Label();
         this.modele.enregistrerObservateur(this);
 
         this.setOnMousePressed(this::gererMousePressed);
@@ -421,4 +426,23 @@ public class VueDiagramme extends Canvas implements Observateur {
 
         return new double[]{closestX, closestY};
     }
+
+    /**
+     * Met à jour le texte du message affiché en bas de l'écran.
+     *
+     * @param message Le message à afficher.
+     */
+    public void setMessage(String message) {
+        messageLabel.setText(message);
+    }
+
+    /**
+     * Retourne le `Label` du message.
+     *
+     * @return Label pour les messages utilisateur.
+     */
+    public Label getMessageLabel() {
+        return messageLabel;
+    }
+
 }

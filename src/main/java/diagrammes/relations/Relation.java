@@ -39,6 +39,4 @@ public class Relation {
         return type;
     }
 
-
-
 }

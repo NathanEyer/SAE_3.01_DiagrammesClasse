@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Modélise la méthode d'une classe
  */
-public class Methode {
+public class  Methode {
     /**
      * Attributs d'une méthode
      */

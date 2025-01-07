@@ -123,9 +123,9 @@ public class ModeleDiagramme implements Diagramme {
 
             if (classeParente != null) {
                 Relation relation = new Relation(nouvelleClasse, new Classe(classeParente.getSimpleName()), new Heritage());
+                System.out.println(nouvelleClasse.getNom() + " " + classeParente.getSimpleName());
                 addRelation(relation);
             }
-            System.out.println(getRelations());
             System.out.println("Classe analysée : " + classe.getSimpleName());
         } catch (Exception e) {
             System.out.println("Erreur lors de l'analyse : " + cheminFichierClass);
@@ -225,5 +225,13 @@ public class ModeleDiagramme implements Diagramme {
      */
     public List<Relation> getRelations() {
         return relations;
+    }
+
+
+    public void supprimerClasse(Classe classe) {
+        classes.remove(classe);
+        relations.removeIf(relation ->
+                relation.getDepart().equals(classe) || relation.getDestination().equals(classe)); // Supprimer les relations associées
+        notifierObservateur();
     }
 }

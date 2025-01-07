@@ -7,6 +7,7 @@ import diagrammes.fichier.Exporter;
 import diagrammes.fichier.ExporterImage;
 import diagrammes.fichier.ChargementClasse;
 import diagrammes.fichier.ExporterUml;
+import diagrammes.relations.Heritage;
 import diagrammes.relations.Relation;
 import diagrammes.vue.Observateur;
 import diagrammes.vue.VueDiagramme;
@@ -118,6 +119,13 @@ public class ModeleDiagramme implements Diagramme {
 
             // Ajouter la classe au modèle
             addClass(nouvelleClasse);
+            Class<?> classeParente = classe.getSuperclass();
+
+            if (classeParente != null) {
+                Relation relation = new Relation(nouvelleClasse, new Classe(classeParente.getSimpleName()), new Heritage());
+                addRelation(relation);
+            }
+            System.out.println(getRelations());
             System.out.println("Classe analysée : " + classe.getSimpleName());
         } catch (Exception e) {
             System.out.println("Erreur lors de l'analyse : " + cheminFichierClass);

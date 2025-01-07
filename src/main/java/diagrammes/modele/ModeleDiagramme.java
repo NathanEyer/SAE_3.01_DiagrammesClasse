@@ -97,7 +97,8 @@ public class ModeleDiagramme implements Diagramme {
             URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[]{dossierParentURL});
 
             // Obtenir le nom complet de la classe
-            String nomClasse = ChargementClasse.getGoodName(fichierClass.toPath());
+            String nomClasse = ChargementClasse.getGoodName(fichierClass.toPath(), urlClassLoader);
+            System.out.println(nomClasse);
 
             // Charger la classe
             Class<?> classe = urlClassLoader.loadClass(nomClasse);

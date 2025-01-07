@@ -34,7 +34,7 @@ public class Main extends Application {
         modele.enregistrerObservateur(vue);
 
         ControleurBoutons controleurBoutons = new ControleurBoutons(modele, primaryStage, vue);
-        ControleurDragDrop dragDrop = new ControleurDragDrop(modele);
+        ControleurDragDrop dragDrop = new ControleurDragDrop(modele, vue);
 
         // Conteneur principal
         BorderPane root = new BorderPane();
@@ -50,6 +50,10 @@ public class Main extends Application {
 
         // Ajout des éléments à la vue principale
         root.setTop(topBar);
+
+        Label messageLabel = vue.getMessageLabel();
+        messageLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 10;");
+        root.setBottom(messageLabel);
 
         // Création et affichage de la scène
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);

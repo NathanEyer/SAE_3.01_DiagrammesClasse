@@ -1,5 +1,7 @@
 package diagrammes.relations;
 
 public interface RelationStrategy {
-    void creerLien();
+
+
+    void creerLien(String nomClasse) throws ClassNotFoundException;
 }

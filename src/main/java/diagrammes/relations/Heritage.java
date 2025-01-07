@@ -1,13 +1,21 @@
 package diagrammes.relations;
 
+import java.lang.reflect.Modifier;
+
 public class Heritage implements RelationStrategy {
     public Heritage() {
     }
 
     @Override
-    public void creerLien() {
+    public void creerLien(String nomClasse) throws ClassNotFoundException{
         System.out.println("Création d'un lien d'héritage entre les classes.");
-        // Logique spécifique pour créer un lien d'héritage
+        Class<?> classe = Class.forName(nomClasse);
+        if (Modifier.isAbstract(classe.getModifiers())) {
+            System.out.println("La classe " + nomClasse + " est abstraite.");
+        } else {
+            System.out.println("La classe " + nomClasse + " n'est pas abstraite.");
+        }
+
     }
 
     public static String type(){

@@ -43,7 +43,7 @@ public class ModeleDiagramme implements Diagramme {
      * Ajoute une classe au diagramme
      * @param classe à ajouter
      */
-    public void addClass(Classe classe) {
+    public void addClass(Classe classe) throws ClassNotFoundException {
         classes.add(classe);
         notifierObservateur();
     }
@@ -52,7 +52,7 @@ public class ModeleDiagramme implements Diagramme {
      * Ajoute une relation entre les classes
      * @param relation à ajouter
      */
-    public void addRelation(Relation relation) {
+    public void addRelation(Relation relation) throws ClassNotFoundException {
         relations.add(relation);
         notifierObservateur();
     }
@@ -128,7 +128,7 @@ public class ModeleDiagramme implements Diagramme {
     /**
      * Réinitialise tout le diagramme
      */
-    public void reinitialiser(){
+    public void reinitialiser()   {
         classes.clear();
         relations.clear();
         this.notifierObservateur();
@@ -187,7 +187,7 @@ public class ModeleDiagramme implements Diagramme {
      * Notifie les observateurs
      */
     @Override
-    public void notifierObservateur() {
+    public void notifierObservateur()   {
         for (Observateur observateur : observateurs) {
             observateur.actualiser(this);
         }

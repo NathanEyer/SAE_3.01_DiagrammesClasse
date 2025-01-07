@@ -177,11 +177,11 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     private boolean estInterface(Classe classe) {
         try {
-            Class<?> clazz = Class.forName(classe.getNom());
-            return clazz.isInterface();
+            Class<?> clas = Class.forName(classe.getNom());
+            return clas.isInterface();
         } catch (ClassNotFoundException e) {
             System.err.println("Classe non trouvée : " + classe.getNom());
-            return false; // Par défaut, considérer comme non-interface
+            return false;
         }
     }
 

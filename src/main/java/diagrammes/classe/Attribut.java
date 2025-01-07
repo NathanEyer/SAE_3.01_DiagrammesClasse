@@ -10,14 +10,17 @@ public class Attribut {
     String nomAttribut;
     String typeAttribut;
 
+    String modificateur;
+
     /**
      * Construit un attribut à partir de son nom et son type
      * @param nomAttribut nom
      * @param typeAttribut type
      */
-    public Attribut(String nomAttribut, String typeAttribut) {
+    public Attribut(String nomAttribut, String typeAttribut, String modificateur) {
         this.nomAttribut = nomAttribut;
         this.typeAttribut = typeAttribut;
+        this.modificateur = modificateur;
     }
 
     /**
@@ -44,4 +47,6 @@ public class Attribut {
     public String getTypeAttribut() {
         return typeAttribut;
     }
+
+    public String getModificateur() { return modificateur; }
 }

@@ -19,8 +19,8 @@ public class Main extends Application {
     /**
      * Récupère la taille de l'écran de l'utilisateur
      */
-    public final static double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth() / 1.5;
-    public final static double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getHeight()*0.95;
+    public final static double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth();
+    public final static double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getHeight();
 
     /**
      * Launcher
@@ -34,7 +34,7 @@ public class Main extends Application {
         modele.enregistrerObservateur(vue);
 
         ControleurBoutons controleurBoutons = new ControleurBoutons(modele, primaryStage, vue);
-        ControleurDragDrop dragDrop = new ControleurDragDrop(modele);
+        ControleurDragDrop dragDrop = new ControleurDragDrop(modele, vue);
 
         // Conteneur principal
         BorderPane root = new BorderPane();
@@ -51,8 +51,25 @@ public class Main extends Application {
         // Ajout des éléments à la vue principale
         root.setTop(topBar);
 
+        // Récupération et configuration du Label pour les messages
+        Label messageLabel = vue.getMessageLabel();
+        messageLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 10; -fx-alignment: center-left;");
+        messageLabel.setMaxWidth(Double.MAX_VALUE); // Étendre le Label à toute la largeur
+        messageLabel.setMinHeight(30); // Hauteur minimale pour une meilleure apparence
+
+        // Utilisation d'un conteneur HBox pour s'assurer du bon alignement
+        HBox bottomBar = new HBox(messageLabel);
+        bottomBar.setStyle("-fx-background-color: lightgray;"); // Couleur de fond pour correspondre au style global
+        bottomBar.setMinHeight(40); // Fixer une hauteur minimale
+        bottomBar.setPrefHeight(40);
+        bottomBar.setMaxWidth(Double.MAX_VALUE); // Étendre la barre à toute la largeur
+
+        // Ajouter la barre en bas du root
+        root.setBottom(bottomBar);
+
+
         // Création et affichage de la scène
-        Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
+        Scene scene = new Scene(root, SCREEN_WIDTH / 1.5, SCREEN_HEIGHT * 0.95);
         primaryStage.setTitle("Commencez par ajouter des fichiers .class");
         primaryStage.setScene(scene);
         primaryStage.show();

@@ -2,8 +2,10 @@ package diagrammes.fichier;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.regex.Pattern;
 
 /**
  * Chargement du bon nom de classe
@@ -43,17 +45,29 @@ public class ChargementClasse extends ClassLoader {
      * @param path nom absolu
      * @return nom voulu
      */
-    public static String getGoodName(Path path) {
+    public static String getGoodName(Path path, URLClassLoader urlClassLoader) {
         if (!path.toFile().exists()) {
             throw new IllegalArgumentException("Le fichier n'existe pas : " + path.toAbsolutePath());
         }
 
-        Path racine = path.getParent();
+        String className = path.toString();
+        className = className.replace(".class", "");
+        int nbSeparator = className.split(Pattern.quote(File.separator)).length - 1;
 
-        Path cheminRelatif = racine.relativize(path);
-
-        return cheminRelatif.toString()
-                .replace(File.separator, ".") // Convertir les séparateurs de chemin en '.'
-                .replace(".class", "");      // Retirer l'extension .class
+        while (nbSeparator > 0) {
+            try {
+                String modifiedClassName = className.split(Pattern.quote(File.separator))[className.split(Pattern.quote(File.separator)).length - 1];
+                System.out.println(modifiedClassName);
+                urlClassLoader.loadClass(modifiedClassName);
+                return modifiedClassName;
+            } catch (Throwable e) {
+                int lastSeparatorIndex = className.lastIndexOf(File.separator);
+                if (lastSeparatorIndex != -1) {
+                    className = className.substring(0, lastSeparatorIndex) + "." + className.substring(lastSeparatorIndex + 1);
+                }
+            }
+            nbSeparator--;
+        }
+        return null;
     }
 }

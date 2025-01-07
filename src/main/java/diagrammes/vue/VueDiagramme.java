@@ -36,10 +36,11 @@ public class VueDiagramme extends Canvas implements Observateur {
      * Initialise le diagramme
      * @param modeleDiagramme Le modèle contenant les données du diagramme
      */
-    public VueDiagramme(ModeleDiagramme modeleDiagramme) {
+    public VueDiagramme(ModeleDiagramme modeleDiagramme)throws ClassNotFoundException {
         super(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
         this.modele = modeleDiagramme;
         this.modele.enregistrerObservateur(this);
+
 
         this.setOnMousePressed(this::gererMousePressed);
         this.setOnMouseDragged(this::gererMouseDragged);
@@ -51,7 +52,7 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @param diagramme diagramme à actualiser
      */
     @Override
-    public void actualiser(Diagramme diagramme) {
+    public void actualiser(Diagramme diagramme)  {
         if (diagramme instanceof ModeleDiagramme) {
             dessinerDiagramme();
         }
@@ -60,7 +61,9 @@ public class VueDiagramme extends Canvas implements Observateur {
     /**
      * Dessine le diagramme UML en fonction des données du modèle
      */
-    public void dessinerDiagramme() {
+    public void dessinerDiagramme()   {
+
+
         GraphicsContext gc = this.getGraphicsContext2D();
 
         // Effacer le canvas
@@ -105,7 +108,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
-    private void gererMouseDragged(MouseEvent event) {
+    private void gererMouseDragged(MouseEvent event)   {
         if (classeSelectionnee != null) {
             double newX = event.getX() - offsetX;
             double newY = event.getY() - offsetY;
@@ -143,10 +146,10 @@ public class VueDiagramme extends Canvas implements Observateur {
         gc.setLineWidth(2);
         gc.strokeRect(x, y, largeur, hauteur);
 
-        // Dessiner la section du nom
-        gc.setFill(Color.LIGHTBLUE);
+        // Appliquer la couleur en fonction du type de la classe (interface ou classe normale)
+        Color couleurFond = estInterface(classe) ? Color.LIGHTGREEN : Color.LIGHTBLUE;
+        gc.setFill(couleurFond);
         gc.fillRect(x, y, largeur, hauteurNom);
-        gc.setStroke(Color.BLACK);
         gc.strokeRect(x, y, largeur, hauteurNom);
 
         // Afficher le nom de la Classe
@@ -169,6 +172,18 @@ public class VueDiagramme extends Canvas implements Observateur {
             currentY += hauteurSection;
         }
     }
+
+
+    private boolean estInterface(Classe classe) {
+        try {
+            Class<?> clazz = Class.forName(classe.getNom());
+            return clazz.isInterface();
+        } catch (ClassNotFoundException e) {
+            System.err.println("Classe non trouvée : " + classe.getNom());
+            return false; // Par défaut, considérer comme non-interface
+        }
+    }
+
 
     /**
      * Dessine les relations entre les classes
@@ -271,3 +286,5 @@ public class VueDiagramme extends Canvas implements Observateur {
         return classe.getAttributs().size() + classe.getMethodes().size() + 20;
     }
 }
+
+

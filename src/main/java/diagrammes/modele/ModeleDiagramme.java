@@ -146,25 +146,36 @@ public class ModeleDiagramme implements Diagramme {
     }
 
     /**
-     * Exporte le diagramme dans un format spécifique.
-     * @param format Le format d'exportation (ex : PNG, PlantUML).
+     * Exporte le diagramme dans un fichier au format spécifié (PNG ou UML).
+     *
+     * @param stage La fenêtre de l'application pour afficher le FileChooser.
+     * @param vue   La vue du diagramme (utile pour l'export PNG).
+     * @param format Le format d'exportation ("PNG" ou "UML").
      * @return true si l'exportation a réussi, false sinon.
      */
     public boolean exporter(Stage stage, VueDiagramme vue, String format) {
         Exporter export = null;
         FileChooser fileChooser = new FileChooser();
-        if(format.equalsIgnoreCase("PNG")) {
+
+        // Configure le FileChooser en fonction du format choisi
+        if (format.equalsIgnoreCase("PNG")) {
             export = new ExporterImage();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png"));
-        }else if(format.equalsIgnoreCase("UML")) {
+        } else if (format.equalsIgnoreCase("UML")) {
             export = new ExporterUml();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("puml files (*.puml)", "*.puml"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PlantUML files (*.puml)", "*.puml"));
         }
 
+        // Affiche le FileChooser pour choisir l'emplacement du fichier
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
             try {
-                export.exporter(file.getAbsolutePath(), vue);
+                // Passe les bons objets pour l'exportation en fonction du format
+                if (format.equalsIgnoreCase("PNG")) {
+                    export.exporter(file.getAbsolutePath(), vue); // La vue est nécessaire pour l'export PNG
+                } else if (format.equalsIgnoreCase("UML")) {
+                    export.exporter(file.getAbsolutePath(), this); // Le modèle est nécessaire pour l'export UML
+                }
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -172,6 +183,7 @@ public class ModeleDiagramme implements Diagramme {
         }
         return false;
     }
+
 
     /**
      * Permet d'enregistrer un observateur

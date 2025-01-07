@@ -32,6 +32,7 @@ public class Relation {
 
     /**
      * Retourne le type de relation
+     *
      * @return RelationStrategy
      */
     public RelationStrategy getType() {

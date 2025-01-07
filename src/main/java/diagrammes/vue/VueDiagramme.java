@@ -323,7 +323,7 @@ public class VueDiagramme extends Canvas implements Observateur {
             maxLength = Math.max(maxLength, text.getLayoutBounds().getWidth());
         }
 
-        return maxLength + 20;
+        return maxLength + 35;
     }
 
     /**

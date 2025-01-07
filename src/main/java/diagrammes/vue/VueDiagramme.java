@@ -307,16 +307,20 @@ public class VueDiagramme extends Canvas implements Observateur {
         if (event.getButton() == MouseButton.SECONDARY) { // Vérifie que c'est un clic droit
             double mouseX = event.getX();
             double mouseY = event.getY();
-
             for (var entry : positionsClasses.entrySet()) {
                 Rectangle rect = entry.getValue();
-                if (rect.contains(mouseX, mouseY)) { // Vérifie si le clic est dans le rectangle
+                if (rect.contains(mouseX, mouseY)) {
                     Classe classeCible = entry.getKey();
+
+                    // Masquer tous les menus contextuels existants
+                    ContextMenu existingMenu = (ContextMenu) this.getProperties().get("activeMenu");
+                    if (existingMenu != null) {
+                        existingMenu.hide();
+                    }
 
                     // Créez un menu contextuel
                     ContextMenu contextMenu = new ContextMenu();
 
-                    // Option "Supprimer"
                     MenuItem supprimer = new MenuItem("Supprimer");
                     supprimer.setOnAction(e -> {
                         modele.getClasses().remove(classeCible); // Supprime la classe du modèle
@@ -324,11 +328,14 @@ public class VueDiagramme extends Canvas implements Observateur {
                         dessinerDiagramme(); // Rafraîchit l'affichage
                     });
 
-                    // Ajoute l'option au menu contextuel
+                    // Ajoutez l'option au menu
                     contextMenu.getItems().add(supprimer);
 
-                    // Affiche le menu contextuel
+                    // Affichez le menu contextuel
                     contextMenu.show(this, event.getScreenX(), event.getScreenY());
+
+                    // Enregistrer le menu actif
+                    this.getProperties().put("activeMenu", contextMenu);
                     return; // Stoppe la recherche après avoir trouvé la classe cible
                 }
             }

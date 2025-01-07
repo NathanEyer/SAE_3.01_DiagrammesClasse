@@ -51,9 +51,22 @@ public class Main extends Application {
         // Ajout des éléments à la vue principale
         root.setTop(topBar);
 
+        // Récupération et configuration du Label pour les messages
         Label messageLabel = vue.getMessageLabel();
-        messageLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 10;");
-        root.setBottom(messageLabel);
+        messageLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 10; -fx-alignment: center-left;");
+        messageLabel.setMaxWidth(Double.MAX_VALUE); // Étendre le Label à toute la largeur
+        messageLabel.setMinHeight(30); // Hauteur minimale pour une meilleure apparence
+
+// Utilisation d'un conteneur HBox pour s'assurer du bon alignement
+        HBox bottomBar = new HBox(messageLabel);
+        bottomBar.setStyle("-fx-background-color: lightgray;"); // Couleur de fond pour correspondre au style global
+        bottomBar.setMinHeight(50); // Fixer une hauteur minimale
+        bottomBar.setPrefHeight(50);
+        bottomBar.setMaxWidth(Double.MAX_VALUE); // Étendre la barre à toute la largeur
+
+// Ajouter la barre en bas du root
+        root.setBottom(bottomBar);
+
 
         // Création et affichage de la scène
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);

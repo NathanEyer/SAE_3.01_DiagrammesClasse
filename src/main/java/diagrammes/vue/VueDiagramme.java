@@ -11,9 +11,13 @@ import diagrammes.relations.Implementation;
 import diagrammes.relations.Relation;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,6 +28,9 @@ public class VueDiagramme extends Canvas implements Observateur {
      * Diagramme
      */
     private final ModeleDiagramme modele;
+    private final HashMap<Classe, Rectangle> positionsClasses = new HashMap<>();
+    private Classe classeSelectionnee = null;
+    private double offsetX, offsetY;
 
     /**
      * Initialise le diagramme
@@ -33,6 +40,10 @@ public class VueDiagramme extends Canvas implements Observateur {
         super(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
         this.modele = modeleDiagramme;
         this.modele.enregistrerObservateur(this);
+
+        this.setOnMousePressed(this::gererMousePressed);
+        this.setOnMouseDragged(this::gererMouseDragged);
+        this.setOnMouseReleased(this::gererMouseReleased);
     }
 
     /**
@@ -56,25 +67,59 @@ public class VueDiagramme extends Canvas implements Observateur {
         gc.clearRect(0, 0, this.getWidth(), this.getHeight());
 
         // Variables pour le positionnement
-        double x = 50;
-        double y = 50;
+        double x = 50, y = 50;
 
         // Dessiner chaque Classe
         List<Classe> classes = modele.getClasses();
         for (Classe classe : classes) {
-            double espace = 30 + (classe.getAttributs().size() + classe.getMethodes().size()) * 20 + 20;
-            dessinerClasse(gc, classe, x, y);
-            y += espace;
+            double largeur = getLargeurClasse(classe);
+            double hauteur = getHauteurClasse(classe);
 
-            // Remettre à zéro si dépassement de la hauteur du Canvas
-            if (y + espace > this.getHeight()) {
+            double finalX = x;
+            double finalY = y;
+            Rectangle position = positionsClasses.computeIfAbsent(classe, c -> new Rectangle(finalX, finalY, largeur, hauteur));
+            dessinerClasse(gc, classe, position.getX(), position.getY());
+
+            y += hauteur + 30;
+            if (y + hauteur > this.getHeight()) {
                 y = 50;
-                x += 300; // Décaler horizontalement pour une nouvelle colonne
+                x += 300;
             }
         }
 
-        // Dessiner les relations
         dessinerRelations(gc);
+    }
+
+    private void gererMousePressed(MouseEvent event) {
+        double mouseX = event.getX();
+        double mouseY = event.getY();
+
+        for (var entry : positionsClasses.entrySet()) {
+            Rectangle rect = entry.getValue();
+            if (rect.contains(mouseX, mouseY)) {
+                classeSelectionnee = entry.getKey();
+                offsetX = mouseX - rect.getX();
+                offsetY = mouseY - rect.getY();
+                break;
+            }
+        }
+    }
+
+    private void gererMouseDragged(MouseEvent event) {
+        if (classeSelectionnee != null) {
+            double newX = event.getX() - offsetX;
+            double newY = event.getY() - offsetY;
+
+            Rectangle rect = positionsClasses.get(classeSelectionnee);
+            rect.setX(newX);
+            rect.setY(newY);
+
+            dessinerDiagramme();
+        }
+    }
+
+    private void gererMouseReleased(MouseEvent event) {
+        classeSelectionnee = null;
     }
 
     /**

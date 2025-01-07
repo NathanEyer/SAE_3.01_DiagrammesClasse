@@ -208,34 +208,29 @@ public class VueDiagramme extends Canvas implements Observateur {
         Classe source = r.getDepart();
         Classe cible = r.getDestination();
         if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            Rectangle rectSource = positionsClasses.get(source);
-            Rectangle rectCible = positionsClasses.get(cible);
-
-            double startX = rectSource.getX() + rectSource.getWidth();
-            double startY = rectSource.getY() + rectSource.getHeight() / 2;
-            double endX = rectCible.getX();
-            double endY = rectCible.getY() + rectCible.getHeight() / 2;
+            double[] start = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
+            double[] end = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
 
             // Dessiner la ligne
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(1);
-            gc.strokeLine(startX, startY, endX, endY);
+            gc.strokeLine(start[0], start[1], end[0], end[1]);
 
             // Dessiner la flèche
             double arrowLength = 15;
             double arrowWidth = 10;
-            double angle = Math.atan2(endY - startY, endX - startX);
+            double angle = Math.atan2(end[1] - start[1], end[0] - start[0]);
             double sin = Math.sin(angle);
             double cos = Math.cos(angle);
 
-            double x1 = endX - arrowLength * cos + arrowWidth * sin;
-            double y1 = endY - arrowLength * sin - arrowWidth * cos;
-            double x2 = endX - arrowLength * cos - arrowWidth * sin;
-            double y2 = endY - arrowLength * sin + arrowWidth * cos;
+            double x1 = end[0] - arrowLength * cos + arrowWidth * sin;
+            double y1 = end[1] - arrowLength * sin - arrowWidth * cos;
+            double x2 = end[0] - arrowLength * cos - arrowWidth * sin;
+            double y2 = end[1] - arrowLength * sin + arrowWidth * cos;
 
             gc.setFill(Color.WHITE);
-            gc.fillPolygon(new double[]{endX, x1, x2}, new double[]{endY, y1, y2}, 3);
-            gc.strokePolygon(new double[]{endX, x1, x2}, new double[]{endY, y1, y2}, 3);
+            gc.fillPolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
+            gc.strokePolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
         }
     }
 
@@ -244,36 +239,31 @@ public class VueDiagramme extends Canvas implements Observateur {
         Classe cible = r.getDestination();
 
         if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            Rectangle rectSource = positionsClasses.get(source);
-            Rectangle rectCible = positionsClasses.get(cible);
-
-            double startX = rectSource.getX() + rectSource.getWidth();
-            double startY = rectSource.getY() + rectSource.getHeight() / 2;
-            double endX = rectCible.getX();
-            double endY = rectCible.getY() + rectCible.getHeight() / 2;
+            double[] start = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
+            double[] end = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
 
             // Dessiner la ligne en pointillés
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(1);
             gc.setLineDashes(5);
-            gc.strokeLine(startX, startY, endX, endY);
+            gc.strokeLine(start[0], start[1], end[0], end[1]);
             gc.setLineDashes(0);
 
             // Dessiner la flèche
             double arrowLength = 15;
             double arrowWidth = 10;
-            double angle = Math.atan2(endY - startY, endX - startX);
+            double angle = Math.atan2(end[1] - start[1], end[0] - start[0]);
             double sin = Math.sin(angle);
             double cos = Math.cos(angle);
 
-            double x1 = endX - arrowLength * cos + arrowWidth * sin;
-            double y1 = endY - arrowLength * sin - arrowWidth * cos;
-            double x2 = endX - arrowLength * cos - arrowWidth * sin;
-            double y2 = endY - arrowLength * sin + arrowWidth * cos;
+            double x1 = end[0] - arrowLength * cos + arrowWidth * sin;
+            double y1 = end[1] - arrowLength * sin - arrowWidth * cos;
+            double x2 = end[0] - arrowLength * cos - arrowWidth * sin;
+            double y2 = end[1] - arrowLength * sin + arrowWidth * cos;
 
             gc.setFill(Color.WHITE);
-            gc.fillPolygon(new double[]{endX, x1, x2}, new double[]{endY, y1, y2}, 3);
-            gc.strokePolygon(new double[]{endX, x1, x2}, new double[]{endY, y1, y2}, 3);
+            gc.fillPolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
+            gc.strokePolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
         }
     }
 
@@ -282,33 +272,28 @@ public class VueDiagramme extends Canvas implements Observateur {
         Classe cible = r.getDestination();
 
         if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            Rectangle rectSource = positionsClasses.get(source);
-            Rectangle rectCible = positionsClasses.get(cible);
-
-            double startX = rectSource.getX() + rectSource.getWidth();
-            double startY = rectSource.getY() + rectSource.getHeight() / 2;
-            double endX = rectCible.getX();
-            double endY = rectCible.getY() + rectCible.getHeight() / 2;
+            double[] start = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
+            double[] end = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
 
             // Dessiner la ligne
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(1);
-            gc.strokeLine(startX, startY, endX, endY);
+            gc.strokeLine(start[0], start[1], end[0], end[1]);
 
             // Dessiner la flèche
             double arrowLength = 15;
             double arrowWidth = 10;
-            double angle = Math.atan2(endY - startY, endX - startX);
+            double angle = Math.atan2(end[1] - start[1], end[0] - start[0]);
             double sin = Math.sin(angle);
             double cos = Math.cos(angle);
 
-            double x1 = endX - arrowLength * cos + arrowWidth * sin;
-            double y1 = endY - arrowLength * sin - arrowWidth * cos;
-            double x2 = endX - arrowLength * cos - arrowWidth * sin;
-            double y2 = endY - arrowLength * sin + arrowWidth * cos;
+            double x1 = end[0] - arrowLength * cos + arrowWidth * sin;
+            double y1 = end[1] - arrowLength * sin - arrowWidth * cos;
+            double x2 = end[0] - arrowLength * cos - arrowWidth * sin;
+            double y2 = end[1] - arrowLength * sin + arrowWidth * cos;
 
-            gc.strokeLine(endX, endY, x1, y1);
-            gc.strokeLine(endX, endY, x2, y2);
+            gc.strokeLine(end[0], end[1], x1, y1);
+            gc.strokeLine(end[0], end[1], x2, y2);
         }
     }
 
@@ -402,5 +387,38 @@ public class VueDiagramme extends Canvas implements Observateur {
                 }
             }
         }
+    }
+
+    /**
+     * Calcule le point le plus proche sur le rectangle cible à partir du rectangle source
+     * @param sourceRect rectangle source
+     * @param targetRect rectangle cible
+     * @return tableau contenant les coordonnées X et Y du point le plus proche
+     */
+    private double[] getClosestPoint(Rectangle sourceRect, Rectangle targetRect) {
+        double sourceCenterX = sourceRect.getX() + sourceRect.getWidth() / 2;
+        double sourceCenterY = sourceRect.getY() + 15; // Center of the title rectangle
+
+        double targetX = targetRect.getX();
+        double targetY = targetRect.getY();
+        double targetWidth = targetRect.getWidth();
+        double targetHeight = 30; // Height of the title rectangle
+
+        double closestX = targetX;
+        double closestY = targetY;
+
+        if (sourceCenterX > targetX + targetWidth) {
+            closestX = targetX + targetWidth;
+        } else if (sourceCenterX > targetX) {
+            closestX = sourceCenterX;
+        }
+
+        if (sourceCenterY > targetY + targetHeight) {
+            closestY = targetY + targetHeight;
+        } else if (sourceCenterY > targetY) {
+            closestY = sourceCenterY;
+        }
+
+        return new double[]{closestX, closestY};
     }
 }

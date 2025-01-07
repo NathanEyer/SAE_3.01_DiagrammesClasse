@@ -34,6 +34,8 @@ public class VueDiagramme extends Canvas implements Observateur {
     private final HashMap<Classe, Rectangle> positionsClasses = new HashMap<>();
     private Classe classeSelectionnee = null;
     private double offsetX, offsetY;
+    private final HashMap<Classe, Boolean> attributsMasques = new HashMap<>();
+    private final HashMap<Classe, Boolean> methodesMasquees = new HashMap<>();
 
     /**
      * Initialise le diagramme
@@ -141,38 +143,41 @@ public class VueDiagramme extends Canvas implements Observateur {
         double hauteurSection = 20;
         double padding = 5;
 
-        // Calculer la hauteur totale
-        double hauteur = hauteurNom + (classe.getAttributs().size() + classe.getMethodes().size()) * hauteurSection;
 
-        // Dessiner le contour de la Classe
+        boolean attributsMasquesActuels = attributsMasques.getOrDefault(classe, false);
+        boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classe, false);
+
+        double hauteurAttributs = attributsMasquesActuels ? 0 : classe.getAttributs().size() * hauteurSection;
+        double hauteurMethodes = methodesMasqueesActuelles ? 0 : classe.getMethodes().size() * hauteurSection;
+        double hauteur = hauteurNom + hauteurAttributs + hauteurMethodes;
+
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(2);
         gc.strokeRect(x, y, largeur, hauteur);
 
-        // Appliquer la couleur en fonction du type de la classe (interface ou classe normale)
         Color couleurFond = estInterface(classe) ? Color.LIGHTGREEN : Color.LIGHTBLUE;
         gc.setFill(couleurFond);
         gc.fillRect(x, y, largeur, hauteurNom);
         gc.strokeRect(x, y, largeur, hauteurNom);
 
-        // Afficher le nom de la Classe
         gc.setFill(Color.BLACK);
         gc.setFont(new Font("Arial", 14));
         gc.fillText(classe.getNom(), x + padding, y + hauteurNom - 10);
 
-        // Dessiner les attributs
         double currentY = y + hauteurNom;
-        for (Attribut attribut : classe.getAttributs()) {
-            gc.fillText("- " + attribut.getNomAttribut() + " : " + attribut.getTypeAttribut(), x + padding, currentY + 15);
-            currentY += hauteurSection;
+        if (!attributsMasquesActuels) {
+            for (Attribut attribut : classe.getAttributs()) {
+                gc.fillText("- " + attribut.getNomAttribut() + " : " + attribut.getTypeAttribut(), x + padding, currentY + 15);
+                currentY += hauteurSection;
+            }
+            gc.strokeLine(x, currentY, x + largeur, currentY);
         }
 
-        gc.strokeLine(x, currentY, x + largeur, currentY);
-
-        // Dessiner les méthodes
-        for (Methode methode : classe.getMethodes()) {
-            gc.fillText("+ " + methode.getNomMethode() + "()", x + padding, currentY + 15);
-            currentY += hauteurSection;
+        if (!methodesMasqueesActuelles) {
+            for (Methode methode : classe.getMethodes()) {
+                gc.fillText("+ " + methode.getNomMethode() + "()", x + padding, currentY + 15);
+                currentY += hauteurSection;
+            }
         }
     }
 
@@ -348,6 +353,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         if (event.getButton() == MouseButton.SECONDARY) { // Vérifie que c'est un clic droit
             double mouseX = event.getX();
             double mouseY = event.getY();
+
             for (var entry : positionsClasses.entrySet()) {
                 Rectangle rect = entry.getValue();
                 if (rect.contains(mouseX, mouseY)) {
@@ -366,11 +372,29 @@ public class VueDiagramme extends Canvas implements Observateur {
                     supprimer.setOnAction(e -> {
                         modele.getClasses().remove(classeCible); // Supprime la classe du modèle
                         positionsClasses.remove(classeCible); // Supprime de la vue
+                        attributsMasques.remove(classeCible); // Supprime l'état des attributs
+                        methodesMasquees.remove(classeCible); // Supprime l'état des méthodes
+                        dessinerDiagramme(); // Rafraîchit l'affichage
+                    });
+                    
+
+                    boolean attributsMasquesActuels = attributsMasques.getOrDefault(classeCible, false);
+                    MenuItem masquerAttributs = new MenuItem(attributsMasquesActuels ? "Démasquer Attributs" : "Masquer Attributs");
+                    masquerAttributs.setOnAction(e -> {
+                        attributsMasques.put(classeCible, !attributsMasquesActuels);
                         dessinerDiagramme(); // Rafraîchit l'affichage
                     });
 
-                    // Ajoutez l'option au menu
-                    contextMenu.getItems().add(supprimer);
+
+                    boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
+                    MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
+                    masquerMethodes.setOnAction(e -> {
+                        methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
+                        dessinerDiagramme(); // Rafraîchit l'affichage
+                    });
+
+                    // Ajoutez les option au menu
+                    contextMenu.getItems().addAll(supprimer, masquerAttributs, masquerMethodes);
 
                     // Affichez le menu contextuel
                     contextMenu.show(this, event.getScreenX(), event.getScreenY());

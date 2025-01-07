@@ -131,6 +131,7 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @param classe classe à dessiner
      * @param x coordonnée X de la Classe
      * @param y coordonnée Y de la Classe
+     *
      */
     private void dessinerClasse(GraphicsContext gc, Classe classe, double x, double y) {
         double largeur = this.getLargeurClasse(classe);

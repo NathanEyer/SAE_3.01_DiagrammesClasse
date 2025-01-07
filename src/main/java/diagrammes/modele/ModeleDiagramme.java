@@ -7,6 +7,7 @@ import diagrammes.fichier.Exporter;
 import diagrammes.fichier.ExporterImage;
 import diagrammes.fichier.ChargementClasse;
 import diagrammes.fichier.ExporterUml;
+import diagrammes.relations.Heritage;
 import diagrammes.relations.Relation;
 import diagrammes.vue.Observateur;
 import diagrammes.vue.VueDiagramme;
@@ -43,7 +44,7 @@ public class ModeleDiagramme implements Diagramme {
      * Ajoute une classe au diagramme
      * @param classe à ajouter
      */
-    public void addClass(Classe classe) {
+    public void addClass(Classe classe) throws ClassNotFoundException {
         classes.add(classe);
         notifierObservateur();
     }
@@ -52,7 +53,7 @@ public class ModeleDiagramme implements Diagramme {
      * Ajoute une relation entre les classes
      * @param relation à ajouter
      */
-    public void addRelation(Relation relation) {
+    public void addRelation(Relation relation) throws ClassNotFoundException {
         relations.add(relation);
         notifierObservateur();
     }
@@ -118,6 +119,13 @@ public class ModeleDiagramme implements Diagramme {
 
             // Ajouter la classe au modèle
             addClass(nouvelleClasse);
+            Class<?> classeParente = classe.getSuperclass();
+
+            if (classeParente != null) {
+                Relation relation = new Relation(nouvelleClasse, new Classe(classeParente.getSimpleName()), new Heritage());
+                addRelation(relation);
+            }
+            System.out.println(getRelations());
             System.out.println("Classe analysée : " + classe.getSimpleName());
         } catch (Exception e) {
             System.out.println("Erreur lors de l'analyse : " + cheminFichierClass);
@@ -128,7 +136,7 @@ public class ModeleDiagramme implements Diagramme {
     /**
      * Réinitialise tout le diagramme
      */
-    public void reinitialiser(){
+    public void reinitialiser()   {
         classes.clear();
         relations.clear();
         this.notifierObservateur();
@@ -187,7 +195,7 @@ public class ModeleDiagramme implements Diagramme {
      * Notifie les observateurs
      */
     @Override
-    public void notifierObservateur() {
+    public void notifierObservateur()   {
         for (Observateur observateur : observateurs) {
             observateur.actualiser(this);
         }

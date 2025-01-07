@@ -27,7 +27,7 @@ public class Main extends Application {
      * @param primaryStage squelette
      */
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws ClassNotFoundException {
         // Initialisations
         ModeleDiagramme modele = new ModeleDiagramme();
         VueDiagramme vue = new VueDiagramme(modele);

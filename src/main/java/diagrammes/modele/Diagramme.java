@@ -8,5 +8,5 @@ import diagrammes.vue.Observateur;
 public interface Diagramme {
     void enregistrerObservateur(Observateur observateur);
     void supprimerObservateur(Observateur observateur);
-    void notifierObservateur();
+    void notifierObservateur() throws ClassNotFoundException;
 }

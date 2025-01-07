@@ -78,7 +78,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         gc.clearRect(0, 0, this.getWidth(), this.getHeight());
 
         // Variables pour le positionnement
-        double x = 50, y = 50;
+        double y = Math.random()*(Main.SCREEN_HEIGHT * 0.95), x = Math.random()*(Main.SCREEN_WIDTH / 1.5);
 
         // Dessiner chaque Classe
         List<Classe> classes = modele.getClasses();
@@ -90,12 +90,8 @@ public class VueDiagramme extends Canvas implements Observateur {
             double finalY = y;
             Rectangle position = positionsClasses.computeIfAbsent(classe, c -> new Rectangle(finalX, finalY, largeur, hauteur));
             dessinerClasse(gc, classe, position.getX(), position.getY());
-
-            y += hauteur + 30;
-            if (y + hauteur > this.getHeight()) {
-                y = 50;
-                x += 300;
-            }
+            y = Math.random()*(Main.SCREEN_HEIGHT * 0.95);
+            x = Math.random()*(Main.SCREEN_WIDTH / 1.5);
         }
 
         for (Relation relation : modele.getRelations()) {

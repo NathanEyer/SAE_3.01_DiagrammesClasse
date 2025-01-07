@@ -23,6 +23,8 @@ import javafx.scene.text.Text;
 import java.util.HashMap;
 import java.util.List;
 
+import static java.lang.System.*;
+
 /**
  * VueDiagramme affiche le diagramme à l'utilisateur en utilisant un Canvas.
  */
@@ -294,6 +296,7 @@ public class VueDiagramme extends Canvas implements Observateur {
 
             gc.strokeLine(end[0], end[1], x1, y1);
             gc.strokeLine(end[0], end[1], x2, y2);
+
         }
     }
 

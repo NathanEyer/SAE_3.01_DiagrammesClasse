@@ -7,7 +7,9 @@ import diagrammes.fichier.Exporter;
 import diagrammes.fichier.ExporterImage;
 import diagrammes.fichier.ChargementClasse;
 import diagrammes.fichier.ExporterUml;
+import diagrammes.relations.Association;
 import diagrammes.relations.Heritage;
+import diagrammes.relations.Implementation;
 import diagrammes.relations.Relation;
 import diagrammes.vue.Observateur;
 import diagrammes.vue.VueDiagramme;
@@ -107,6 +109,13 @@ public class ModeleDiagramme implements Diagramme {
 
             for (Field field : classe.getDeclaredFields()) {
                 nouvelleClasse.ajouterAttribut(new Attribut(field.getName(), field.getType().getSimpleName()));
+
+                //gérer associations
+                if(!field.getType().isPrimitive() && !field.getType().getName().startsWith("java.")){
+                    Relation association = new Relation(nouvelleClasse,new Classe(field.getType().getSimpleName()),new Association());
+                    System.out.println(classe.getSimpleName() + "possède un attribut de type " + field.getType().getSimpleName());
+                    addRelation(association);
+                }
             }
 
             for (Method method : classe.getDeclaredMethods()) {
@@ -126,6 +135,17 @@ public class ModeleDiagramme implements Diagramme {
                 System.out.println(nouvelleClasse.getNom() + " " + classeParente.getSimpleName());
                 addRelation(relation);
             }
+            Class<?>[] interfaces = classe.getInterfaces();
+            for (Class<?> inter : interfaces){
+                Relation implementation = new Relation(nouvelleClasse,new Classe(inter.getSimpleName()),new Implementation());
+                System.out.println(nouvelleClasse.getNom() + " implémente " + inter.getSimpleName());
+                addRelation(implementation);
+            }
+
+
+
+
+
             System.out.println("Classe analysée : " + classe.getSimpleName());
         } catch (Exception e) {
             System.out.println("Erreur lors de l'analyse : " + cheminFichierClass);

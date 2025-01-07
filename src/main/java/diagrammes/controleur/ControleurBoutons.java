@@ -1,9 +1,11 @@
 package diagrammes.controleur;
 
+
 import diagrammes.modele.ModeleDiagramme;
 import diagrammes.vue.VueDiagramme;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 
@@ -58,5 +60,7 @@ public class ControleurBoutons implements EventHandler<ActionEvent> {
             }
         }
     }
+
+
 }
 

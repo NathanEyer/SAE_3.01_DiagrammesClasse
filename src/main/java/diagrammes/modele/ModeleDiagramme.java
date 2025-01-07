@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,16 +108,29 @@ public class ModeleDiagramme implements Diagramme {
             Classe nouvelleClasse = new Classe(classe.getSimpleName());
 
             for (Field field : classe.getDeclaredFields()) {
-                nouvelleClasse.ajouterAttribut(new Attribut(field.getName(), field.getType().getSimpleName()));
+                String modificateur = Modifier.toString(field.getModifiers()); // Récupération du modificateur
+                nouvelleClasse.ajouterAttribut(new Attribut(
+                        field.getName(),
+                        field.getType().getSimpleName(),
+                        modificateur // Ajout du modificateur
+                ));
             }
+
 
             for (Method method : classe.getDeclaredMethods()) {
                 List<String> parametres = new ArrayList<>();
                 for (Class<?> paramType : method.getParameterTypes()) {
                     parametres.add(paramType.getSimpleName());
                 }
-                nouvelleClasse.ajouterMethode(new Methode(method.getName(), method.getReturnType().getSimpleName(), parametres));
+                String modificateur = Modifier.toString(method.getModifiers()); // Récupération du modificateur
+                nouvelleClasse.ajouterMethode(new Methode(
+                        method.getName(),
+                        method.getReturnType().getSimpleName(),
+                        parametres,
+                        modificateur // Ajout du modificateur
+                ));
             }
+
 
             // Ajouter la classe au modèle
             addClass(nouvelleClasse);
@@ -214,6 +228,13 @@ public class ModeleDiagramme implements Diagramme {
         }
     }
 
+
+    public void ajouterClasse(Classe classe) {
+        classes.add(classe);
+        notifierObservateur(); // Pour mettre à jour la vue
+    }
+    
+    
     /**
      * Renvoie la liste des classes
      * @return liste
@@ -229,10 +250,9 @@ public class ModeleDiagramme implements Diagramme {
     }
 
 
-    public void supprimerClasse(Classe classe) {
-        classes.remove(classe);
-        relations.removeIf(relation ->
-                relation.getDepart().equals(classe) || relation.getDestination().equals(classe)); // Supprimer les relations associées
-        notifierObservateur();
-    }
+
+
+
+
+
 }

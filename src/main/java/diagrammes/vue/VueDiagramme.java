@@ -41,11 +41,10 @@ public class VueDiagramme extends Canvas implements Observateur {
      * Initialise le diagramme
      * @param modeleDiagramme Le modèle contenant les données du diagramme
      */
-    public VueDiagramme(ModeleDiagramme modeleDiagramme)throws ClassNotFoundException {
+    public VueDiagramme(ModeleDiagramme modeleDiagramme) throws ClassNotFoundException {
         super(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
         this.modele = modeleDiagramme;
         this.modele.enregistrerObservateur(this);
-
 
         this.setOnMousePressed(this::gererMousePressed);
         this.setOnMouseDragged(this::gererMouseDragged);
@@ -58,7 +57,7 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @param diagramme diagramme à actualiser
      */
     @Override
-    public void actualiser(Diagramme diagramme)  {
+    public void actualiser(Diagramme diagramme) {
         if (diagramme instanceof ModeleDiagramme) {
             dessinerDiagramme();
         }
@@ -67,9 +66,7 @@ public class VueDiagramme extends Canvas implements Observateur {
     /**
      * Dessine le diagramme UML en fonction des données du modèle
      */
-    public void dessinerDiagramme()   {
-
-
+    public void dessinerDiagramme() {
         GraphicsContext gc = this.getGraphicsContext2D();
 
         // Effacer le canvas
@@ -116,7 +113,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
-    private void gererMouseDragged(MouseEvent event)   {
+    private void gererMouseDragged(MouseEvent event) {
         if (classeSelectionnee != null) {
             double newX = event.getX() - offsetX;
             double newY = event.getY() - offsetY;
@@ -139,14 +136,12 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @param classe classe à dessiner
      * @param x coordonnée X de la Classe
      * @param y coordonnée Y de la Classe
-     *
      */
     private void dessinerClasse(GraphicsContext gc, Classe classe, double x, double y) {
         double largeur = this.getLargeurClasse(classe);
         double hauteurNom = 30;
         double hauteurSection = 20;
         double padding = 5;
-
 
         boolean attributsMasquesActuels = attributsMasques.getOrDefault(classe, false);
         boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classe, false);
@@ -185,7 +180,6 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
-
     private boolean estInterface(Classe classe) {
         try {
             Class<?> clas = Class.forName(classe.getNom());
@@ -205,28 +199,38 @@ public class VueDiagramme extends Canvas implements Observateur {
             dessinerFlecheHeritage(gc, relation);
         } else if (relation.getType() instanceof Implementation) {
             dessinerFlecheImplementation(gc, relation);
-        } else dessinerFlecheAssociation(gc, relation);
+        } else {
+            dessinerFlecheAssociation(gc, relation);
+        }
     }
 
     private void dessinerFlecheHeritage(GraphicsContext gc, Relation r) {
         Classe source = r.getDepart();
         Classe cible = r.getDestination();
         if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            Rectangle rectSource = positionsClasses.get(source);
-            Rectangle rectCible = positionsClasses.get(cible);
+            double[] start = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
+            double[] end = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
 
-            double startX = rectSource.getX() + rectSource.getWidth();
-            double startY = rectSource.getY() + rectSource.getHeight() / 2;
-            double endX = rectCible.getX() + rectCible.getWidth();
-            double endY = rectCible.getY() + rectCible.getHeight() /2;
-
-            // Dessiner une simple ligne entre les deux coins supérieurs gauche
+            // Dessiner la ligne
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(1);
-            gc.beginPath();
-            gc.moveTo(startX, startY);
-            gc.lineTo(endX, endY);
-            gc.stroke();
+            gc.strokeLine(start[0], start[1], end[0], end[1]);
+
+            // Dessiner la flèche
+            double arrowLength = 15;
+            double arrowWidth = 10;
+            double angle = Math.atan2(end[1] - start[1], end[0] - start[0]);
+            double sin = Math.sin(angle);
+            double cos = Math.cos(angle);
+
+            double x1 = end[0] - arrowLength * cos + arrowWidth * sin;
+            double y1 = end[1] - arrowLength * sin - arrowWidth * cos;
+            double x2 = end[0] - arrowLength * cos - arrowWidth * sin;
+            double y2 = end[1] - arrowLength * sin + arrowWidth * cos;
+
+            gc.setFill(Color.WHITE);
+            gc.fillPolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
+            gc.strokePolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
         }
     }
 
@@ -235,19 +239,31 @@ public class VueDiagramme extends Canvas implements Observateur {
         Classe cible = r.getDestination();
 
         if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            System.out.println("2");
-            Rectangle rectSource = positionsClasses.get(source);
-            Rectangle rectCible = positionsClasses.get(cible);
+            double[] start = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
+            double[] end = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
 
-            double startX = rectSource.getX() + rectSource.getWidth() / 2;
-            double startY = rectSource.getY() + rectSource.getHeight() / 2;
-            double endX = rectCible.getX() + rectCible.getWidth() / 2;
-            double endY = rectCible.getY() + rectCible.getHeight() / 2;
-
-            // Dessiner une simple ligne entre les deux coins supérieurs gauche
+            // Dessiner la ligne en pointillés
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(1);
-            gc.strokeLine(startX, startY, endX, endY);
+            gc.setLineDashes(5);
+            gc.strokeLine(start[0], start[1], end[0], end[1]);
+            gc.setLineDashes(0);
+
+            // Dessiner la flèche
+            double arrowLength = 15;
+            double arrowWidth = 10;
+            double angle = Math.atan2(end[1] - start[1], end[0] - start[0]);
+            double sin = Math.sin(angle);
+            double cos = Math.cos(angle);
+
+            double x1 = end[0] - arrowLength * cos + arrowWidth * sin;
+            double y1 = end[1] - arrowLength * sin - arrowWidth * cos;
+            double x2 = end[0] - arrowLength * cos - arrowWidth * sin;
+            double y2 = end[1] - arrowLength * sin + arrowWidth * cos;
+
+            gc.setFill(Color.WHITE);
+            gc.fillPolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
+            gc.strokePolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
         }
     }
 
@@ -256,19 +272,28 @@ public class VueDiagramme extends Canvas implements Observateur {
         Classe cible = r.getDestination();
 
         if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            System.out.println("3");
-            Rectangle rectSource = positionsClasses.get(source);
-            Rectangle rectCible = positionsClasses.get(cible);
+            double[] start = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
+            double[] end = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
 
-            double startX = rectSource.getX() + rectSource.getWidth() / 2;
-            double startY = rectSource.getY() + rectSource.getHeight() / 2;
-            double endX = rectCible.getX() + rectCible.getWidth() / 2;
-            double endY = rectCible.getY() + rectCible.getHeight() / 2;
-
-            // Dessiner une simple ligne entre les deux coins supérieurs gauche
+            // Dessiner la ligne
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(1);
-            gc.strokeLine(startX, startY, endX, endY);
+            gc.strokeLine(start[0], start[1], end[0], end[1]);
+
+            // Dessiner la flèche
+            double arrowLength = 15;
+            double arrowWidth = 10;
+            double angle = Math.atan2(end[1] - start[1], end[0] - start[0]);
+            double sin = Math.sin(angle);
+            double cos = Math.cos(angle);
+
+            double x1 = end[0] - arrowLength * cos + arrowWidth * sin;
+            double y1 = end[1] - arrowLength * sin - arrowWidth * cos;
+            double x2 = end[0] - arrowLength * cos - arrowWidth * sin;
+            double y2 = end[1] - arrowLength * sin + arrowWidth * cos;
+
+            gc.strokeLine(end[0], end[1], x1, y1);
+            gc.strokeLine(end[0], end[1], x2, y2);
         }
     }
 
@@ -335,7 +360,6 @@ public class VueDiagramme extends Canvas implements Observateur {
                         methodesMasquees.remove(classeCible); // Supprime l'état des méthodes
                         dessinerDiagramme(); // Rafraîchit l'affichage
                     });
-                    
 
                     boolean attributsMasquesActuels = attributsMasques.getOrDefault(classeCible, false);
                     MenuItem masquerAttributs = new MenuItem(attributsMasquesActuels ? "Démasquer Attributs" : "Masquer Attributs");
@@ -344,7 +368,6 @@ public class VueDiagramme extends Canvas implements Observateur {
                         dessinerDiagramme(); // Rafraîchit l'affichage
                     });
 
-
                     boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
                     MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
                     masquerMethodes.setOnAction(e -> {
@@ -352,7 +375,7 @@ public class VueDiagramme extends Canvas implements Observateur {
                         dessinerDiagramme(); // Rafraîchit l'affichage
                     });
 
-                    // Ajoutez les option au menu
+                    // Ajoutez les options au menu
                     contextMenu.getItems().addAll(supprimer, masquerAttributs, masquerMethodes);
 
                     // Affichez le menu contextuel
@@ -366,4 +389,36 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
+    /**
+     * Calcule le point le plus proche sur le rectangle cible à partir du rectangle source
+     * @param sourceRect rectangle source
+     * @param targetRect rectangle cible
+     * @return tableau contenant les coordonnées X et Y du point le plus proche
+     */
+    private double[] getClosestPoint(Rectangle sourceRect, Rectangle targetRect) {
+        double sourceCenterX = sourceRect.getX() + sourceRect.getWidth() / 2;
+        double sourceCenterY = sourceRect.getY() + 15; // Center of the title rectangle
+
+        double targetX = targetRect.getX();
+        double targetY = targetRect.getY();
+        double targetWidth = targetRect.getWidth();
+        double targetHeight = 30; // Height of the title rectangle
+
+        double closestX = targetX;
+        double closestY = targetY;
+
+        if (sourceCenterX > targetX + targetWidth) {
+            closestX = targetX + targetWidth;
+        } else if (sourceCenterX > targetX) {
+            closestX = sourceCenterX;
+        }
+
+        if (sourceCenterY > targetY + targetHeight) {
+            closestY = targetY + targetHeight;
+        } else if (sourceCenterY > targetY) {
+            closestY = sourceCenterY;
+        }
+
+        return new double[]{closestX, closestY};
+    }
 }

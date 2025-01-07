@@ -19,8 +19,8 @@ public class Main extends Application {
     /**
      * Récupère la taille de l'écran de l'utilisateur
      */
-    public final static double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth() / 1.5;
-    public final static double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getHeight()*0.95;
+    public final static double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth();
+    public final static double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getHeight();
 
     /**
      * Launcher
@@ -52,7 +52,7 @@ public class Main extends Application {
         root.setTop(topBar);
 
         // Création et affichage de la scène
-        Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
+        Scene scene = new Scene(root, SCREEN_WIDTH / 1.5, SCREEN_HEIGHT * 0.95);
         primaryStage.setTitle("Commencez par ajouter des fichiers .class");
         primaryStage.setScene(scene);
         primaryStage.show();

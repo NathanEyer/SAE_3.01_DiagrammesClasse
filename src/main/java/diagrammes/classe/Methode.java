@@ -12,6 +12,7 @@ public class  Methode {
     String nomMethode;
     String typeRetour;
     List<String> parametres;
+    String modificateur;
 
     /**
      * Construit une méthode à partir de son nom, du type de retour et des parametres
@@ -19,10 +20,11 @@ public class  Methode {
      * @param typeRetour type
      * @param parametres paramètres
      */
-    public Methode(String nomMethode, String typeRetour, List<String> parametres) {
+    public Methode(String nomMethode, String typeRetour, List<String> parametres, String modificateur) {
         this.nomMethode = nomMethode;
         this.typeRetour = typeRetour;
         this.parametres = parametres;
+        this.modificateur = modificateur;
     }
 
     /**
@@ -49,4 +51,6 @@ public class  Methode {
     public String getTypeRetour() { return typeRetour; }
 
     public List<String> getParametres() { return parametres; }
+
+    public String getModificateur() { return modificateur; }
 }

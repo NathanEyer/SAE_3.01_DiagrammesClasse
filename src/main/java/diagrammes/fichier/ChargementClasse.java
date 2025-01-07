@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.regex.Pattern;
 
 /**
  * Chargement du bon nom de classe
@@ -51,11 +52,11 @@ public class ChargementClasse extends ClassLoader {
 
         String className = path.toString();
         className = className.replace(".class", "");
-        int nbSeparator = className.split(File.separator).length - 1;
+        int nbSeparator = className.split(Pattern.quote(File.separator)).length - 1;
 
         while (nbSeparator > 0) {
             try {
-                String modifiedClassName = className.split(File.separator)[className.split(File.separator).length - 1];
+                String modifiedClassName = className.split(Pattern.quote(File.separator))[className.split(Pattern.quote(File.separator)).length - 1];
                 System.out.println(modifiedClassName);
                 urlClassLoader.loadClass(modifiedClassName);
                 return modifiedClassName;

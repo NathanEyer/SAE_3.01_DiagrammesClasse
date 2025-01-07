@@ -214,4 +214,12 @@ public class ModeleDiagramme implements Diagramme {
     public List<Relation> getRelations() {
         return relations;
     }
+
+
+    public void supprimerClasse(Classe classe) {
+        classes.remove(classe);
+        relations.removeIf(relation ->
+                relation.getDepart().equals(classe) || relation.getDestination().equals(classe)); // Supprimer les relations associées
+        notifierObservateur();
+    }
 }

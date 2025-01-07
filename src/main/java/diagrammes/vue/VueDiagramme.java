@@ -11,6 +11,10 @@ import diagrammes.relations.Implementation;
 import diagrammes.relations.Relation;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -45,6 +49,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         this.setOnMousePressed(this::gererMousePressed);
         this.setOnMouseDragged(this::gererMouseDragged);
         this.setOnMouseReleased(this::gererMouseReleased);
+        this.setOnMouseClicked(this::gererClicDroit);
     }
 
     /**
@@ -285,6 +290,52 @@ public class VueDiagramme extends Canvas implements Observateur {
     public double getHauteurClasse(Classe classe) {
         return classe.getAttributs().size() + classe.getMethodes().size() + 20;
     }
+
+
+    private void gererClicDroit(MouseEvent event) {
+        if (event.getButton() == MouseButton.SECONDARY) { // Clic droit
+            double mouseX = event.getX();
+            double mouseY = event.getY();
+
+            for (var entry : positionsClasses.entrySet()) {
+                Rectangle rect = entry.getValue();
+                if (rect.contains(mouseX, mouseY)) {
+                    Classe classeCible = entry.getKey();
+
+                    // Créez un menu contextuel
+                    ContextMenu contextMenu = new ContextMenu();
+
+                    // Option "Supprimer"
+                    MenuItem supprimer = new MenuItem("Supprimer");
+                    supprimer.setOnAction(e -> {
+                        modele.getClasses().remove(classeCible); // Supprimer du modèle
+                        positionsClasses.remove(classeCible); // Supprimer de la vue
+                        dessinerDiagramme(); // Réactualiser l'affichage
+                    });
+
+                    // Ajouter l'option au menu contextuel
+                    contextMenu.getItems().add(supprimer);
+
+                    // Afficher le menu
+                    contextMenu.show(this, event.getScreenX(), event.getScreenY());
+                    break;
+                }
+            }
+        }
+    }
+
+
+    public void ajouterGestionnaireTouches() {
+        this.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.DELETE && classeSelectionnee != null) {
+                modele.getClasses().remove(classeSelectionnee); // Supprimer du modèle
+                positionsClasses.remove(classeSelectionnee); // Supprimer de la vue
+                classeSelectionnee = null; // Réinitialiser la sélection
+                dessinerDiagramme(); // Réactualiser l'affichage
+            }
+        });
+    }
+
 }
 
 

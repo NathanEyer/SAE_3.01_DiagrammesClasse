@@ -143,7 +143,6 @@ public class VueDiagramme extends Canvas implements Observateur {
         double hauteurSection = 20;
         double padding = 5;
 
-
         boolean attributsMasquesActuels = attributsMasques.getOrDefault(classe, false);
         boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classe, false);
 
@@ -223,8 +222,8 @@ public class VueDiagramme extends Canvas implements Observateur {
             gc.strokeLine(startX, startY, endX, endY);
 
             // Dessiner la flèche
-            double arrowLength = 10;
-            double arrowWidth = 5;
+            double arrowLength = 15;
+            double arrowWidth = 10;
             double angle = Math.atan2(endY - startY, endX - startX);
             double sin = Math.sin(angle);
             double cos = Math.cos(angle);
@@ -261,8 +260,8 @@ public class VueDiagramme extends Canvas implements Observateur {
             gc.setLineDashes(0);
 
             // Dessiner la flèche
-            double arrowLength = 10;
-            double arrowWidth = 5;
+            double arrowLength = 15;
+            double arrowWidth = 10;
             double angle = Math.atan2(endY - startY, endX - startX);
             double sin = Math.sin(angle);
             double cos = Math.cos(angle);
@@ -297,8 +296,8 @@ public class VueDiagramme extends Canvas implements Observateur {
             gc.strokeLine(startX, startY, endX, endY);
 
             // Dessiner la flèche
-            double arrowLength = 10;
-            double arrowWidth = 5;
+            double arrowLength = 15;
+            double arrowWidth = 10;
             double angle = Math.atan2(endY - startY, endX - startX);
             double sin = Math.sin(angle);
             double cos = Math.cos(angle);
@@ -376,7 +375,6 @@ public class VueDiagramme extends Canvas implements Observateur {
                         methodesMasquees.remove(classeCible); // Supprime l'état des méthodes
                         dessinerDiagramme(); // Rafraîchit l'affichage
                     });
-                    
 
                     boolean attributsMasquesActuels = attributsMasques.getOrDefault(classeCible, false);
                     MenuItem masquerAttributs = new MenuItem(attributsMasquesActuels ? "Démasquer Attributs" : "Masquer Attributs");
@@ -385,7 +383,6 @@ public class VueDiagramme extends Canvas implements Observateur {
                         dessinerDiagramme(); // Rafraîchit l'affichage
                     });
 
-
                     boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
                     MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
                     masquerMethodes.setOnAction(e -> {
@@ -393,7 +390,7 @@ public class VueDiagramme extends Canvas implements Observateur {
                         dessinerDiagramme(); // Rafraîchit l'affichage
                     });
 
-                    // Ajoutez les option au menu
+                    // Ajoutez les options au menu
                     contextMenu.getItems().addAll(supprimer, masquerAttributs, masquerMethodes);
 
                     // Affichez le menu contextuel

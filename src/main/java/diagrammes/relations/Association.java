@@ -9,7 +9,7 @@ public class Association implements RelationStrategy{
     * Création d'un lien d'association entre les classes.
     * @return void
     */
-    public void creerLien() {
+    public void creerLien(String nomClasse)throws ClassNotFoundException {
         System.out.println("Création d'un lien d'association entre les classes.");
         // Logique spécifique pour créer un lien d'association}
     }

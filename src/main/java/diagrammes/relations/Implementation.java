@@ -1,13 +1,27 @@
 package diagrammes.relations;
 
+
+import diagrammes.vue.VueDiagramme;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+
+
+
 public class Implementation implements RelationStrategy {
     public Implementation() {
     }
 
     @Override
-    public void creerLien() {
+    public void creerLien(String nomClasse)throws ClassNotFoundException {
         System.out.println("Création d'un lien d'implémentation entre les classes.");
-        // Logique spécifique pour créer un lien d'implémentation
+        Class<?> classe = Class.forName(nomClasse);
+        if(classe.isInterface()){
+            System.out.println("La classe est bien une interface");
+        }
+
     }
 
     public static String type(){

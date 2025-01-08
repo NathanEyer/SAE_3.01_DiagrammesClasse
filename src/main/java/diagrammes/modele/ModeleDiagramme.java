@@ -96,7 +96,7 @@ public class ModeleDiagramme implements Diagramme {
             File fichierClass = new File(cheminFichierClass);
 
             // Détecter le dossier parent comme racine
-            File dossierParent = fichierClass.getParentFile();
+            File dossierParent = fichierClass.getParentFile().getParentFile();
             URL dossierParentURL = dossierParent.toURI().toURL();
 
             // Créer un ClassLoader pour ce dossier
@@ -104,6 +104,12 @@ public class ModeleDiagramme implements Diagramme {
 
             // Obtenir le nom complet de la classe
             String nomClasse = ChargementClasse.getGoodName(fichierClass.toPath(), urlClassLoader);
+            while(nomClasse == null) {
+                dossierParent = fichierClass.getParentFile();
+                dossierParentURL = dossierParent.toURI().toURL();
+                urlClassLoader = URLClassLoader.newInstance(new URL[]{dossierParentURL});
+                nomClasse = ChargementClasse.getGoodName(fichierClass.toPath(), urlClassLoader);
+            }
 
             // Charger la classe
             Class<?> classe = urlClassLoader.loadClass(nomClasse);

@@ -3,10 +3,7 @@ package diagrammes.modele;
 import diagrammes.classe.Classe;
 import diagrammes.classe.Methode;
 import diagrammes.classe.Attribut;
-import diagrammes.fichier.Exporter;
-import diagrammes.fichier.ExporterImage;
-import diagrammes.fichier.ChargementClasse;
-import diagrammes.fichier.ExporterUml;
+import diagrammes.fichier.*;
 import diagrammes.relations.Association;
 import diagrammes.relations.Heritage;
 import diagrammes.relations.Implementation;
@@ -148,6 +145,8 @@ public class ModeleDiagramme implements Diagramme {
                         modificateur // Ajout du modificateur
                 ));
 
+
+
                 // Gérer les associations pour les collections
                 if (Collection.class.isAssignableFrom(field.getType())) {
                     Type genericType = field.getGenericType();
@@ -268,8 +267,11 @@ public class ModeleDiagramme implements Diagramme {
         } else if (format.equalsIgnoreCase("UML")) {
             export = new ExporterUml();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PlantUML files (*.puml)", "*.puml"));
-        }
 
+        } //else if (format.equalsIgnoreCase("JAVA")) {
+            //export = new ExporterJava();
+            //fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PlantUML files (*.puml)", "*.puml"));
+        //}
         // Affiche le FileChooser pour choisir l'emplacement du fichier
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {

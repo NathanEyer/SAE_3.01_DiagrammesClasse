@@ -11,9 +11,10 @@ public class Classe {
     /**
      * Attributs d'une classe
      */
-    private final String nom;
+    private String nom;
     private List<Attribut> attributs;
     private List<Methode> methodes;
+
 
     /**
      * Construit une classe à partir de son nom
@@ -23,6 +24,8 @@ public class Classe {
         this.nom = nom;
         this.attributs = new ArrayList<>();
         this.methodes = new ArrayList<>();
+
+
     }
 
     /**
@@ -101,6 +104,8 @@ public class Classe {
         this.methodes = methodes;
     }
 
+
+    public void setNom(String nom) { this.nom = nom; }
     //REDEFINITION DU EQUALS ET DU HASHCODE POUR COMPARER LES CLASSES CORRECTEMENT
     /**
      * Redéfinition du equals
@@ -123,4 +128,8 @@ public class Classe {
     public int hashCode() {
         return Objects.hash(nom); //Générer un hashcode basé sur le même attribut que equals
     }
+
+
+
+
 }

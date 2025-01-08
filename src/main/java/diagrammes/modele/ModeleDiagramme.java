@@ -123,6 +123,19 @@ public class ModeleDiagramme implements Diagramme {
                     System.out.println(classe.getSimpleName() + "possède un attribut de type " + field.getType().getSimpleName());
                     addRelation(association);
                 }
+                // gérer les associations pour les collections
+                if (estCollection(field.getType())) {
+                    String typeAttribut = field.getGenericType().getTypeName();
+                    if (typeAttribut.contains("<") && typeAttribut.contains(">")) {
+                        // on extrait le type contenu dans la collection
+                        String typeAssocie = typeAttribut.substring(typeAttribut.indexOf("<") + 1, typeAttribut.indexOf(">"));
+                        System.out.println("Association détectée via une collection : " + typeAssocie);
+
+                        // on ajoute une relation pour le type contenu dans la collection
+                        Relation association = new Relation(nouvelleClasse, new Classe(typeAssocie), new Association());
+                        addRelation(association);
+                    }
+                }
 
             }
 
@@ -148,7 +161,7 @@ public class ModeleDiagramme implements Diagramme {
 
             if (classeParente != null) {
                 Relation relation = new Relation(nouvelleClasse, new Classe(classeParente.getSimpleName()), new Heritage());
-                System.out.println(nouvelleClasse.getNom() + " " + classeParente.getSimpleName());
+                System.out.println(nouvelleClasse.getNom() + " hérite de " + classeParente.getSimpleName());
                 addRelation(relation);
             }
             Class<?>[] interfaces = classe.getInterfaces();
@@ -167,6 +180,10 @@ public class ModeleDiagramme implements Diagramme {
             System.out.println("Erreur lors de l'analyse : " + cheminFichierClass);
             e.printStackTrace();
         }
+    }
+
+    private boolean estCollection(Class<?> type) {
+        return type.getName().startsWith("java.util.");
     }
 
     /**

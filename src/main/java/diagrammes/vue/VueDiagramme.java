@@ -493,6 +493,21 @@ public class VueDiagramme extends Canvas implements Observateur {
                         contextMenu.getItems().add(masquerMethodes);
                     }
 
+                    // Ajouter le bouton Modifier
+                    MenuItem modifier = new MenuItem("Modifier");
+                    modifier.setOnAction(e -> {
+                        VueModifier vueModifier = new VueModifier(classeCible);
+                        Classe classeModifiee = vueModifier.afficher();
+
+                        // Mettre à jour la classe modifiée dans le modèle
+                        int indexClasse = modele.getClasses().indexOf(classeCible);
+                        if (indexClasse >= 0) {
+                            modele.getClasses().set(indexClasse, classeModifiee);
+                            dessinerDiagramme(); // Redessiner le diagramme
+                            setMessage("Classe modifiée : " + classeModifiee.getNom());
+                        }
+                    });
+
                     // Masquer/Démasquer les relations
                     boolean relationsMasqueesActuelles = modele.getRelations().stream()
                             .filter(relation -> relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible))
@@ -510,9 +525,8 @@ public class VueDiagramme extends Canvas implements Observateur {
                         dessinerDiagramme();
                         setMessage(relationsMasqueesActuelles ? "Relations démasquées pour : " + classeCible.getNom() : "Relations masquées pour : " + classeCible.getNom());
                     });
-                    contextMenu.getItems().add(masquerDemasquerRelations);
 
-                    contextMenu.getItems().add(supprimer);
+                    contextMenu.getItems().addAll(modifier, masquerDemasquerRelations, supprimer);
                     contextMenu.show(this, event.getScreenX(), event.getScreenY());
 
                     this.getProperties().put("activeMenu", contextMenu);
@@ -521,6 +535,7 @@ public class VueDiagramme extends Canvas implements Observateur {
             }
         }
     }
+
 
 
 

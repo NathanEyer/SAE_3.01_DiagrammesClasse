@@ -1,8 +1,10 @@
 package diagrammes;
 
 import diagrammes.controleur.ControleurBoutons;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 /**
  * Permet de raccourcir le Main.java
@@ -54,8 +56,15 @@ public class Interface {
 
         masquer.getItems().addAll(masquerToutMethodes, masquerToutAttributs);
 
+        Menu aide = new Menu("Aide");
+        // Item pour ouvrir la page d'aide
+        MenuItem afficherAide = new MenuItem("Afficher l'aide");
+        afficherAide.setOnAction(e -> afficherAide());
+
+        aide.getItems().add(afficherAide);
+
         fichier.getItems().addAll(importer, exporter);
-        menu.getMenus().addAll(fichier, editer, creer , masquer);
+        menu.getMenus().addAll(fichier, editer, creer , masquer , aide);
         return menu;
     }
 
@@ -68,5 +77,31 @@ public class Interface {
         HBox topBar = new HBox(menuBar);
         topBar.setStyle("-fx-background-color: lightgray;");
         return topBar;
+    }
+
+
+    public static void afficherAide() {
+
+        Stage aideStage = new Stage();
+        aideStage.setTitle("Aide - Application Diagramme");
+
+
+        String contenuAide = "Bienvenue dans Banal UML !\n\n"
+                + "Voici comment utiliser l'application :\n\n"
+                + "- Pour créer une nouvelle classe, utilisez le menu 'Créer' et sélectionnez 'Créer une nouvelle classe'.\n"
+                + "- Pour importer des données, utilisez l'option 'Importer' dans le menu 'Fichier', vous pouvez aussi simplement glisser des fichiers .class et notre application se chargera du reste'.\n"
+                + "- Vous pouvez exporter votre diagramme en différents formats via le menu 'Exporter'.\n"
+                + "- Pour masquer les méthodes ou attributs cliquez deux fois sur n'importe quelle classe'.\n"
+                + "- Pour réinitialiser le diagramme, utilisez l'option 'Réinitialiser' dans le menu 'Éditer'.\n"
+                + "- Pour avoir plus de fonctionnalités, cliquez droit sur une classe et vous pourrez la modifier a votre guise.\n\n"
+                + "Si vous avez des questions supplémentaires, consultez la documentation ou contactez le support.";
+
+        TextArea textAreaAide = new TextArea(contenuAide);
+        textAreaAide.setEditable(false);
+        textAreaAide.setWrapText(true);
+        textAreaAide.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
+        Scene sceneAide = new Scene(textAreaAide, 400, 300);
+        aideStage.setScene(sceneAide);
+        aideStage.show();
     }
 }

@@ -35,6 +35,7 @@ public class VueDiagramme extends Canvas implements Observateur {
     private double offsetX, offsetY;
     private final HashMap<Classe, Boolean> attributsMasques = new HashMap<>();
     private final HashMap<Classe, Boolean> methodesMasquees = new HashMap<>();
+    private final HashMap<Relation, Boolean> relationsMasquees = new HashMap<>();
     private static Label messageLabel;
 
 
@@ -216,6 +217,9 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @param relation relation à dessiner
      */
     private void dessinerRelation(GraphicsContext gc, Relation relation) {
+        if (relationsMasquees.getOrDefault(relation, false)) {
+            return; // Ne pas dessiner les relations masquées
+        }
         if (relation.getType() instanceof Heritage) {
             dessinerFlecheHeritage(gc, relation);
         } else if (relation.getType() instanceof Implementation) {
@@ -409,9 +413,9 @@ public class VueDiagramme extends Canvas implements Observateur {
                         dessinerDiagramme();
                     });
 
+                    // Option pour masquer/démasquer les attributs
                     boolean attributsMasquesActuels = attributsMasques.getOrDefault(classeCible, false);
-
-                    if(!classeCible.getAttributs().isEmpty()) {
+                    if (!classeCible.getAttributs().isEmpty()) {
                         MenuItem masquerAttributs = new MenuItem(attributsMasquesActuels ? "Démasquer Attributs" : "Masquer Attributs");
                         masquerAttributs.setOnAction(e -> {
                             attributsMasques.put(classeCible, !attributsMasquesActuels);
@@ -427,9 +431,15 @@ public class VueDiagramme extends Canvas implements Observateur {
                     }
 
 
+                    // Option pour masquer/démasquer les méthodes
+                    if (!classeCible.getMethodes().isEmpty()) {
+                        boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
+
+
                     boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
 
                     if(!classeCible.getMethodes().isEmpty()) {
+
                         MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
                         masquerMethodes.setOnAction(e -> {
                             methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
@@ -438,11 +448,31 @@ public class VueDiagramme extends Canvas implements Observateur {
                         contextMenu.getItems().add(masquerMethodes);
                     }else{
 
+
+                    // Option pour masquer/démasquer les relations
+                    boolean relationsMasqueesActuelles = modele.getRelations().stream()
+                            .filter(relation -> relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible))
+                            .allMatch(relation -> relationsMasquees.getOrDefault(relation, false));
+
+                    MenuItem masquerDemasquerRelations = new MenuItem(
+                            relationsMasqueesActuelles ? "Démasquer Relations" : "Masquer Relations"
+                    );
+                    masquerDemasquerRelations.setOnAction(e -> {
+                        modele.getRelations().forEach(relation -> {
+                            if (relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible)) {
+                                relationsMasquees.put(relation, !relationsMasqueesActuelles);
+                            }
+                        });
+                        dessinerDiagramme(); // Rafraîchit l'affichage
+                    });
+                    contextMenu.getItems().add(masquerDemasquerRelations);
+
                         MenuItem ajouterMethode = new MenuItem("Ajouter Méthode");
                         ajouterMethode.setOnAction(e -> {
                         });
                         contextMenu.getItems().add(ajouterMethode);
                     }
+
                     contextMenu.getItems().add(supprimer);
                     contextMenu.show(this, event.getScreenX(), event.getScreenY());
 

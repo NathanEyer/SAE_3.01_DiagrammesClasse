@@ -53,6 +53,7 @@ public class ExporterUml implements Exporter {
                 String source = relation.getDepart().getNom();
                 String target = relation.getDestination().getNom();
                 String type = getRelationArrow(relation.getType());
+                System.out.println(relation.getType());
                 writer.write(source + " " + type + " " + target + "\n");
             }
 
@@ -66,13 +67,13 @@ public class ExporterUml implements Exporter {
      * @return flèche
      */
     private String getRelationArrow(RelationStrategy type) {
-        // Ajoutez ici la logique pour mapper les types de relation à leurs flèches UML
-        if (type.equals("heritage")) {
-            return "<|--";
-        } else if (type.equals("association")) {
-            return "-->";
+
+        if (type instanceof diagrammes.relations.Heritage) {
+            return "--|>";
+        } else if (type instanceof diagrammes.relations.Implementation) {
+            return "..|>";
         }
-        return "--";
+        return "-->";
     }
 
     /**

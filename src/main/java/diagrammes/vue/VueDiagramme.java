@@ -431,6 +431,7 @@ public class VueDiagramme extends Canvas implements Observateur {
                     // Créez un menu contextuel
                     ContextMenu contextMenu = new ContextMenu();
 
+                    // Supprimer la classe
                     MenuItem supprimer = new MenuItem("Supprimer");
                     supprimer.setOnAction(e -> {
                         modele.getClasses().remove(classeCible);
@@ -438,31 +439,34 @@ public class VueDiagramme extends Canvas implements Observateur {
                         attributsMasques.remove(classeCible);
                         methodesMasquees.remove(classeCible);
                         dessinerDiagramme();
+                        setMessage("Classe supprimée : " + classeCible.getNom());
                     });
 
-                    // Option pour masquer/démasquer les attributs
+                    // Masquer/Démasquer les attributs
                     boolean attributsMasquesActuels = attributsMasques.getOrDefault(classeCible, false);
                     if (!classeCible.getAttributs().isEmpty()) {
                         MenuItem masquerAttributs = new MenuItem(attributsMasquesActuels ? "Démasquer Attributs" : "Masquer Attributs");
                         masquerAttributs.setOnAction(e -> {
                             attributsMasques.put(classeCible, !attributsMasquesActuels);
                             dessinerDiagramme();
+                            setMessage(attributsMasquesActuels ? "Attributs démasqués pour : " + classeCible.getNom() : "Attributs masqués pour : " + classeCible.getNom());
                         });
                         contextMenu.getItems().add(masquerAttributs);
                     }
 
-                    // Option pour masquer/démasquer les méthodes
+                    // Masquer/Démasquer les méthodes
                     if (!classeCible.getMethodes().isEmpty()) {
                         boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
                         MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
                         masquerMethodes.setOnAction(e -> {
                             methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
                             dessinerDiagramme();
+                            setMessage(methodesMasqueesActuelles ? "Méthodes démasquées pour : " + classeCible.getNom() : "Méthodes masquées pour : " + classeCible.getNom());
                         });
                         contextMenu.getItems().add(masquerMethodes);
                     }
 
-                    // Option pour masquer/démasquer les relations
+                    // Masquer/Démasquer les relations
                     boolean relationsMasqueesActuelles = modele.getRelations().stream()
                             .filter(relation -> relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible))
                             .allMatch(relation -> relationsMasquees.getOrDefault(relation, false));
@@ -471,12 +475,13 @@ public class VueDiagramme extends Canvas implements Observateur {
                             relationsMasqueesActuelles ? "Démasquer Relations" : "Masquer Relations"
                     );
                     masquerDemasquerRelations.setOnAction(e -> {
-                        modele.getRelations().forEach(relation -> {
+                        for (Relation relation : modele.getRelations()) {
                             if (relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible)) {
                                 relationsMasquees.put(relation, !relationsMasqueesActuelles);
                             }
-                        });
-                        dessinerDiagramme(); // Rafraîchit l'affichage
+                        }
+                        dessinerDiagramme();
+                        setMessage(relationsMasqueesActuelles ? "Relations démasquées pour : " + classeCible.getNom() : "Relations masquées pour : " + classeCible.getNom());
                     });
                     contextMenu.getItems().add(masquerDemasquerRelations);
 
@@ -489,6 +494,7 @@ public class VueDiagramme extends Canvas implements Observateur {
             }
         }
     }
+
 
 
 

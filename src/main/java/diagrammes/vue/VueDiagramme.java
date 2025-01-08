@@ -52,7 +52,14 @@ public class VueDiagramme extends Canvas implements Observateur {
         this.setOnMousePressed(this::gererMousePressed);
         this.setOnMouseDragged(this::gererMouseDragged);
         this.setOnMouseReleased(this::gererMouseReleased);
-        this.setOnMouseClicked(this::gererClicDroit);
+       // this.setOnMouseClicked(this::gererDoubleClic);
+        this.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1) {
+                gererClicDroit(event); // Gestion du clic droit
+            } else {
+                gererDoubleClic(event); // Gestion du double-clic
+            }
+        });
     }
 
     /**
@@ -509,7 +516,6 @@ public class VueDiagramme extends Canvas implements Observateur {
                     if(!classeCible.getAttributs().isEmpty()){
                         MenuItem modifierAttributs = new MenuItem("Modifier les attributs");
                         modifierAttributs.setOnAction(e -> {
-
                         });
                         contextMenu.getItems().add(modifierAttributs);
                     }
@@ -532,9 +538,6 @@ public class VueDiagramme extends Canvas implements Observateur {
     }
 
 
-
-
-
     /**
      * Met à jour le texte du message affiché en bas de l'écran.
      * @param message Le message à afficher.
@@ -554,5 +557,35 @@ public class VueDiagramme extends Canvas implements Observateur {
     public static void reinitialiser(){
         positionsClasses.clear();
     }
+
+
+    private void gererDoubleClic(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            double mouseX = event.getX();
+            double mouseY = event.getY();
+
+            for (var entry : positionsClasses.entrySet()) {
+                Rectangle rect = entry.getValue();
+                if (rect.contains(mouseX, mouseY)) {
+                    Classe classeCible = entry.getKey();
+
+                    boolean attributsMasquesActuels = attributsMasques.getOrDefault(classeCible, false);
+                    boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
+
+                    attributsMasques.put(classeCible, !attributsMasquesActuels);
+                    methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
+
+                    dessinerDiagramme();
+                    setMessage((attributsMasquesActuels ? "Attributs démasqués" : "Attributs masqués") +
+                            " et " + (methodesMasqueesActuelles ? "méthodes démasquées" : "méthodes masquées") +
+                            " pour : " + classeCible.getNom());
+                    return;
+                }
+            }
+        }
+    }
+
+
+
 
 }

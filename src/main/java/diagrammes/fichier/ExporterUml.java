@@ -12,7 +12,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class ExporterUml implements Exporter {
-
+    /**
+     * Méthode pour exporter en UML
+     * @param path chemin absolu
+     * @param diagramme diagramme à exporter
+     * @throws IOException potentielle erreur
+     */
     @Override
     public void exporter(String path, Object diagramme) throws IOException {
         if (!(diagramme instanceof Diagramme)) {
@@ -55,7 +60,11 @@ public class ExporterUml implements Exporter {
         }
     }
 
-
+    /**
+     * Retourne le bon type de relation
+     * @param type type
+     * @return flèche
+     */
     private String getRelationArrow(RelationStrategy type) {
         // Ajoutez ici la logique pour mapper les types de relation à leurs flèches UML
         if (type.equals("heritage")) {
@@ -66,12 +75,17 @@ public class ExporterUml implements Exporter {
         return "--";
     }
 
+    /**
+     * Retourne la visibilité
+     * @param modificateur visibilité
+     * @return symbole
+     */
     private String getVisibility(String modificateur) {
         return switch (modificateur.toLowerCase()) {
             case "public" -> "+ ";
             case "private" -> "- ";
             case "protected" -> "# ";
-            default -> "~ "; // package-private ou autre
+            default -> "~ ";
         };
     }
 }

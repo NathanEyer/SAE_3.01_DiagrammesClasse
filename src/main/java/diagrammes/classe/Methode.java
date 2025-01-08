@@ -9,10 +9,10 @@ public class  Methode {
     /**
      * Attributs d'une méthode
      */
-    String nomMethode;
-    String typeRetour;
+    private final String nomMethode;
+    private final String typeRetour;
     List<String> parametres;
-    String modificateur;
+    private final String modificateur;
 
     /**
      * Construit une méthode à partir de son nom, du type de retour et des parametres
@@ -36,8 +36,7 @@ public class  Methode {
         return "Methode{" +
                 "nomMethode='" + nomMethode + '\'' +
                 ", typeRetour='" + typeRetour + '\'' +
-                ", parametres=" + parametres +
-                '}';
+                ", parametres=" + parametres + '}';
     }
 
     /**
@@ -48,9 +47,21 @@ public class  Methode {
         return nomMethode;
     }
 
+    /**
+     * Retourne le type de retour
+     * @return typeRetour
+     */
     public String getTypeRetour() { return typeRetour; }
 
+    /**
+     * Retourne les paramètres
+     * @return parametres
+     */
     public List<String> getParametres() { return parametres; }
 
+    /**
+     * Retourne la visibilité
+     * @return modificateur
+     */
     public String getModificateur() { return modificateur; }
 }

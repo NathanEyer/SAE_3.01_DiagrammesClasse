@@ -3,10 +3,19 @@ package diagrammes.relations;
 import diagrammes.classe.Classe;
 
 public class Relation {
-    private Classe depart;
-    private Classe destination;
-    private RelationStrategy type;
+    /**
+     * Attributs
+     */
+    private final Classe depart;
+    private final Classe destination;
+    private final RelationStrategy type;
 
+    /**
+     * Construit une relation
+     * @param depart classe de départ
+     * @param destination classe de destination
+     * @param type type de relation
+     */
     public Relation(Classe depart, Classe destination, RelationStrategy type) {
         this.depart = depart;
         this.destination = destination;
@@ -38,5 +47,4 @@ public class Relation {
     public RelationStrategy getType() {
         return type;
     }
-
 }

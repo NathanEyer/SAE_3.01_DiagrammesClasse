@@ -11,9 +11,7 @@ import java.util.List;
  */
 public interface Diagramme {
     void enregistrerObservateur(Observateur observateur);
-    void supprimerObservateur(Observateur observateur);
     void notifierObservateur() throws ClassNotFoundException;
     List<Classe> getClasses();
     List<Relation> getRelations();
-
 }

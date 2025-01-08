@@ -27,5 +27,4 @@ public class Association implements RelationStrategy{
    public static String type(){
       return "Association";
    }
-
 }

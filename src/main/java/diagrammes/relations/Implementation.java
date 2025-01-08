@@ -1,19 +1,13 @@
 package diagrammes.relations;
 
-
-import diagrammes.vue.VueDiagramme;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-
-
-
 public class Implementation implements RelationStrategy {
-    public Implementation() {
-    }
+    public Implementation() {}
 
+    /**
+     * Crée le lien
+     * @param nomClasse classe concernée
+     * @throws ClassNotFoundException potentielle erreur
+     */
     @Override
     public void creerLien(String nomClasse)throws ClassNotFoundException {
         System.out.println("Création d'un lien d'implémentation entre les classes.");
@@ -24,6 +18,10 @@ public class Implementation implements RelationStrategy {
 
     }
 
+    /**
+     * Retourne le type
+     * @return Implémentation
+     */
     public static String type(){
         return "Implementation";
     }

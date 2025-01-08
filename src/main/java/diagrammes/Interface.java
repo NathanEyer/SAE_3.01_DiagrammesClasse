@@ -1,7 +1,6 @@
 package diagrammes;
 
 import diagrammes.controleur.ControleurBoutons;
-import diagrammes.vue.VueDiagramme;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
@@ -39,19 +38,13 @@ public class Interface {
         reinitialiser.setOnAction(controleurBoutons);
         editer.getItems().addAll(reinitialiser);
 
-
         Menu creer = new Menu("Créer");
         MenuItem creerNvClasse = new MenuItem("Créer une nouvelle classe");
         creerNvClasse.setOnAction(controleurBoutons);
         creer.getItems().add(creerNvClasse);
 
-
-
         fichier.getItems().addAll(importer, exporter);
-
-
         menu.getMenus().addAll(fichier, editer, creer);
-
         return menu;
     }
 

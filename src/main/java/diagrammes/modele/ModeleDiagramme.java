@@ -147,7 +147,6 @@ public class ModeleDiagramme implements Diagramme {
 
             }
 
-
             for (Method method : classe.getDeclaredMethods()) {
                 List<String> parametres = new ArrayList<>();
                 for (Class<?> paramType : method.getParameterTypes()) {
@@ -161,7 +160,6 @@ public class ModeleDiagramme implements Diagramme {
                         modificateur // Ajout du modificateur
                 ));
             }
-
 
             // Ajouter la classe au modèle
             addClass(nouvelleClasse);
@@ -178,11 +176,6 @@ public class ModeleDiagramme implements Diagramme {
                 System.out.println(nouvelleClasse.getNom() + " implémente " + inter.getSimpleName());
                 addRelation(implementation);
             }
-
-
-
-
-
             System.out.println("Classe analysée : " + classe.getSimpleName());
         } catch (Exception e) {
             System.out.println("Erreur lors de l'analyse : " + cheminFichierClass);

@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class VueDiagramme extends Canvas implements Observateur {
     /**
-     * Diagramme
+     * Attributs
      */
     private final ModeleDiagramme modele;
     private final static HashMap<Classe, Rectangle> positionsClasses = new HashMap<>();
@@ -42,7 +42,7 @@ public class VueDiagramme extends Canvas implements Observateur {
      * Initialise le diagramme
      * @param modeleDiagramme Le modèle contenant les données du diagramme
      */
-    public VueDiagramme(ModeleDiagramme modeleDiagramme) throws ClassNotFoundException {
+    public VueDiagramme(ModeleDiagramme modeleDiagramme){
         super(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
         this.modele = modeleDiagramme;
         VueDiagramme.messageLabel = new Label();
@@ -96,6 +96,10 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
+    /**
+     * Gère l'action lorsque la souris est pressé
+     * @param event MouseEvent
+     */
     private void gererMousePressed(MouseEvent event) {
         double mouseX = event.getX();
         double mouseY = event.getY();
@@ -111,6 +115,10 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
+    /**
+     * Gère l'action quand la souris est maintenue
+     * @param event MouseEvent
+     */
     private void gererMouseDragged(MouseEvent event) {
         if (classeSelectionnee != null) {
             double newX = event.getX() - offsetX;
@@ -124,6 +132,10 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
+    /**
+     * Gère l'action quand la souris est lâché
+     * @param event MouseEvent
+     */
     private void gererMouseReleased(MouseEvent event) {
         classeSelectionnee = null;
     }
@@ -178,6 +190,11 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
+    /**
+     * Vérifie que c'est une interface
+     * @param classe Classe concernée
+     * @return boolean
+     */
     private boolean estInterface(Classe classe) {
         try {
             Class<?> clas = Class.forName(classe.getNom());
@@ -202,6 +219,11 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
+    /**
+     * Dessine une flèche d'héritage
+     * @param gc contexte graphique
+     * @param r relation à dessiner
+     */
     private void dessinerFlecheHeritage(GraphicsContext gc, Relation r) {
         Classe source = r.getDepart();
         Classe cible = r.getDestination();
@@ -232,6 +254,11 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
+    /**
+     * Dessine une flèche d'implémentation
+     * @param gc contexte graphique
+     * @param r relation à dessiner
+     */
     private void dessinerFlecheImplementation(GraphicsContext gc, Relation r) {
         Classe source = r.getDepart();
         Classe cible = r.getDestination();
@@ -265,6 +292,11 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
+    /**
+     * Dessine une flèche d'association
+     * @param gc contexte graphique
+     * @param r relation à dessiner
+     */
     private void dessinerFlecheAssociation(GraphicsContext gc, Relation r) {
         Classe source = r.getDepart();
         Classe cible = r.getDestination();
@@ -332,6 +364,10 @@ public class VueDiagramme extends Canvas implements Observateur {
         return hauteurNom + hauteurAttributs + hauteurMethodes + 10; // Ajout d'un padding
     }
 
+    /**
+     * Gère l'interaction du clic droit
+     * @param event MouseEvent
+     */
     private void gererClicDroit(MouseEvent event) {
         if (event.getButton() == MouseButton.SECONDARY) { // Vérifie que c'est un clic droit
             double mouseX = event.getX();
@@ -353,11 +389,11 @@ public class VueDiagramme extends Canvas implements Observateur {
 
                     MenuItem supprimer = new MenuItem("Supprimer");
                     supprimer.setOnAction(e -> {
-                        modele.getClasses().remove(classeCible); // Supprime la classe du modèle
-                        positionsClasses.remove(classeCible); // Supprime de la vue
-                        attributsMasques.remove(classeCible); // Supprime l'état des attributs
-                        methodesMasquees.remove(classeCible); // Supprime l'état des méthodes
-                        dessinerDiagramme(); // Rafraîchit l'affichage
+                        modele.getClasses().remove(classeCible);
+                        positionsClasses.remove(classeCible);
+                        attributsMasques.remove(classeCible);
+                        methodesMasquees.remove(classeCible);
+                        dessinerDiagramme();
                     });
 
                     boolean attributsMasquesActuels = attributsMasques.getOrDefault(classeCible, false);
@@ -376,20 +412,16 @@ public class VueDiagramme extends Canvas implements Observateur {
                         MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
                         masquerMethodes.setOnAction(e -> {
                             methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
-                            dessinerDiagramme(); // Rafraîchit l'affichage
+                            dessinerDiagramme();
                         });
                         contextMenu.getItems().add(masquerMethodes);
                     }
 
-                    // Ajoutez les options au menu
                     contextMenu.getItems().add(supprimer);
-
-                    // Affichez le menu contextuel
                     contextMenu.show(this, event.getScreenX(), event.getScreenY());
 
-                    // Enregistrer le menu actif
                     this.getProperties().put("activeMenu", contextMenu);
-                    return; // Stoppe la recherche après avoir trouvé la classe cible
+                    return;
                 }
             }
         }
@@ -430,7 +462,6 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Met à jour le texte du message affiché en bas de l'écran.
-     *
      * @param message Le message à afficher.
      */
     public static void setMessage(String message) {
@@ -439,7 +470,6 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Retourne le `Label` du message.
-     *
      * @return Label pour les messages utilisateur.
      */
     public Label getMessageLabel() {

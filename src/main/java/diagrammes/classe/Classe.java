@@ -11,7 +11,7 @@ public class Classe {
     /**
      * Attributs d'une classe
      */
-    private String nom;
+    private final String nom;
     private List<Attribut> attributs;
     private List<Methode> methodes;
 
@@ -21,7 +21,6 @@ public class Classe {
      */
     public Classe(String nom) {
         this.nom = nom;
-        //Initialise des Listes vides
         this.attributs = new ArrayList<>();
         this.methodes = new ArrayList<>();
     }
@@ -102,16 +101,26 @@ public class Classe {
         this.methodes = methodes;
     }
 
+    //REDEFINITION DU EQUALS ET DU HASHCODE POUR COMPARER LES CLASSES CORRECTEMENT
+    /**
+     * Redéfinition du equals
+     * @param o Object
+     * @return boolean
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Classe classe = (Classe) o;
-        return Objects.equals(nom, classe.nom); // Comparer par le nom ou un autre attribut unique
+        return Objects.equals(nom, classe.nom); //Comparer par le nom ou un autre attribut unique
     }
 
+    /**
+     * Redéfinition du hashCode
+     * @return int
+     */
     @Override
     public int hashCode() {
-        return Objects.hash(nom); // Générer un hashcode basé sur le même attribut que equals
+        return Objects.hash(nom); //Générer un hashcode basé sur le même attribut que equals
     }
 }

@@ -10,6 +10,9 @@ import java.io.File;
  * Gère les interactions de drag and drop
  */
 public class ControleurDragDrop {
+    /**
+     * Attribut
+     */
     private final ModeleDiagramme modele;
 
     /**

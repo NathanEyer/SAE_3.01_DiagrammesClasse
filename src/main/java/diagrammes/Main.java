@@ -75,5 +75,9 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Lancement de l'application
+     * @param args potentiel argument
+     */
     public static void main(String[] args) {launch(args);}
 }

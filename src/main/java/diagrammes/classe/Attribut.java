@@ -7,15 +7,15 @@ public class Attribut {
     /**
      * Attributs d'un attribut
      */
-    String nomAttribut;
-    String typeAttribut;
-
-    String modificateur;
+    private final String nomAttribut;
+    private final String typeAttribut;
+    private final String modificateur;
 
     /**
      * Construit un attribut à partir de son nom et son type
      * @param nomAttribut nom
      * @param typeAttribut type
+     * @param modificateur visibilité
      */
     public Attribut(String nomAttribut, String typeAttribut, String modificateur) {
         this.nomAttribut = nomAttribut;
@@ -48,5 +48,9 @@ public class Attribut {
         return typeAttribut;
     }
 
+    /**
+     * Retourne la visibilité de l'attribut
+     * @return modificateur
+     */
     public String getModificateur() { return modificateur; }
 }

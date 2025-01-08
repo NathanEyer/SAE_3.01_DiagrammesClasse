@@ -19,6 +19,7 @@ public class ChargementClasse extends ClassLoader {
     private final Path path;
 
     /**
+     * Construit un objet pour charger le bon nom de classe
      * @param path chemin absolu
      */
     public ChargementClasse(Path path) {
@@ -52,14 +53,14 @@ public class ChargementClasse extends ClassLoader {
             throw new IllegalArgumentException("Le fichier n'existe pas : " + path.toAbsolutePath());
         }
 
-        String className = path.toString();
-        className = className.replace(".class", "");
+        String className = path.toString().replace(".class", "");
         int nbSeparator = className.split(Pattern.quote(File.separator)).length - 1;
 
         while (nbSeparator > 0) {
             try {
+                //Retire le chemin absolu
                 String modifiedClassName = className.split(Pattern.quote(File.separator))[className.split(Pattern.quote(File.separator)).length - 1];
-                System.out.println(modifiedClassName);
+                //Teste le chargement de la classe sinon throwable
                 urlClassLoader.loadClass(modifiedClassName);
                 VueDiagramme.setMessage("Fichier " + modifiedClassName + ".class ajouté !");
                 return modifiedClassName;

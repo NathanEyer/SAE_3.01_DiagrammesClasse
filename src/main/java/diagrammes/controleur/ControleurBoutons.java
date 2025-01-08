@@ -1,6 +1,5 @@
 package diagrammes.controleur;
 
-
 import diagrammes.modele.ModeleDiagramme;
 import diagrammes.vue.VueDiagramme;
 import javafx.event.ActionEvent;
@@ -17,8 +16,8 @@ public class ControleurBoutons implements EventHandler<ActionEvent> {
      * Référence au modèle qui contient les données du diagramme
      */
     private final ModeleDiagramme modele;
-    private Stage stage;
-    private VueDiagramme vue;
+    private final Stage stage;
+    private final VueDiagramme vue;
 
     /**
      * Construit un objet ControleurBoutons
@@ -56,13 +55,9 @@ public class ControleurBoutons implements EventHandler<ActionEvent> {
                     modele.creerClasse();
                     break;
                 default:
-                    System.out.println("Bouton inconnu : " + control.getId());
+                    VueDiagramme.setMessage("Bouton inconnu : " + control.getId());
             }
         }
     }
-
-
-
-
 }
 

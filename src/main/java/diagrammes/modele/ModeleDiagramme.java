@@ -168,7 +168,7 @@ public class ModeleDiagramme implements Diagramme {
             addClass(nouvelleClasse);
             Class<?> classeParente = classe.getSuperclass();
 
-            if (classeParente != null) {
+            if (classeParente != null && !classeParente.getSimpleName().equals("Object")) {
                 Relation relation = new Relation(nouvelleClasse, new Classe(classeParente.getSimpleName()), new Heritage());
                 addRelation(relation);
             }

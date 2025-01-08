@@ -435,30 +435,35 @@ public class VueDiagramme extends Canvas implements Observateur {
      */
     private double[] getClosestPoint(Rectangle sourceRect, Rectangle targetRect) {
         double sourceCenterX = sourceRect.getX() + sourceRect.getWidth() / 2;
-        double sourceCenterY = sourceRect.getY() + 15; // Center of the title rectangle
+        double sourceCenterY = sourceRect.getY() + sourceRect.getHeight() / 2;
 
         double targetX = targetRect.getX();
         double targetY = targetRect.getY();
         double targetWidth = targetRect.getWidth();
-        double targetHeight = 30; // Height of the title rectangle
+        double targetHeight = targetRect.getHeight();
 
-        double closestX = targetX;
-        double closestY = targetY;
+        double closestX = sourceCenterX;
+        double closestY = sourceCenterY;
 
-        if (sourceCenterX > targetX + targetWidth) {
+        if (sourceCenterX < targetX) {
+            closestX = targetX;
+        } else if (sourceCenterX > targetX + targetWidth) {
             closestX = targetX + targetWidth;
-        } else if (sourceCenterX > targetX) {
-            closestX = sourceCenterX;
         }
 
-        if (sourceCenterY > targetY + targetHeight) {
-            closestY = targetY + targetHeight;
-        } else if (sourceCenterY > targetY) {
-            closestY = sourceCenterY;
+        if (sourceCenterY < targetY) {
+            closestY = targetY;
+        } else if (sourceCenterY > targetY + targetHeight) {
+            closestY = targetY + targetHeight - 10;
+        } else {
+            closestY = Math.max(targetY, Math.min(sourceCenterY, targetY + targetHeight));
         }
 
         return new double[]{closestX, closestY};
     }
+
+
+
 
     /**
      * Met à jour le texte du message affiché en bas de l'écran.

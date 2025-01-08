@@ -580,7 +580,6 @@ public class VueDiagramme extends Canvas implements Observateur {
 
                     attributsMasques.put(classeCible, !attributsMasquesActuels);
                     methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
-
                     dessinerDiagramme();
                     setMessage((attributsMasquesActuels ? "Attributs démasqués" : "Attributs masqués") +
                             " et " + (methodesMasqueesActuelles ? "méthodes démasquées" : "méthodes masquées") +

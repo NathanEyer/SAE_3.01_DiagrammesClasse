@@ -101,7 +101,6 @@ public class ModeleDiagramme implements Diagramme {
 
             // Obtenir le nom complet de la classe
             String nomClasse = ChargementClasse.getGoodName(fichierClass.toPath(), urlClassLoader);
-            System.out.println(nomClasse);
 
             // Charger la classe
             Class<?> classe = urlClassLoader.loadClass(nomClasse);
@@ -249,11 +248,6 @@ public class ModeleDiagramme implements Diagramme {
         }
     }
 
-
-    public void ajouterClasse(Classe classe) {
-        classes.add(classe);
-        notifierObservateur(); // Pour mettre à jour la vue
-    }
     
     
     /**

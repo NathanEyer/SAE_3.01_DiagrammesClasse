@@ -14,6 +14,11 @@ public class Implementation implements RelationStrategy {
     public Implementation() {
     }
 
+
+    /**
+     * @param nomClasse
+     * @throws ClassNotFoundException
+     */
     @Override
     public void creerLien(String nomClasse)throws ClassNotFoundException {
         System.out.println("Création d'un lien d'implémentation entre les classes.");
@@ -24,6 +29,10 @@ public class Implementation implements RelationStrategy {
 
     }
 
+
+    /**
+     * @return le type
+     */
     public static String type(){
         return "Implementation";
     }

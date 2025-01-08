@@ -6,6 +6,11 @@ public class Heritage implements RelationStrategy {
     public Heritage() {
     }
 
+
+    /**
+     * @param nomClasse
+     * @throws ClassNotFoundException
+     */
     @Override
     public void creerLien(String nomClasse) throws ClassNotFoundException{
         System.out.println("Création d'un lien d'héritage entre les classes.");
@@ -18,6 +23,9 @@ public class Heritage implements RelationStrategy {
 
     }
 
+    /**
+     * @return le type
+     */
     public static String type(){
         return "Heritage";
     }

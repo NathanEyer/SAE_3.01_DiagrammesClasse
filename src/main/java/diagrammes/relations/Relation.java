@@ -7,6 +7,12 @@ public class Relation {
     private Classe destination;
     private RelationStrategy type;
 
+
+    /**
+     * @param depart
+     * @param destination
+     * @param type
+     */
     public Relation(Classe depart, Classe destination, RelationStrategy type) {
         this.depart = depart;
         this.destination = destination;

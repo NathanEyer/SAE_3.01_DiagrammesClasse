@@ -9,18 +9,20 @@ import diagrammes.classe.Classe;
 import diagrammes.relations.Heritage;
 import diagrammes.relations.Implementation;
 import diagrammes.relations.Relation;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.List;
@@ -443,5 +445,10 @@ public class VueDiagramme extends Canvas implements Observateur {
     public Label getMessageLabel() {
         return messageLabel;
     }
+
+
+
+
+
 
 }

@@ -249,11 +249,6 @@ public class ModeleDiagramme implements Diagramme {
         }
     }
 
-
-    public void ajouterClasse(Classe classe) {
-        classes.add(classe);
-        notifierObservateur(); // Pour mettre à jour la vue
-    }
     
     
     /**

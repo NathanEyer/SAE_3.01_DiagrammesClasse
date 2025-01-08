@@ -15,6 +15,7 @@ public class Classe {
     private List<Attribut> attributs;
     private List<Methode> methodes;
 
+
     /**
      * Construit une classe à partir de son nom
      * @param nom nom
@@ -23,6 +24,8 @@ public class Classe {
         this.nom = nom;
         this.attributs = new ArrayList<>();
         this.methodes = new ArrayList<>();
+
+
     }
 
     /**
@@ -123,4 +126,8 @@ public class Classe {
     public int hashCode() {
         return Objects.hash(nom); //Générer un hashcode basé sur le même attribut que equals
     }
+
+
+
+
 }

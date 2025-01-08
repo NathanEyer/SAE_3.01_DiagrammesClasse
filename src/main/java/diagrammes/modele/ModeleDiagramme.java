@@ -36,6 +36,10 @@ public class ModeleDiagramme implements Diagramme {
     private List<Relation> relations;
     private List<Observateur> observateurs;
 
+
+    private boolean afficherAttributs = true;
+    private boolean afficherMethodes = true;
+
     /**
      * Construit un ModeleDiagramme par défaut
      */

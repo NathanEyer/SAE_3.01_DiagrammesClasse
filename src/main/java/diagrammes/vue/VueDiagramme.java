@@ -41,10 +41,9 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Initialise le diagramme
-     *
      * @param modeleDiagramme Le modèle contenant les données du diagramme
      */
-    public VueDiagramme(ModeleDiagramme modeleDiagramme) {
+    public VueDiagramme(ModeleDiagramme modeleDiagramme){
         super(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
         this.modele = modeleDiagramme;
         VueDiagramme.messageLabel = new Label();
@@ -58,7 +57,6 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Mise à jour de la vue
-     *
      * @param diagramme diagramme à actualiser
      */
     @Override
@@ -78,7 +76,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         gc.clearRect(0, 0, this.getWidth(), this.getHeight());
 
         // Variables pour le positionnement
-        double y = Math.random() * (Main.SCREEN_HEIGHT * 0.8), x = Math.random() * (Main.SCREEN_WIDTH * 0.5);
+        double y = Math.random()*(Main.SCREEN_HEIGHT * 0.8), x = Math.random()*(Main.SCREEN_WIDTH * 0.5);
 
         // Dessiner chaque Classe
         List<Classe> classes = modele.getClasses();
@@ -90,8 +88,8 @@ public class VueDiagramme extends Canvas implements Observateur {
             double finalY = y;
             Rectangle position = positionsClasses.computeIfAbsent(classe, c -> new Rectangle(finalX, finalY, largeur, hauteur));
             dessinerClasse(gc, classe, position.getX(), position.getY());
-            y = Math.random() * (Main.SCREEN_HEIGHT) / 1.2;
-            x = Math.random() * (Main.SCREEN_WIDTH / 1.6);
+            y = Math.random()*(Main.SCREEN_HEIGHT) / 1.2;
+            x = Math.random()*(Main.SCREEN_WIDTH / 1.6);
         }
 
         for (Relation relation : modele.getRelations()) {
@@ -101,7 +99,6 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Gère l'action lorsque la souris est pressé
-     *
      * @param event MouseEvent
      */
     private void gererMousePressed(MouseEvent event) {
@@ -121,7 +118,6 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Gère l'action quand la souris est maintenue
-     *
      * @param event MouseEvent
      */
     private void gererMouseDragged(MouseEvent event) {
@@ -139,7 +135,6 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Gère l'action quand la souris est lâché
-     *
      * @param event MouseEvent
      */
     private void gererMouseReleased(MouseEvent event) {
@@ -148,11 +143,10 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Dessine une Classe avec ses attributs et méthodes
-     *
-     * @param gc     contexte graphique
+     * @param gc contexte graphique
      * @param classe classe à dessiner
-     * @param x      coordonnée X de la Classe
-     * @param y      coordonnée Y de la Classe
+     * @param x coordonnée X de la Classe
+     * @param y coordonnée Y de la Classe
      */
     private void dessinerClasse(GraphicsContext gc, Classe classe, double x, double y) {
         double largeur = this.getLargeurClasse(classe);
@@ -172,7 +166,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         gc.strokeRect(x, y, largeur, hauteur);
 
         Color couleurFond = Color.LIGHTBLUE;
-        if (estInterface(classe)) {
+        if(estInterface(classe)) {
             couleurFond = Color.LIGHTGREEN;
         }
         gc.setFill(couleurFond);
@@ -202,7 +196,6 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Vérifie que c'est une interface
-     *
      * @param classe Classe concernée
      * @return boolean
      */
@@ -218,8 +211,7 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Dessine une relation entre deux classes
-     *
-     * @param gc       contexte graphique
+     * @param gc contexte graphique
      * @param relation relation à dessiner
      */
     private void dessinerRelation(GraphicsContext gc, Relation relation) {
@@ -238,9 +230,8 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Dessine une flèche d'héritage
-     *
      * @param gc contexte graphique
-     * @param r  relation à dessiner
+     * @param r relation à dessiner
      */
     private void dessinerFlecheHeritage(GraphicsContext gc, Relation r) {
         Classe source = r.getDepart();
@@ -272,12 +263,10 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
-
     /**
      * Dessine une flèche d'implémentation
-     *
      * @param gc contexte graphique
-     * @param r  relation à dessiner
+     * @param r relation à dessiner
      */
     private void dessinerFlecheImplementation(GraphicsContext gc, Relation r) {
         Classe source = r.getDepart();
@@ -314,9 +303,8 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Dessine une flèche d'association
-     *
      * @param gc contexte graphique
-     * @param r  relation à dessiner
+     * @param r relation à dessiner
      */
     private void dessinerFlecheAssociation(GraphicsContext gc, Relation r) {
         Classe source = r.getDepart();
@@ -350,8 +338,42 @@ public class VueDiagramme extends Canvas implements Observateur {
     }
 
     /**
+     * Calcule le point le plus proche sur le rectangle cible à partir du rectangle source
+     * @param sourceRect rectangle source
+     * @param targetRect rectangle cible
+     * @return tableau contenant les coordonnées X et Y du point le plus proche
+     */
+    private double[] getClosestPoint(Rectangle sourceRect, Rectangle targetRect) {
+        double sourceCenterX = sourceRect.getX() + sourceRect.getWidth() / 2;
+        double sourceCenterY = sourceRect.getY() + sourceRect.getHeight() / 2;
+
+        double targetX = targetRect.getX();
+        double targetY = targetRect.getY();
+        double targetWidth = targetRect.getWidth();
+        double targetHeight = targetRect.getHeight();
+
+        double closestX = sourceCenterX;
+        double closestY = sourceCenterY;
+
+        if (sourceCenterX < targetX) {
+            closestX = targetX;
+        } else if (sourceCenterX > targetX + targetWidth) {
+            closestX = targetX + targetWidth;
+        }
+
+        if (sourceCenterY < targetY) {
+            closestY = targetY;
+        } else if (sourceCenterY > targetY + targetHeight) {
+            closestY = targetY + targetHeight - 10;
+        } else {
+            closestY = Math.max(targetY, Math.min(sourceCenterY, targetY + targetHeight));
+        }
+
+        return new double[]{closestX, closestY};
+    }
+
+    /**
      * Renvoie la largeur de la classe à dessiner
-     *
      * @param classe classe concernée
      * @return largeur en px
      */
@@ -376,7 +398,6 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Renvoie la hauteur de la classe à dessiner
-     *
      * @param classe classe concernée
      * @return hauteur en px
      */
@@ -389,7 +410,6 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Gère l'interaction du clic droit
-     *
      * @param event MouseEvent
      */
     private void gererClicDroit(MouseEvent event) {
@@ -429,127 +449,70 @@ public class VueDiagramme extends Canvas implements Observateur {
                             dessinerDiagramme();
                         });
                         contextMenu.getItems().add(masquerAttributs);
-                    } else {
-                        MenuItem ajouterAttribut = new MenuItem("Ajouter Attribut");
-                        ajouterAttribut.setOnAction(e -> {
-
-                        });
-                        contextMenu.getItems().add(ajouterAttribut);
                     }
-
 
                     // Option pour masquer/démasquer les méthodes
                     if (!classeCible.getMethodes().isEmpty()) {
                         boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
-
-
-                        boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
-
-                        if (!classeCible.getMethodes().isEmpty()) {
-
-                            MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
-                            masquerMethodes.setOnAction(e -> {
-                                methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
-                                dessinerDiagramme();
-                            });
-                            contextMenu.getItems().add(masquerMethodes);
-                        } else {
-
-
-                            // Option pour masquer/démasquer les relations
-                            boolean relationsMasqueesActuelles = modele.getRelations().stream()
-                                    .filter(relation -> relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible))
-                                    .allMatch(relation -> relationsMasquees.getOrDefault(relation, false));
-
-                            MenuItem masquerDemasquerRelations = new MenuItem(
-                                    relationsMasqueesActuelles ? "Démasquer Relations" : "Masquer Relations"
-                            );
-                            masquerDemasquerRelations.setOnAction(e -> {
-                                modele.getRelations().forEach(relation -> {
-                                    if (relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible)) {
-                                        relationsMasquees.put(relation, !relationsMasqueesActuelles);
-                                    }
-                                });
-                                dessinerDiagramme(); // Rafraîchit l'affichage
-                            });
-                            contextMenu.getItems().add(masquerDemasquerRelations);
-
-                            MenuItem ajouterMethode = new MenuItem("Ajouter Méthode");
-                            ajouterMethode.setOnAction(e -> {
-                            });
-                            contextMenu.getItems().add(ajouterMethode);
-                        }
-
-                        contextMenu.getItems().add(supprimer);
-                        contextMenu.show(this, event.getScreenX(), event.getScreenY());
-
-                        this.getProperties().put("activeMenu", contextMenu);
-                        return;
+                        MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
+                        masquerMethodes.setOnAction(e -> {
+                            methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
+                            dessinerDiagramme();
+                        });
+                        contextMenu.getItems().add(masquerMethodes);
                     }
+
+                    // Option pour masquer/démasquer les relations
+                    boolean relationsMasqueesActuelles = modele.getRelations().stream()
+                            .filter(relation -> relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible))
+                            .allMatch(relation -> relationsMasquees.getOrDefault(relation, false));
+
+                    MenuItem masquerDemasquerRelations = new MenuItem(
+                            relationsMasqueesActuelles ? "Démasquer Relations" : "Masquer Relations"
+                    );
+                    masquerDemasquerRelations.setOnAction(e -> {
+                        modele.getRelations().forEach(relation -> {
+                            if (relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible)) {
+                                relationsMasquees.put(relation, !relationsMasqueesActuelles);
+                            }
+                        });
+                        dessinerDiagramme(); // Rafraîchit l'affichage
+                    });
+                    contextMenu.getItems().add(masquerDemasquerRelations);
+
+                    contextMenu.getItems().add(supprimer);
+                    contextMenu.show(this, event.getScreenX(), event.getScreenY());
+
+                    this.getProperties().put("activeMenu", contextMenu);
+                    return;
                 }
             }
-            this.dessinerDiagramme();
-        }
-
-        /**
-         * Calcule le point le plus proche sur le rectangle cible à partir du rectangle source
-         * @param sourceRect rectangle source
-         * @param targetRect rectangle cible
-         * @return tableau contenant les coordonnées X et Y du point le plus proche
-         */
-        private double[] getClosestPoint (Rectangle sourceRect, Rectangle targetRect) {
-            double sourceCenterX = sourceRect.getX() + sourceRect.getWidth() / 2;
-            double sourceCenterY = sourceRect.getY() + sourceRect.getHeight() / 2;
-
-            double targetX = targetRect.getX();
-            double targetY = targetRect.getY();
-            double targetWidth = targetRect.getWidth();
-            double targetHeight = targetRect.getHeight();
-
-            double closestX = sourceCenterX;
-            double closestY = sourceCenterY;
-
-            if (sourceCenterX < targetX) {
-                closestX = targetX;
-            } else if (sourceCenterX > targetX + targetWidth) {
-                closestX = targetX + targetWidth;
-            }
-
-            if (sourceCenterY < targetY) {
-                closestY = targetY;
-            } else if (sourceCenterY > targetY + targetHeight) {
-                closestY = targetY + targetHeight - 10;
-            } else {
-                closestY = Math.max(targetY, Math.min(sourceCenterY, targetY + targetHeight));
-            }
-
-            return new double[]{closestX, closestY};
-        }
-
-        private double getClosestPoint [](){
-
-
-            /**
-             * Met à jour le texte du message affiché en bas de l'écran.
-             * @param message Le message à afficher.
-             */
-            public static void setMessage (String message){
-                messageLabel.setText(message);
-            }
-
-            /**
-             * Retourne le `Label` du message.
-             * @return Label pour les messages utilisateur.
-             */
-            public Label getMessageLabel () {
-                return messageLabel;
-            }
-
-            public static void reinitialiser () {
-                positionsClasses.clear();
-            }
-
-
         }
     }
 
+
+
+
+    /**
+     * Met à jour le texte du message affiché en bas de l'écran.
+     * @param message Le message à afficher.
+     */
+    public static void setMessage(String message) {
+        messageLabel.setText(message);
+    }
+
+    /**
+     * Retourne le `Label` du message.
+     * @return Label pour les messages utilisateur.
+     */
+    public Label getMessageLabel() {
+        return messageLabel;
+    }
+
+    public static void reinitialiser(){
+        positionsClasses.clear();
+    }
+
+
+
+}

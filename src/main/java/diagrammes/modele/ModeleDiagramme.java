@@ -166,18 +166,14 @@ public class ModeleDiagramme implements Diagramme {
 
             if (classeParente != null) {
                 Relation relation = new Relation(nouvelleClasse, new Classe(classeParente.getSimpleName()), new Heritage());
-                System.out.println(nouvelleClasse.getNom() + " hérite de " + classeParente.getSimpleName());
                 addRelation(relation);
             }
             Class<?>[] interfaces = classe.getInterfaces();
             for (Class<?> inter : interfaces){
                 Relation implementation = new Relation(nouvelleClasse,new Classe(inter.getSimpleName()),new Implementation());
-                System.out.println(nouvelleClasse.getNom() + " implémente " + inter.getSimpleName());
                 addRelation(implementation);
             }
-            System.out.println("Classe analysée : " + classe.getSimpleName());
         } catch (Exception e) {
-            System.out.println("Erreur lors de l'analyse : " + cheminFichierClass);
             e.printStackTrace();
         }
     }

@@ -25,6 +25,8 @@ import javafx.scene.layout.Pane;
 import java.util.HashMap;
 import java.util.List;
 
+import static java.lang.System.*;
+
 /**
  * VueDiagramme affiche le diagramme à l'utilisateur en utilisant un Canvas.
  */
@@ -209,8 +211,8 @@ public class VueDiagramme extends Canvas implements Observateur {
         Classe source = r.getDepart();
         Classe cible = r.getDestination();
         if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            double[] start = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
-            double[] end = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
+            double[] start = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
+            double[] end = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
 
             // Dessiner la ligne
             gc.setStroke(Color.BLACK);
@@ -240,8 +242,8 @@ public class VueDiagramme extends Canvas implements Observateur {
         Classe cible = r.getDestination();
 
         if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            double[] start = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
-            double[] end = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
+            double[] start = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
+            double[] end = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
 
             // Dessiner la ligne en pointillés
             gc.setStroke(Color.BLACK);
@@ -273,8 +275,8 @@ public class VueDiagramme extends Canvas implements Observateur {
         Classe cible = r.getDestination();
 
         if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            double[] start = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
-            double[] end = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
+            double[] start = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
+            double[] end = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
 
             // Dessiner la ligne
             gc.setStroke(Color.BLACK);
@@ -295,6 +297,7 @@ public class VueDiagramme extends Canvas implements Observateur {
 
             gc.strokeLine(end[0], end[1], x1, y1);
             gc.strokeLine(end[0], end[1], x2, y2);
+
         }
     }
 

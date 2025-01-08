@@ -146,34 +146,25 @@ public class ModeleDiagramme implements Diagramme {
                 ));
 
 
-
                 // Gérer les associations pour les collections
                 if (Collection.class.isAssignableFrom(field.getType())) {
                     Type genericType = field.getGenericType();
                     if (genericType instanceof ParameterizedType) {
                         ParameterizedType parameterizedType = (ParameterizedType) genericType;
                         Type[] typeArguments = parameterizedType.getActualTypeArguments();
-                        if (typeArguments.length > 0) {
-                            String typeName = typeArguments[0].getTypeName(); // Obtenez le type contenu dans la collection
-                            System.out.println("Type générique détecté : " + typeName);
-                            String className = typeName.substring(typeName.lastIndexOf('.') + 1);
-                            Classe classeDestination = getClasseParNom(className);
-                            if (classeDestination == null) {
-                                System.out.println("Erreur : Classe non trouvée pour le type générique : " + className);
-                            } else {
-                                System.out.println("Classe trouvée pour le type générique : " + classeDestination.getNom());
-                                Relation relation = new Relation(nouvelleClasse, classeDestination, new Association());
-                                addRelation(relation);
-                            }
+                        if (typeArguments.length > 0 && typeArguments[0] instanceof Class<?>) {
+                            Class<?> genericClass = (Class<?>) typeArguments[0];
+                            String nomSimpl = genericClass.getSimpleName();
+                            Classe classeCollection = chargerOuCreerClasse(nomSimpl);
+                            Relation collectionRelation = new Relation(nouvelleClasse, classeCollection, new Association());
+                            addRelation(collectionRelation);
                         }
                     }
                 }
+
                 // Gérer les associations pour les types non primitifs
                 if (!field.getType().isPrimitive() && !field.getType().getName().startsWith("java.")) {
-                    Classe classeDestination = getClasseParNom(field.getType().getSimpleName());
-                    if (classeDestination == null) {
-                        classeDestination = new Classe(field.getType().getSimpleName());
-                    }
+                    Classe classeDestination = chargerOuCreerClasse(field.getType().getSimpleName());
                     Relation association = new Relation(nouvelleClasse, classeDestination, new Association());
                     System.out.println(classe.getSimpleName() + " possède un attribut de type " + field.getType().getSimpleName());
                     addRelation(association);
@@ -217,7 +208,29 @@ public class ModeleDiagramme implements Diagramme {
         for (Classe classe : classes) {
             System.out.println("- " + classe.getNom());
         }
+
+
     }
+
+    private Classe chargerOuCreerClasse(String nomClasse) throws ClassNotFoundException {
+        // Vérifie si la classe existe déjà dans le modèle
+        Classe classe = getClasseParNom(nomClasse);
+        if (classe == null) {
+            try {
+                // Tente de charger la classe dynamiquement
+                Class<?> classeDynamique = Class.forName(nomClasse);
+                classe = new Classe(classeDynamique.getSimpleName());
+                addClass(classe);
+            } catch (ClassNotFoundException e) {
+                // Si elle n'existe pas, la crée comme une nouvelle classe
+                System.out.println("Classe introuvable : " + nomClasse + ". Création d'une classe par défaut.");
+                classe = new Classe(nomClasse);
+                addClass(classe);
+            }
+        }
+        return classe;
+    }
+
 
 
     public Classe getClasseParNom(String nomClasse) {
@@ -234,9 +247,7 @@ public class ModeleDiagramme implements Diagramme {
     }
 
 
-    private boolean estCollection(Class<?> type) {
-        return type.getName().startsWith("java.util.");
-    }
+
 
     /**
      * Réinitialise tout le diagramme
@@ -269,8 +280,8 @@ public class ModeleDiagramme implements Diagramme {
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PlantUML files (*.puml)", "*.puml"));
 
         } //else if (format.equalsIgnoreCase("JAVA")) {
-            //export = new ExporterJava();
-            //fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PlantUML files (*.puml)", "*.puml"));
+        //export = new ExporterJava();
+        //fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PlantUML files (*.puml)", "*.puml"));
         //}
         // Affiche le FileChooser pour choisir l'emplacement du fichier
         File file = fileChooser.showSaveDialog(stage);

@@ -37,6 +37,7 @@ public class VueDiagramme extends Canvas implements Observateur {
     private final HashMap<Classe, Boolean> methodesMasquees = new HashMap<>();
     private final HashMap<Relation, Boolean> relationsMasquees = new HashMap<>();
     private static Label messageLabel;
+    private int e = 0;
 
 
     /**
@@ -88,6 +89,8 @@ public class VueDiagramme extends Canvas implements Observateur {
             double finalY = y;
             Rectangle position = positionsClasses.computeIfAbsent(classe, c -> new Rectangle(finalX, finalY, largeur, hauteur));
             dessinerClasse(gc, classe, position.getX(), position.getY());
+            position.setWidth(largeur);
+            position.setHeight(hauteur);
             y = Math.random()*(Main.SCREEN_HEIGHT) / 1.2;
             x = Math.random()*(Main.SCREEN_WIDTH / 1.6);
         }
@@ -114,6 +117,7 @@ public class VueDiagramme extends Canvas implements Observateur {
                 break;
             }
         }
+
     }
 
     /**
@@ -168,6 +172,10 @@ public class VueDiagramme extends Canvas implements Observateur {
         Color couleurFond = Color.LIGHTBLUE;
         if(estInterface(classe)) {
             couleurFond = Color.LIGHTGREEN;
+        }else if(estParente(classe)) {
+            couleurFond = Color.RED;
+        }else if(estParente(classe) && estInterface(classe)) {
+            couleurFond = Color.GREEN;
         }
         gc.setFill(couleurFond);
         gc.fillRect(x, y, largeur, hauteurNom);
@@ -192,6 +200,10 @@ public class VueDiagramme extends Canvas implements Observateur {
                 currentY += hauteurSection;
             }
         }
+
+
+        e++;
+        System.out.println("Dessin" + e);
     }
 
     /**
@@ -200,13 +212,26 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @return boolean
      */
     private boolean estInterface(Classe classe) {
-        try {
-            Class<?> clas = Class.forName(classe.getNom());
-            System.out.println("La classe est une interface");
-            return clas.isInterface();
-        } catch (ClassNotFoundException e) {
-            return false;
+        for(Relation relation : modele.getRelations()) {
+            if(relation.getDestination().equals(classe) && relation.getType() instanceof Implementation) {
+                return true;
+            }
         }
+        return false;
+    }
+
+    /**
+     * Vérifie que c'est une classe parente
+     * @param classe Classe concernée
+     * @return boolean
+     */
+    private boolean estParente(Classe classe) {
+        for(Relation relation : modele.getRelations()) {
+            if(relation.getDestination().equals(classe) && relation.getType() instanceof Heritage) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -216,7 +241,7 @@ public class VueDiagramme extends Canvas implements Observateur {
      */
     private void dessinerRelation(GraphicsContext gc, Relation relation) {
         if (relationsMasquees.getOrDefault(relation, false)) {
-            return; // Ne pas dessiner les relations masquées
+            return;
         }
         if (relation.getType() instanceof Heritage) {
             dessinerFlecheHeritage(gc, relation);
@@ -403,9 +428,11 @@ public class VueDiagramme extends Canvas implements Observateur {
      */
     public double getHauteurClasse(Classe classe) {
         double hauteurNom = 30; // Hauteur du titre
-        double hauteurAttributs = classe.getAttributs().size() * 20;
-        double hauteurMethodes = classe.getMethodes().size() * 20;
-        return hauteurNom + hauteurAttributs + hauteurMethodes + 10; // Ajout d'un padding
+        boolean attributsMasquesActuels = attributsMasques.getOrDefault(classe, false);
+        boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classe, false);
+        double hauteurAttributs = attributsMasquesActuels ? 0 : classe.getAttributs().size() * 20;
+        double hauteurMethodes = methodesMasqueesActuelles ? 0 : classe.getMethodes().size() * 20;
+        return hauteurNom + hauteurAttributs + hauteurMethodes + 10;
     }
 
     /**

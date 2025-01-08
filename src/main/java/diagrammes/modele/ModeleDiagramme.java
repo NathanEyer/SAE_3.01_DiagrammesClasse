@@ -319,10 +319,4 @@ public class ModeleDiagramme implements Diagramme {
         alert.showAndWait();
     }
 
-
-
-
-
-
-
 }

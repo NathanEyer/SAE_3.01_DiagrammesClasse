@@ -432,9 +432,6 @@ public class VueDiagramme extends Canvas implements Observateur {
 
 
                     // Option pour masquer/démasquer les méthodes
-                    if (!classeCible.getMethodes().isEmpty()) {
-                        boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
-
 
                     boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
 

@@ -211,8 +211,8 @@ public class VueDiagramme extends Canvas implements Observateur {
         Classe source = r.getDepart();
         Classe cible = r.getDestination();
         if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            double[] start = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
-            double[] end = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
+            double[] start = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
+            double[] end = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
 
             // Dessiner la ligne
             gc.setStroke(Color.BLACK);
@@ -242,8 +242,8 @@ public class VueDiagramme extends Canvas implements Observateur {
         Classe cible = r.getDestination();
 
         if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            double[] start = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
-            double[] end = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
+            double[] start = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
+            double[] end = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
 
             // Dessiner la ligne en pointillés
             gc.setStroke(Color.BLACK);
@@ -275,8 +275,8 @@ public class VueDiagramme extends Canvas implements Observateur {
         Classe cible = r.getDestination();
 
         if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            double[] start = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
-            double[] end = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
+            double[] start = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
+            double[] end = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
 
             // Dessiner la ligne
             gc.setStroke(Color.BLACK);

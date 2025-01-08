@@ -37,9 +37,7 @@ public class Interface {
         Menu editer  = new Menu("Éditer");
         MenuItem reinitialiser = new MenuItem("Réinitialiser");
         reinitialiser.setOnAction(controleurBoutons);
-        MenuItem nouveau = new MenuItem("Nouveau");
-        nouveau.setOnAction(controleurBoutons);
-        editer.getItems().addAll(reinitialiser, nouveau);
+        editer.getItems().addAll(reinitialiser);
 
 
         Menu creer = new Menu("Créer");

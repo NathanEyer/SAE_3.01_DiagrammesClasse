@@ -200,10 +200,8 @@ public class ModeleDiagramme implements Diagramme {
     public void reinitialiser()   {
         classes.clear();
         relations.clear();
+        VueDiagramme.reinitialiser();
         this.notifierObservateur();
-    }
-
-    public void nouveau(){
     }
 
     /**

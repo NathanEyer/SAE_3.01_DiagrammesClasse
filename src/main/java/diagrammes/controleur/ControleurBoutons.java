@@ -52,9 +52,6 @@ public class ControleurBoutons implements EventHandler<ActionEvent> {
                 case "Réinitialiser":
                     modele.reinitialiser();
                     break;
-                case "Nouveau":
-                    modele.nouveau();
-                    break;
                 case "Créer une nouvelle classe":
                     modele.creerClasse();
                     break;

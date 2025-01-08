@@ -9,25 +9,18 @@ import diagrammes.classe.Classe;
 import diagrammes.relations.Heritage;
 import diagrammes.relations.Implementation;
 import diagrammes.relations.Relation;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.List;
-
-import static java.lang.System.*;
 
 /**
  * VueDiagramme affiche le diagramme à l'utilisateur en utilisant un Canvas.
@@ -37,7 +30,7 @@ public class VueDiagramme extends Canvas implements Observateur {
      * Diagramme
      */
     private final ModeleDiagramme modele;
-    private final HashMap<Classe, Rectangle> positionsClasses = new HashMap<>();
+    private final static HashMap<Classe, Rectangle> positionsClasses = new HashMap<>();
     private Classe classeSelectionnee = null;
     private double offsetX, offsetY;
     private final HashMap<Classe, Boolean> attributsMasques = new HashMap<>();
@@ -52,7 +45,7 @@ public class VueDiagramme extends Canvas implements Observateur {
     public VueDiagramme(ModeleDiagramme modeleDiagramme) throws ClassNotFoundException {
         super(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
         this.modele = modeleDiagramme;
-        this.messageLabel = new Label();
+        VueDiagramme.messageLabel = new Label();
         this.modele.enregistrerObservateur(this);
 
         this.setOnMousePressed(this::gererMousePressed);
@@ -82,7 +75,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         gc.clearRect(0, 0, this.getWidth(), this.getHeight());
 
         // Variables pour le positionnement
-        double y = Math.random()*(Main.SCREEN_HEIGHT * 0.95), x = Math.random()*(Main.SCREEN_WIDTH / 1.5);
+        double y = Math.random()*(Main.SCREEN_HEIGHT * 0.8), x = Math.random()*(Main.SCREEN_WIDTH * 0.5);
 
         // Dessiner chaque Classe
         List<Classe> classes = modele.getClasses();
@@ -94,8 +87,8 @@ public class VueDiagramme extends Canvas implements Observateur {
             double finalY = y;
             Rectangle position = positionsClasses.computeIfAbsent(classe, c -> new Rectangle(finalX, finalY, largeur, hauteur));
             dessinerClasse(gc, classe, position.getX(), position.getY());
-            y = Math.random()*(Main.SCREEN_HEIGHT * 0.95);
-            x = Math.random()*(Main.SCREEN_WIDTH / 1.5);
+            y = Math.random()*(Main.SCREEN_HEIGHT) / 1.2;
+            x = Math.random()*(Main.SCREEN_WIDTH / 1.6);
         }
 
         for (Relation relation : modele.getRelations()) {
@@ -453,10 +446,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         return messageLabel;
     }
 
-
-
-
-
-
-
+    public static void reinitialiser(){
+        positionsClasses.clear();
+    }
 }

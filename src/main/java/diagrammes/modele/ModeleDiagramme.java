@@ -282,7 +282,9 @@ public class ModeleDiagramme implements Diagramme {
     }
 
 
-
+    /**
+     * methode creerClasse
+     */
     public void creerClasse() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Créer une nouvelle classe");
@@ -303,6 +305,11 @@ public class ModeleDiagramme implements Diagramme {
         });
     }
 
+
+    /**
+     * @param title
+     * @param message
+     */
 
     private void afficherAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

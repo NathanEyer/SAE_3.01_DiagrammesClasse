@@ -5,11 +5,6 @@ import java.lang.reflect.Modifier;
 public class Heritage implements RelationStrategy {
     public Heritage() {}
 
-    /**
-     * Crée le lien d'héritage
-     * @param nomClasse classe concerné
-     * @throws ClassNotFoundException potentielle erreur
-     */
     @Override
     public void creerLien(String nomClasse) throws ClassNotFoundException{
         System.out.println("Création d'un lien d'héritage entre les classes.");

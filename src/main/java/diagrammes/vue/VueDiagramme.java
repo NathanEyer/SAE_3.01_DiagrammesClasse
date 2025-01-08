@@ -165,7 +165,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         gc.strokeRect(x, y, largeur, hauteur);
 
         Color couleurFond = Color.LIGHTBLUE;
-        if(estInterface(classe)) {
+        if (estInterface(classe)) {
             couleurFond = Color.LIGHTGREEN;
         }
         gc.setFill(couleurFond);
@@ -201,7 +201,6 @@ public class VueDiagramme extends Canvas implements Observateur {
     private boolean estInterface(Classe classe) {
         try {
             Class<?> clas = Class.forName(classe.getNom());
-            System.out.println("La classe est une interface");
             return clas.isInterface();
         } catch (ClassNotFoundException e) {
             return false;

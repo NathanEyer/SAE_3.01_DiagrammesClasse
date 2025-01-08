@@ -213,14 +213,51 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @param relation relation à dessiner
      */
     private void dessinerRelation(GraphicsContext gc, Relation relation) {
-        if (relation.getType() instanceof Heritage) {
-            dessinerFlecheHeritage(gc, relation);
-        } else if (relation.getType() instanceof Implementation) {
-            dessinerFlecheImplementation(gc, relation);
-        } else {
-            dessinerFlecheAssociation(gc, relation);
+        Classe source = relation.getDepart();
+        Classe cible = relation.getDestination();
+
+        if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
+            // Obtenir les points de départ et d'arrivée en fonction des sections visibles
+            double[] start = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
+            double[] end = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
+
+            // Vérifie si des sections sont masquées, et ajuste le dessin des relations en conséquence
+            if (attributsMasques.getOrDefault(source, false)) {
+                start[1] = positionsClasses.get(source).getY() + 30; // Ajuste selon la hauteur du titre
+            }
+            if (methodesMasquees.getOrDefault(source, false)) {
+                start[1] = positionsClasses.get(source).getY() + 30 + (source.getAttributs().size() * 20); // Ajuste selon la taille des attributs
+            }
+            if (attributsMasques.getOrDefault(cible, false)) {
+                end[1] = positionsClasses.get(cible).getY() + 30; // Ajuste selon la hauteur du titre
+            }
+            if (methodesMasquees.getOrDefault(cible, false)) {
+                end[1] = positionsClasses.get(cible).getY() + 30 + (cible.getAttributs().size() * 20); // Ajuste selon la taille des attributs
+            }
+
+            // Dessiner la ligne
+            gc.setStroke(Color.BLACK);
+            gc.setLineWidth(1);
+            gc.strokeLine(start[0], start[1], end[0], end[1]);
+
+            // Dessiner la flèche
+            double arrowLength = 15;
+            double arrowWidth = 10;
+            double angle = Math.atan2(end[1] - start[1], end[0] - start[0]);
+            double sin = Math.sin(angle);
+            double cos = Math.cos(angle);
+
+            double x1 = end[0] - arrowLength * cos + arrowWidth * sin;
+            double y1 = end[1] - arrowLength * sin - arrowWidth * cos;
+            double x2 = end[0] - arrowLength * cos - arrowWidth * sin;
+            double y2 = end[1] - arrowLength * sin + arrowWidth * cos;
+
+            gc.setFill(Color.WHITE);
+            gc.fillPolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
+            gc.strokePolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
         }
     }
+
 
     /**
      * Dessine une flèche d'héritage

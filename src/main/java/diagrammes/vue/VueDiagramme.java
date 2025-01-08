@@ -164,7 +164,10 @@ public class VueDiagramme extends Canvas implements Observateur {
         gc.setLineWidth(2);
         gc.strokeRect(x, y, largeur, hauteur);
 
-        Color couleurFond = estInterface(classe) ? Color.LIGHTGREEN : Color.LIGHTBLUE;
+        Color couleurFond = Color.LIGHTBLUE;
+        if(estInterface(classe)) {
+            couleurFond = Color.LIGHTGREEN;
+        }
         gc.setFill(couleurFond);
         gc.fillRect(x, y, largeur, hauteurNom);
         gc.strokeRect(x, y, largeur, hauteurNom);
@@ -198,6 +201,7 @@ public class VueDiagramme extends Canvas implements Observateur {
     private boolean estInterface(Classe classe) {
         try {
             Class<?> clas = Class.forName(classe.getNom());
+            System.out.println("La classe est une interface");
             return clas.isInterface();
         } catch (ClassNotFoundException e) {
             return false;
@@ -405,18 +409,31 @@ public class VueDiagramme extends Canvas implements Observateur {
                             dessinerDiagramme();
                         });
                         contextMenu.getItems().add(masquerAttributs);
+                    }else{
+                        MenuItem ajouterAttribut = new MenuItem("Ajouter Attribut");
+                        ajouterAttribut.setOnAction(e -> {
+
+                        });
+                        contextMenu.getItems().add(ajouterAttribut);
                     }
 
+
+                    boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
+
                     if(!classeCible.getMethodes().isEmpty()) {
-                        boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
                         MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
                         masquerMethodes.setOnAction(e -> {
                             methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
                             dessinerDiagramme();
                         });
                         contextMenu.getItems().add(masquerMethodes);
-                    }
+                    }else{
 
+                        MenuItem ajouterMethode = new MenuItem("Ajouter Méthode");
+                        ajouterMethode.setOnAction(e -> {
+                        });
+                        contextMenu.getItems().add(ajouterMethode);
+                    }
                     contextMenu.getItems().add(supprimer);
                     contextMenu.show(this, event.getScreenX(), event.getScreenY());
 
@@ -479,4 +496,7 @@ public class VueDiagramme extends Canvas implements Observateur {
     public static void reinitialiser(){
         positionsClasses.clear();
     }
+
+
+
 }

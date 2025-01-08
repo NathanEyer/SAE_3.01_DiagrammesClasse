@@ -11,7 +11,7 @@ public class Classe {
     /**
      * Attributs d'une classe
      */
-    private final String nom;
+    private String nom;
     private List<Attribut> attributs;
     private List<Methode> methodes;
 
@@ -104,6 +104,8 @@ public class Classe {
         this.methodes = methodes;
     }
 
+
+    public void setNom(String nom) { this.nom = nom; }
     //REDEFINITION DU EQUALS ET DU HASHCODE POUR COMPARER LES CLASSES CORRECTEMENT
     /**
      * Redéfinition du equals

@@ -36,10 +36,6 @@ public class ModeleDiagramme implements Diagramme {
     private List<Relation> relations;
     private List<Observateur> observateurs;
 
-
-    private boolean afficherAttributs = true;
-    private boolean afficherMethodes = true;
-
     /**
      * Construit un ModeleDiagramme par défaut
      */
@@ -131,7 +127,6 @@ public class ModeleDiagramme implements Diagramme {
                 //gérer associations
                 if(!field.getType().isPrimitive() && !field.getType().getName().startsWith("java.")){
                     Relation association = new Relation(nouvelleClasse,new Classe(field.getType().getSimpleName()),new Association());
-                    System.out.println(classe.getSimpleName() + "possède un attribut de type " + field.getType().getSimpleName());
                     addRelation(association);
                 }
                 // gérer les associations pour les collections
@@ -140,7 +135,6 @@ public class ModeleDiagramme implements Diagramme {
                     if (typeAttribut.contains("<") && typeAttribut.contains(">")) {
                         // on extrait le type contenu dans la collection
                         String typeAssocie = typeAttribut.substring(typeAttribut.indexOf("<") + 1, typeAttribut.indexOf(">"));
-                        System.out.println("Association détectée via une collection : " + typeAssocie);
 
                         // on ajoute une relation pour le type contenu dans la collection
                         Relation association = new Relation(nouvelleClasse, new Classe(typeAssocie), new Association());

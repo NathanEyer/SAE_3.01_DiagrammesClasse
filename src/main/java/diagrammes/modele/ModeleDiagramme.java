@@ -14,7 +14,6 @@ import diagrammes.relations.Relation;
 import diagrammes.vue.Observateur;
 import diagrammes.vue.VueDiagramme;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;

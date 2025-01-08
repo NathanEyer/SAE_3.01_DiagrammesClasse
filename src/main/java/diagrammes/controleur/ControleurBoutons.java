@@ -55,11 +55,16 @@ public class ControleurBoutons implements EventHandler<ActionEvent> {
                 case "Nouveau":
                     modele.nouveau();
                     break;
+                case "Créer une nouvelle classe":
+                    modele.creerClasse();
+                    break;
                 default:
                     System.out.println("Bouton inconnu : " + control.getId());
             }
         }
     }
+
+
 
 
 }

@@ -34,7 +34,7 @@ public class Main extends Application {
         modele.enregistrerObservateur(vue);
 
         ControleurBoutons controleurBoutons = new ControleurBoutons(modele, primaryStage, vue);
-        ControleurDragDrop dragDrop = new ControleurDragDrop(modele, vue);
+        ControleurDragDrop dragDrop = new ControleurDragDrop(modele);
 
         // Conteneur principal
         BorderPane root = new BorderPane();

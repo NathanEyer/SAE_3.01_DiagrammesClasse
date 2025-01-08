@@ -13,6 +13,9 @@ import diagrammes.relations.Implementation;
 import diagrammes.relations.Relation;
 import diagrammes.vue.Observateur;
 import diagrammes.vue.VueDiagramme;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
@@ -101,7 +104,6 @@ public class ModeleDiagramme implements Diagramme {
 
             // Obtenir le nom complet de la classe
             String nomClasse = ChargementClasse.getGoodName(fichierClass.toPath(), urlClassLoader);
-            System.out.println(nomClasse);
 
             // Charger la classe
             Class<?> classe = urlClassLoader.loadClass(nomClasse);
@@ -266,11 +268,6 @@ public class ModeleDiagramme implements Diagramme {
         }
     }
 
-
-    public void ajouterClasse(Classe classe) {
-        classes.add(classe);
-        notifierObservateur(); // Pour mettre à jour la vue
-    }
     
     
     /**
@@ -285,6 +282,37 @@ public class ModeleDiagramme implements Diagramme {
      */
     public List<Relation> getRelations() {
         return relations;
+    }
+
+
+
+    public void creerClasse() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Créer une nouvelle classe");
+        dialog.setHeaderText("Entrez le nom de la nouvelle classe");
+        dialog.setContentText("Nom de la classe:");
+
+        dialog.showAndWait().ifPresent(nomClasse -> {
+            if (nomClasse != null && !nomClasse.trim().isEmpty()) {
+                Classe nouvelleClasse = new Classe(nomClasse);
+                try {
+                    addClass(nouvelleClasse);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                afficherAlert("Erreur", "Le nom de la classe ne peut pas être vide.");
+            }
+        });
+    }
+
+
+    private void afficherAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 

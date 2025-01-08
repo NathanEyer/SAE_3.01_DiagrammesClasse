@@ -11,16 +11,13 @@ import java.io.File;
  */
 public class ControleurDragDrop {
     private final ModeleDiagramme modele;
-    private final VueDiagramme vue; // Référence à la vue pour afficher les messages
 
     /**
      * Construit le contrôleur avec une référence au modèle et à la vue.
      * @param modele Le modèle contenant les données du diagramme.
-     * @param vue La vue permettant d'afficher les messages.
      */
-    public ControleurDragDrop(ModeleDiagramme modele, VueDiagramme vue) {
+    public ControleurDragDrop(ModeleDiagramme modele) {
         this.modele = modele;
-        this.vue = vue;
     }
 
     /**
@@ -30,7 +27,7 @@ public class ControleurDragDrop {
     public void handleDragOver(DragEvent event) {
         if (event.getGestureSource() != event.getSource() && event.getDragboard().hasFiles()) {
             event.acceptTransferModes(TransferMode.COPY);
-            vue.setMessage("Relâchez pour ajouter le fichier.");
+            VueDiagramme.setMessage("Relâchez pour ajouter le fichier.");
         }
         event.consume();
     }
@@ -45,9 +42,8 @@ public class ControleurDragDrop {
             for (File file : db.getFiles()) {
                 if (file.getName().endsWith(".class")) {
                     modele.analyserFichierClass(file.getAbsolutePath());
-                    vue.setMessage("Fichier ajouté : " + file.getName());
                 } else {
-                    vue.setMessage("Erreur : " + file.getName() + " n'est pas un fichier .class valide.");
+                    VueDiagramme.setMessage("Erreur : " + file.getName() + " n'est pas un fichier .class valide.");
                 }
             }
         }

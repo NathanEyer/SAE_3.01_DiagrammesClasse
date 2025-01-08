@@ -1,5 +1,7 @@
 package diagrammes.fichier;
 
+import diagrammes.vue.VueDiagramme;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URLClassLoader;
@@ -59,6 +61,7 @@ public class ChargementClasse extends ClassLoader {
                 String modifiedClassName = className.split(Pattern.quote(File.separator))[className.split(Pattern.quote(File.separator)).length - 1];
                 System.out.println(modifiedClassName);
                 urlClassLoader.loadClass(modifiedClassName);
+                VueDiagramme.setMessage("Fichier " + modifiedClassName + ".class ajouté !");
                 return modifiedClassName;
             } catch (Throwable e) {
                 int lastSeparatorIndex = className.lastIndexOf(File.separator);
@@ -68,6 +71,7 @@ public class ChargementClasse extends ClassLoader {
             }
             nbSeparator--;
         }
+        VueDiagramme.setMessage("Le fichier " + path + " n'a pas pu être importé");
         return null;
     }
 }

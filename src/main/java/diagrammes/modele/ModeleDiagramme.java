@@ -291,6 +291,7 @@ public class ModeleDiagramme implements Diagramme {
                 Classe nouvelleClasse = new Classe(nomClasse);
                 try {
                     addClass(nouvelleClasse);
+                    VueDiagramme.setMessage(nomClasse + " créé");
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }

@@ -43,8 +43,17 @@ public class Interface {
         creerNvClasse.setOnAction(controleurBoutons);
         creer.getItems().add(creerNvClasse);
 
+        Menu masquer = new Menu("Masquer");
+        MenuItem masquerToutMethodes = new MenuItem("Masquer toutes les méthodes");
+        MenuItem masquerToutAttributs = new MenuItem("Masquer tout les attributs");
+
+        masquerToutAttributs.setOnAction(controleurBoutons);
+        masquerToutMethodes.setOnAction(controleurBoutons);
+
+        masquer.getItems().addAll(masquerToutMethodes, masquerToutAttributs);
+
         fichier.getItems().addAll(importer, exporter);
-        menu.getMenus().addAll(fichier, editer, creer);
+        menu.getMenus().addAll(fichier, editer, creer , masquer);
         return menu;
     }
 

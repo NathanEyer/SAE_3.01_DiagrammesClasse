@@ -165,7 +165,10 @@ public class VueDiagramme extends Canvas implements Observateur {
         gc.setLineWidth(2);
         gc.strokeRect(x, y, largeur, hauteur);
 
-        Color couleurFond = estInterface(classe) ? Color.LIGHTGREEN : Color.LIGHTBLUE;
+        Color couleurFond = Color.LIGHTBLUE;
+        if(estInterface(classe)) {
+            couleurFond = Color.LIGHTGREEN;
+        }
         gc.setFill(couleurFond);
         gc.fillRect(x, y, largeur, hauteurNom);
         gc.strokeRect(x, y, largeur, hauteurNom);
@@ -199,6 +202,7 @@ public class VueDiagramme extends Canvas implements Observateur {
     private boolean estInterface(Classe classe) {
         try {
             Class<?> clas = Class.forName(classe.getNom());
+            System.out.println("La classe est une interface");
             return clas.isInterface();
         } catch (ClassNotFoundException e) {
             return false;
@@ -222,6 +226,7 @@ public class VueDiagramme extends Canvas implements Observateur {
             dessinerFlecheAssociation(gc, relation);
         }
     }
+
 
     /**
      * Dessine une flèche d'héritage
@@ -409,18 +414,32 @@ public class VueDiagramme extends Canvas implements Observateur {
                             dessinerDiagramme();
                         });
                         contextMenu.getItems().add(masquerAttributs);
+                    }else{
+                        MenuItem ajouterAttribut = new MenuItem("Ajouter Attribut");
+                        ajouterAttribut.setOnAction(e -> {
+
+                        });
+                        contextMenu.getItems().add(ajouterAttribut);
                     }
+
 
                     // Option pour masquer/démasquer les méthodes
                     if (!classeCible.getMethodes().isEmpty()) {
                         boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
+
+
+                    boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
+
+                    if(!classeCible.getMethodes().isEmpty()) {
+
                         MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
                         masquerMethodes.setOnAction(e -> {
                             methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
                             dessinerDiagramme();
                         });
                         contextMenu.getItems().add(masquerMethodes);
-                    }
+                    }else{
+
 
                     // Option pour masquer/démasquer les relations
                     boolean relationsMasqueesActuelles = modele.getRelations().stream()
@@ -440,6 +459,12 @@ public class VueDiagramme extends Canvas implements Observateur {
                     });
                     contextMenu.getItems().add(masquerDemasquerRelations);
 
+                        MenuItem ajouterMethode = new MenuItem("Ajouter Méthode");
+                        ajouterMethode.setOnAction(e -> {
+                        });
+                        contextMenu.getItems().add(ajouterMethode);
+                    }
+
                     contextMenu.getItems().add(supprimer);
                     contextMenu.show(this, event.getScreenX(), event.getScreenY());
 
@@ -448,6 +473,7 @@ public class VueDiagramme extends Canvas implements Observateur {
                 }
             }
         }
+        this.dessinerDiagramme();
     }
 
     /**
@@ -458,30 +484,35 @@ public class VueDiagramme extends Canvas implements Observateur {
      */
     private double[] getClosestPoint(Rectangle sourceRect, Rectangle targetRect) {
         double sourceCenterX = sourceRect.getX() + sourceRect.getWidth() / 2;
-        double sourceCenterY = sourceRect.getY() + 15; // Center of the title rectangle
+        double sourceCenterY = sourceRect.getY() + sourceRect.getHeight() / 2;
 
         double targetX = targetRect.getX();
         double targetY = targetRect.getY();
         double targetWidth = targetRect.getWidth();
-        double targetHeight = 30; // Height of the title rectangle
+        double targetHeight = targetRect.getHeight();
 
-        double closestX = targetX;
-        double closestY = targetY;
+        double closestX = sourceCenterX;
+        double closestY = sourceCenterY;
 
-        if (sourceCenterX > targetX + targetWidth) {
+        if (sourceCenterX < targetX) {
+            closestX = targetX;
+        } else if (sourceCenterX > targetX + targetWidth) {
             closestX = targetX + targetWidth;
-        } else if (sourceCenterX > targetX) {
-            closestX = sourceCenterX;
         }
 
-        if (sourceCenterY > targetY + targetHeight) {
-            closestY = targetY + targetHeight;
-        } else if (sourceCenterY > targetY) {
-            closestY = sourceCenterY;
+        if (sourceCenterY < targetY) {
+            closestY = targetY;
+        } else if (sourceCenterY > targetY + targetHeight) {
+            closestY = targetY + targetHeight - 10;
+        } else {
+            closestY = Math.max(targetY, Math.min(sourceCenterY, targetY + targetHeight));
         }
 
         return new double[]{closestX, closestY};
     }
+
+
+
 
     /**
      * Met à jour le texte du message affiché en bas de l'écran.
@@ -502,4 +533,7 @@ public class VueDiagramme extends Canvas implements Observateur {
     public static void reinitialiser(){
         positionsClasses.clear();
     }
+
+
+
 }

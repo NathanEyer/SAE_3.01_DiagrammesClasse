@@ -3,10 +3,7 @@ package diagrammes.modele;
 import diagrammes.classe.Classe;
 import diagrammes.classe.Methode;
 import diagrammes.classe.Attribut;
-import diagrammes.fichier.Exporter;
-import diagrammes.fichier.ExporterImage;
-import diagrammes.fichier.ChargementClasse;
-import diagrammes.fichier.ExporterUml;
+import diagrammes.fichier.*;
 import diagrammes.relations.Association;
 import diagrammes.relations.Heritage;
 import diagrammes.relations.Implementation;
@@ -35,10 +32,6 @@ public class ModeleDiagramme implements Diagramme {
     private List<Classe> classes;
     private List<Relation> relations;
     private List<Observateur> observateurs;
-
-
-    private boolean afficherAttributs = true;
-    private boolean afficherMethodes = true;
 
     /**
      * Construit un ModeleDiagramme par défaut
@@ -131,7 +124,6 @@ public class ModeleDiagramme implements Diagramme {
                 //gérer associations
                 if(!field.getType().isPrimitive() && !field.getType().getName().startsWith("java.")){
                     Relation association = new Relation(nouvelleClasse,new Classe(field.getType().getSimpleName()),new Association());
-                    System.out.println(classe.getSimpleName() + "possède un attribut de type " + field.getType().getSimpleName());
                     addRelation(association);
                 }
                 // gérer les associations pour les collections
@@ -140,7 +132,6 @@ public class ModeleDiagramme implements Diagramme {
                     if (typeAttribut.contains("<") && typeAttribut.contains(">")) {
                         // on extrait le type contenu dans la collection
                         String typeAssocie = typeAttribut.substring(typeAttribut.indexOf("<") + 1, typeAttribut.indexOf(">"));
-                        System.out.println("Association détectée via une collection : " + typeAssocie);
 
                         // on ajoute une relation pour le type contenu dans la collection
                         Relation association = new Relation(nouvelleClasse, new Classe(typeAssocie), new Association());
@@ -215,8 +206,11 @@ public class ModeleDiagramme implements Diagramme {
         } else if (format.equalsIgnoreCase("UML")) {
             export = new ExporterUml();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PlantUML files (*.puml)", "*.puml"));
-        }
 
+        } //else if (format.equalsIgnoreCase("JAVA")) {
+            //export = new ExporterJava();
+            //fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PlantUML files (*.puml)", "*.puml"));
+        //}
         // Affiche le FileChooser pour choisir l'emplacement du fichier
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
@@ -318,11 +312,5 @@ public class ModeleDiagramme implements Diagramme {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-
-
-
-
-
 
 }

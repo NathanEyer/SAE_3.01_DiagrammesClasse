@@ -7,7 +7,6 @@ public class Heritage implements RelationStrategy {
 
     @Override
     public void creerLien(String nomClasse) throws ClassNotFoundException{
-        System.out.println("Création d'un lien d'héritage entre les classes.");
         Class<?> classe = Class.forName(nomClasse);
         if (Modifier.isAbstract(classe.getModifiers())) {
             System.out.println("La classe " + nomClasse + " est abstraite.");

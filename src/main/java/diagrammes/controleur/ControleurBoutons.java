@@ -1,6 +1,8 @@
 package diagrammes.controleur;
 
+import diagrammes.classe.Classe;
 import diagrammes.modele.ModeleDiagramme;
+import diagrammes.vue.VueCreationClasse;
 import diagrammes.vue.VueDiagramme;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -52,7 +54,19 @@ public class ControleurBoutons implements EventHandler<ActionEvent> {
                     modele.reinitialiser();
                     break;
                 case "Créer une nouvelle classe":
-                    modele.creerClasse();
+                    VueCreationClasse vueCreation = new VueCreationClasse();
+                    Classe nouvelleClasse = vueCreation.afficher();
+                    if (nouvelleClasse != null) {
+                        try {
+                            modele.addClass(nouvelleClasse);
+                        } catch (ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                        VueDiagramme.setMessage("Classe " + nouvelleClasse.getNom() + " créée !");
+                    }
+                    break;
+                case "Exporter en Java":
+                    modele.exporter(stage, vue, "JAVA");
                     break;
                 default:
                     VueDiagramme.setMessage("Bouton inconnu : " + control.getId());

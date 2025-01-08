@@ -37,6 +37,7 @@ public class VueDiagramme extends Canvas implements Observateur {
     private final HashMap<Classe, Boolean> methodesMasquees = new HashMap<>();
     private final HashMap<Relation, Boolean> relationsMasquees = new HashMap<>();
     private static Label messageLabel;
+    private int e = 0;
 
 
     /**
@@ -123,6 +124,7 @@ public class VueDiagramme extends Canvas implements Observateur {
                 break;
             }
         }
+
     }
 
     /**
@@ -205,6 +207,10 @@ public class VueDiagramme extends Canvas implements Observateur {
                 currentY += hauteurSection;
             }
         }
+
+
+        e++;
+        System.out.println("Dessin" + e);
     }
 
     /**

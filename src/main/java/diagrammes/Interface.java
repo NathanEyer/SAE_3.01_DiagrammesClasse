@@ -30,7 +30,9 @@ public class Interface {
         exporterPng.setOnAction(controleurBoutons);
         MenuItem exporterUml = new MenuItem("Exporter en UML");
         exporterUml.setOnAction(controleurBoutons);
-        exporter.getItems().addAll(exporterPng, exporterUml);
+        MenuItem exporterJava = new MenuItem("Exporter en Java");
+        exporterJava.setOnAction(controleurBoutons);
+        exporter.getItems().addAll(exporterPng, exporterUml, exporterJava);
 
         //Menu Edit
         Menu editer  = new Menu("Éditer");

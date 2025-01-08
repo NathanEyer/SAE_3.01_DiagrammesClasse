@@ -168,6 +168,10 @@ public class VueDiagramme extends Canvas implements Observateur {
         Color couleurFond = Color.LIGHTBLUE;
         if(estInterface(classe)) {
             couleurFond = Color.LIGHTGREEN;
+        }else if(estParente(classe)) {
+            couleurFond = Color.RED;
+        }else if(estParente(classe) && estInterface(classe)) {
+            couleurFond = Color.GREEN;
         }
         gc.setFill(couleurFond);
         gc.fillRect(x, y, largeur, hauteurNom);
@@ -200,13 +204,26 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @return boolean
      */
     private boolean estInterface(Classe classe) {
-        try {
-            Class<?> clas = Class.forName(classe.getNom());
-            System.out.println("La classe est une interface");
-            return clas.isInterface();
-        } catch (ClassNotFoundException e) {
-            return false;
+        for(Relation relation : modele.getRelations()) {
+            if(relation.getDestination().equals(classe) && relation.getType() instanceof Implementation) {
+                return true;
+            }
         }
+        return false;
+    }
+
+    /**
+     * Vérifie que c'est une classe parente
+     * @param classe Classe concernée
+     * @return boolean
+     */
+    private boolean estParente(Classe classe) {
+        for(Relation relation : modele.getRelations()) {
+            if(relation.getDestination().equals(classe) && relation.getType() instanceof Heritage) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -216,7 +233,7 @@ public class VueDiagramme extends Canvas implements Observateur {
      */
     private void dessinerRelation(GraphicsContext gc, Relation relation) {
         if (relationsMasquees.getOrDefault(relation, false)) {
-            return; // Ne pas dessiner les relations masquées
+            return;
         }
         if (relation.getType() instanceof Heritage) {
             dessinerFlecheHeritage(gc, relation);

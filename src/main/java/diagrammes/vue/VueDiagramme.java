@@ -489,6 +489,21 @@ public class VueDiagramme extends Canvas implements Observateur {
                     });
                     contextMenu.getItems().add(masquerDemasquerRelations);
 
+                    if(!classeCible.getAttributs().isEmpty()){
+                        MenuItem modifierAttributs = new MenuItem("Modifier les attributs");
+                        modifierAttributs.setOnAction(e -> {
+
+                        });
+                        contextMenu.getItems().add(modifierAttributs);
+                    }
+
+
+                    if(!classeCible.getAttributs().isEmpty()){
+                        MenuItem modifierMethodes = new MenuItem("Modifier les Methodes");
+                        contextMenu.getItems().add(modifierMethodes);
+                    }
+
+
                     contextMenu.getItems().add(supprimer);
                     contextMenu.show(this, event.getScreenX(), event.getScreenY());
 
@@ -522,10 +537,5 @@ public class VueDiagramme extends Canvas implements Observateur {
     public static void reinitialiser(){
         positionsClasses.clear();
     }
-
-
-
-
-
 
 }

@@ -17,13 +17,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Diagramme concret
@@ -47,6 +48,7 @@ public class ModeleDiagramme implements Diagramme {
 
     /**
      * Ajoute une classe au diagramme
+     *
      * @param classe à ajouter
      */
     public void addClass(Classe classe) throws ClassNotFoundException {
@@ -56,9 +58,25 @@ public class ModeleDiagramme implements Diagramme {
 
     /**
      * Ajoute une relation entre les classes
+     *
      * @param relation à ajouter
      */
     public void addRelation(Relation relation) throws ClassNotFoundException {
+        //debug//
+        if (relation.getDestination() == null || relation.getDepart() == null) {
+            System.out.println("Relation invalide détectée : ");
+            if (relation.getDepart() != null) {
+                System.out.println("Source : " + relation.getDepart().getNom());
+            } else {
+                System.out.println("Source est null");
+            }
+            if (relation.getDestination() != null) {
+                System.out.println("Destination : " + relation.getDestination().getNom());
+            } else {
+                System.out.println("Destination est null");
+            }
+        }
+        ////
         relations.add(relation);
         notifierObservateur();
     }
@@ -88,6 +106,7 @@ public class ModeleDiagramme implements Diagramme {
     /**
      * Analyse un fichier class grâce à l'introspection pour extraire
      * les attributs et les méthodes.
+     *
      * @param cheminFichierClass Le nom complet de la classe (package inclus).
      */
     public void analyserFichierClass(String cheminFichierClass) {
@@ -103,7 +122,7 @@ public class ModeleDiagramme implements Diagramme {
 
             // Obtenir le nom complet de la classe
             String nomClasse = ChargementClasse.getGoodName(fichierClass.toPath(), urlClassLoader);
-            while(nomClasse == null) {
+            while (nomClasse == null) {
                 dossierParent = fichierClass.getParentFile();
                 dossierParentURL = dossierParent.toURI().toURL();
                 urlClassLoader = URLClassLoader.newInstance(new URL[]{dossierParentURL});
@@ -117,6 +136,10 @@ public class ModeleDiagramme implements Diagramme {
             Classe nouvelleClasse = new Classe(classe.getSimpleName());
 
             for (Field field : classe.getDeclaredFields()) {
+                // Debug
+                System.out.println("Analyse du champ : " + field.getName());
+                System.out.println("Type : " + field.getType());
+                System.out.println("Type générique : " + field.getGenericType());
 
                 String modificateur = Modifier.toString(field.getModifiers()); // Récupération du modificateur
                 nouvelleClasse.ajouterAttribut(new Attribut(
@@ -124,26 +147,38 @@ public class ModeleDiagramme implements Diagramme {
                         field.getType().getSimpleName(),
                         modificateur // Ajout du modificateur
                 ));
-                //gérer associations
-                if(!field.getType().isPrimitive() && !field.getType().getName().startsWith("java.")){
-                    Relation association = new Relation(nouvelleClasse,new Classe(field.getType().getSimpleName()),new Association());
-                    System.out.println(classe.getSimpleName() + "possède un attribut de type " + field.getType().getSimpleName());
-                    addRelation(association);
-                }
-                // gérer les associations pour les collections
-                if (estCollection(field.getType())) {
-                    String typeAttribut = field.getGenericType().getTypeName();
-                    if (typeAttribut.contains("<") && typeAttribut.contains(">")) {
-                        // on extrait le type contenu dans la collection
-                        String typeAssocie = typeAttribut.substring(typeAttribut.indexOf("<") + 1, typeAttribut.indexOf(">"));
-                        System.out.println("Association détectée via une collection : " + typeAssocie);
 
-                        // on ajoute une relation pour le type contenu dans la collection
-                        Relation association = new Relation(nouvelleClasse, new Classe(typeAssocie), new Association());
-                        addRelation(association);
+                // Gérer les associations pour les collections
+                if (Collection.class.isAssignableFrom(field.getType())) {
+                    Type genericType = field.getGenericType();
+                    if (genericType instanceof ParameterizedType) {
+                        ParameterizedType parameterizedType = (ParameterizedType) genericType;
+                        Type[] typeArguments = parameterizedType.getActualTypeArguments();
+                        if (typeArguments.length > 0) {
+                            String typeName = typeArguments[0].getTypeName(); // Obtenez le type contenu dans la collection
+                            System.out.println("Type générique détecté : " + typeName);
+                            String className = typeName.substring(typeName.lastIndexOf('.') + 1);
+                            Classe classeDestination = getClasseParNom(className);
+                            if (classeDestination == null) {
+                                System.out.println("Erreur : Classe non trouvée pour le type générique : " + className);
+                            } else {
+                                System.out.println("Classe trouvée pour le type générique : " + classeDestination.getNom());
+                                Relation relation = new Relation(nouvelleClasse, classeDestination, new Association());
+                                addRelation(relation);
+                            }
+                        }
                     }
                 }
-
+                // Gérer les associations pour les types non primitifs
+                if (!field.getType().isPrimitive() && !field.getType().getName().startsWith("java.")) {
+                    Classe classeDestination = getClasseParNom(field.getType().getSimpleName());
+                    if (classeDestination == null) {
+                        classeDestination = new Classe(field.getType().getSimpleName());
+                    }
+                    Relation association = new Relation(nouvelleClasse, classeDestination, new Association());
+                    System.out.println(classe.getSimpleName() + " possède un attribut de type " + field.getType().getSimpleName());
+                    addRelation(association);
+                }
             }
 
             for (Method method : classe.getDeclaredMethods()) {
@@ -169,14 +204,36 @@ public class ModeleDiagramme implements Diagramme {
                 addRelation(relation);
             }
             Class<?>[] interfaces = classe.getInterfaces();
-            for (Class<?> inter : interfaces){
-                Relation implementation = new Relation(nouvelleClasse,new Classe(inter.getSimpleName()),new Implementation());
+            for (Class<?> inter : interfaces) {
+                Relation implementation = new Relation(nouvelleClasse, new Classe(inter.getSimpleName()), new Implementation());
                 addRelation(implementation);
             }
+            urlClassLoader.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // Debug
+        System.out.println("Classes détectées dans le modèle :");
+        for (Classe classe : classes) {
+            System.out.println("- " + classe.getNom());
+        }
     }
+
+
+    public Classe getClasseParNom(String nomClasse) {
+        System.out.println("Recherche de la classe : " + nomClasse);
+        for (Classe classe : classes) {
+            System.out.println("Comparaison avec : " + classe.getNom());
+            if (classe.getNom().equals(nomClasse)) {
+                System.out.println("Classe trouvée : " + classe.getNom());
+                return classe;
+            }
+        }
+        System.out.println("Classe non trouvée : " + nomClasse);
+        return null;
+    }
+
 
     private boolean estCollection(Class<?> type) {
         return type.getName().startsWith("java.util.");
@@ -185,7 +242,7 @@ public class ModeleDiagramme implements Diagramme {
     /**
      * Réinitialise tout le diagramme
      */
-    public void reinitialiser()   {
+    public void reinitialiser() {
         classes.clear();
         relations.clear();
         VueDiagramme.reinitialiser();
@@ -195,8 +252,8 @@ public class ModeleDiagramme implements Diagramme {
     /**
      * Exporte le diagramme dans un fichier au format spécifié (PNG ou UML).
      *
-     * @param stage La fenêtre de l'application pour afficher le FileChooser.
-     * @param vue   La vue du diagramme (utile pour l'export PNG).
+     * @param stage  La fenêtre de l'application pour afficher le FileChooser.
+     * @param vue    La vue du diagramme (utile pour l'export PNG).
      * @param format Le format d'exportation ("PNG" ou "UML").
      * @return true si l'exportation a réussi, false sinon.
      */
@@ -234,6 +291,7 @@ public class ModeleDiagramme implements Diagramme {
 
     /**
      * Permet d'enregistrer un observateur
+     *
      * @param o observateur concerné
      */
     @Override
@@ -243,6 +301,7 @@ public class ModeleDiagramme implements Diagramme {
 
     /**
      * Permet de supprimer un observateur
+     *
      * @param o à supprimer
      */
     @Override
@@ -254,22 +313,25 @@ public class ModeleDiagramme implements Diagramme {
      * Notifie les observateurs
      */
     @Override
-    public void notifierObservateur()   {
+    public void notifierObservateur() {
         for (Observateur observateur : observateurs) {
             observateur.actualiser(this);
         }
     }
 
-    
-    
+
     /**
      * Renvoie la liste des classes
+     *
      * @return liste
      */
-    public List<Classe> getClasses() {return classes;}
+    public List<Classe> getClasses() {
+        return classes;
+    }
 
     /**
      * Renvoie la liste des relations
+     *
      * @return liste
      */
     public List<Relation> getRelations() {
@@ -314,11 +376,6 @@ public class ModeleDiagramme implements Diagramme {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-
-
-
-
 
 
 }

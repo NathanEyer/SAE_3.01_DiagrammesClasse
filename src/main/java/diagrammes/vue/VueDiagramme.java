@@ -368,21 +368,28 @@ public class VueDiagramme extends Canvas implements Observateur {
                     });
 
                     boolean attributsMasquesActuels = attributsMasques.getOrDefault(classeCible, false);
-                    MenuItem masquerAttributs = new MenuItem(attributsMasquesActuels ? "Démasquer Attributs" : "Masquer Attributs");
-                    masquerAttributs.setOnAction(e -> {
-                        attributsMasques.put(classeCible, !attributsMasquesActuels);
-                        dessinerDiagramme(); // Rafraîchit l'affichage
-                    });
 
-                    boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
-                    MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
-                    masquerMethodes.setOnAction(e -> {
-                        methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
-                        dessinerDiagramme(); // Rafraîchit l'affichage
-                    });
+                    if(!classeCible.getAttributs().isEmpty()) {
+                        MenuItem masquerAttributs = new MenuItem(attributsMasquesActuels ? "Démasquer Attributs" : "Masquer Attributs");
+                        masquerAttributs.setOnAction(e -> {
+                            attributsMasques.put(classeCible, !attributsMasquesActuels);
+                            dessinerDiagramme();
+                        });
+                        contextMenu.getItems().add(masquerAttributs);
+                    }
+
+                    if(!classeCible.getMethodes().isEmpty()) {
+                        boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
+                        MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
+                        masquerMethodes.setOnAction(e -> {
+                            methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
+                            dessinerDiagramme(); // Rafraîchit l'affichage
+                        });
+                        contextMenu.getItems().add(masquerMethodes);
+                    }
 
                     // Ajoutez les options au menu
-                    contextMenu.getItems().addAll(supprimer, masquerAttributs, masquerMethodes);
+                    contextMenu.getItems().add(supprimer);
 
                     // Affichez le menu contextuel
                     contextMenu.show(this, event.getScreenX(), event.getScreenY());
@@ -445,6 +452,7 @@ public class VueDiagramme extends Canvas implements Observateur {
     public Label getMessageLabel() {
         return messageLabel;
     }
+
 
 
 

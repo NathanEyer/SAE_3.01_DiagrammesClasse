@@ -42,7 +42,7 @@ public class VueDiagramme extends Canvas implements Observateur {
     private double offsetX, offsetY;
     private final HashMap<Classe, Boolean> attributsMasques = new HashMap<>();
     private final HashMap<Classe, Boolean> methodesMasquees = new HashMap<>();
-    private final Label messageLabel;
+    private static Label messageLabel;
 
 
     /**
@@ -433,7 +433,7 @@ public class VueDiagramme extends Canvas implements Observateur {
      *
      * @param message Le message à afficher.
      */
-    public void setMessage(String message) {
+    public static void setMessage(String message) {
         messageLabel.setText(message);
     }
 

@@ -54,6 +54,9 @@ public class ControleurBoutons implements EventHandler<ActionEvent> {
                 case "Créer une nouvelle classe":
                     modele.creerClasse();
                     break;
+                case "Exporter en Java":
+                    modele.exporter(stage, vue, "JAVA");
+                    break;
                 default:
                     VueDiagramme.setMessage("Bouton inconnu : " + control.getId());
             }

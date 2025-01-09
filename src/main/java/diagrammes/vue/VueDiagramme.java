@@ -1,5 +1,4 @@
 package diagrammes.vue;
-
 import diagrammes.Main;
 import diagrammes.classe.Attribut;
 import diagrammes.classe.Methode;
@@ -248,7 +247,6 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
         return false;
     }
-
     /**
      * Vérifie que c'est une classe parente
      * @param classe Classe concernée
@@ -353,6 +351,7 @@ public class VueDiagramme extends Canvas implements Observateur {
             gc.fillPolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
             gc.strokePolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
         }
+
     }
 
     /**

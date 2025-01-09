@@ -450,7 +450,12 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
 
         for (Methode methode : classe.getMethodes()) {
-            text = new Text("+ " + methode.getNomMethode() + "()");
+            StringBuilder s = new StringBuilder("+ " + methode.getNomMethode() + "(");
+            for(String p: methode.getParametres()){
+                s.append(p).append(",");
+            }
+            s.append("): ").append(methode.getTypeRetour());
+            text = new Text(s.toString());
             maxLength = Math.max(maxLength, text.getLayoutBounds().getWidth());
         }
 

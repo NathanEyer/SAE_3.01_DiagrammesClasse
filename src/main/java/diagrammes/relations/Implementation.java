@@ -10,10 +10,8 @@ public class Implementation implements RelationStrategy {
      */
     @Override
     public void creerLien(String nomClasse)throws ClassNotFoundException {
-        System.out.println("Création d'un lien d'implémentation entre les classes.");
         Class<?> classe = Class.forName(nomClasse);
         if(classe.isInterface()){
-            System.out.println("La classe est bien une interface");
         }
 
     }

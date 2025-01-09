@@ -23,9 +23,6 @@ public class ExporterJava implements Exporter {
                     String typeAttribut = classe.getAttributs().get(i).getTypeAttribut();
                     String nomAttribut = classe.getAttributs().get(i).getNomAttribut();
 
-                    // Log pour vérifier les valeurs des attributs
-                    System.out.println("Attribut: modificateur = " + modificateur + ", type = " + typeAttribut + ", nom = " + nomAttribut);
-
                     if (modificateur != null && typeAttribut != null && nomAttribut != null) {
                         writer.write("    " + modificateur + " " + typeAttribut + " " + nomAttribut + ";\n");
                     }
@@ -43,8 +40,6 @@ public class ExporterJava implements Exporter {
                     String typeRetour = classe.getMethodes().get(j).getTypeRetour();
                     String nomMethode = classe.getMethodes().get(j).getNomMethode();
 
-                    // Log pour vérifier les valeurs des méthodes
-                    System.out.println("Méthode: modificateur = " + modificateur + ", typeRetour = " + typeRetour + ", nom = " + nomMethode);
 
                     if (modificateur != null && typeRetour != null && nomMethode != null) {
                         writer.write("    " + modificateur + " " + typeRetour + " " + nomMethode + "() {\n");

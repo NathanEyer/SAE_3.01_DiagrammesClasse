@@ -193,7 +193,7 @@ public class ModeleDiagramme implements Diagramme {
                         modificateur // Ajout du modificateur
                 ));
             }
-            
+
             addClass(nouvelleClasse);
             Class<?> classeParente = classe.getSuperclass();
             if (classeParente != null && !classeParente.getSimpleName().equals("Object")) {

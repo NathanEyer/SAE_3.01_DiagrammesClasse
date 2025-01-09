@@ -10,13 +10,8 @@ import java.util.List;
  * Interface du diagramme
  */
 public interface Diagramme {
-
-
     void enregistrerObservateur(Observateur observateur);
-
     void supprimerObservateur(Observateur o);
-
-
     void notifierObservateur() throws ClassNotFoundException;
     List<Classe> getClasses();
     List<Relation> getRelations();

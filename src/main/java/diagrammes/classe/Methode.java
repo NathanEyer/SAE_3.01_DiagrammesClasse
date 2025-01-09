@@ -61,7 +61,6 @@ public class  Methode {
      */
     public List<String> getParametres() { return parametres; }
 
-
     /**
      * Retourne la visibilité
      * @return modificateur
@@ -70,7 +69,9 @@ public class  Methode {
         return modificateur;
     }
 
-    public int getAbstractStatic() {
-        return abstractStatic;
-    }
+    /**
+     * Retourne 0, 1, 2
+     * @return 0, 1, 2
+     */
+    public int getAbstractStatic() {return abstractStatic;}
 }

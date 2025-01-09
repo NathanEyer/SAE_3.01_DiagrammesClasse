@@ -1,13 +1,15 @@
 package diagrammes.relations;
 
 public class Heritage implements RelationStrategy {
+    /**
+     * Constructeur vide
+     */
     public Heritage() {}
 
-
     /**
-     * Implementation de la méthode créer lien
-     * @param nomClasse
-     * @throws ClassNotFoundException
+     * Implementation de la méthode creerlien
+     * @param nomClasse nom de la classe
+     * @throws ClassNotFoundException potentielle exception
      */
     @Override
     public void creerLien(String nomClasse) throws ClassNotFoundException{

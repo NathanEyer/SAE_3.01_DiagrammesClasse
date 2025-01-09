@@ -4,19 +4,17 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 
 public class Association implements RelationStrategy{
-
-
+    /**
+     * Constructeur vide
+     */
    public Association() {}
 
-   @Override
-   /**
-    * Création d'un lien d'association entre les classes.
-    * @return void
-    */
+    /**
+     * Création d'un lien d'association entre les classes.
+     */
     public void creerLien(String nomClasse)throws ClassNotFoundException {
-        // Logique spécifique pour créer un lien d'association}
-       Class<?> classe = Class.forName(nomClasse);
-       Field[] champs = classe.getDeclaredFields();
+        Class<?> classe = Class.forName(nomClasse);
+        Field[] champs = classe.getDeclaredFields();
     }
 
     /**

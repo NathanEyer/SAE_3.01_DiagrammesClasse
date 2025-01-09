@@ -54,4 +54,3 @@ public class ControleurDragDrop {
         event.consume();
     }
 }
-

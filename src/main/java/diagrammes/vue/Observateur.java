@@ -3,7 +3,7 @@ package diagrammes.vue;
 import diagrammes.modele.Diagramme;
 
 /**
- * Interace observateur
+ * Interface observateur
  */
 public interface Observateur {
     void actualiser(Diagramme diagramme)  ;

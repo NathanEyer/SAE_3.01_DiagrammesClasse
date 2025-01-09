@@ -12,8 +12,16 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Vue de la création d'une classe
+ */
 public class VueCreationClasse {
+    /**
+     * Méthode d'affichage de la fenêtre
+     * @return Classe
+     */
     public Classe afficher() {
+        //Initialisations
         Stage stage = new Stage();
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));

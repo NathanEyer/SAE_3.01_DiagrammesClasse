@@ -10,13 +10,11 @@ import java.io.IOException;
 import java.util.List;
 
 public class ExporterJava implements Exporter {
-
-
     /**
-     * Méthpde exporterClasse qui permet de d'exporter la classe en java
-     * @param classe
-     * @param outputFile
-     * @throws IOException
+     * Méthpde exporterClasse qui permet d'exporter la classe en java
+     * @param classe classe à exporter
+     * @param outputFile fichier concerné
+     * @throws IOException potentielle exception
      */
     private void exporterClasse(Classe classe, File outputFile) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
@@ -63,6 +61,12 @@ public class ExporterJava implements Exporter {
         }
     }
 
+    /**
+     * Méthode principale d'exportation
+     * @param path chemin absolu
+     * @param diagramme diagramme concerné
+     * @throws Exception potentielle exception
+     */
     @Override
     public void exporter(String path, Object diagramme) throws Exception {
         if (!(diagramme instanceof Diagramme)) {

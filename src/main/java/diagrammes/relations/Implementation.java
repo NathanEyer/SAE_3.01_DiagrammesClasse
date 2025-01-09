@@ -1,6 +1,9 @@
 package diagrammes.relations;
 
 public class Implementation implements RelationStrategy {
+    /**
+     * Constructeur vide
+     */
     public Implementation() {}
 
     /**

@@ -20,11 +20,9 @@ public class ExporterImage implements Exporter {
      */
     @Override
     public void exporter(String chemin, Object contenu) {
-        if (!(contenu instanceof Node)) {
+        if (!(contenu instanceof Node node)) {
             throw new IllegalArgumentException("Le contenu doit être un Node JavaFX.");
         }
-
-        Node node = (Node) contenu;
 
         Platform.runLater(() -> {
             try {
@@ -33,10 +31,10 @@ public class ExporterImage implements Exporter {
                 File fichier = new File(chemin);
                 File parentDir = fichier.getParentFile();
                 if (parentDir != null && !parentDir.exists()) {
-                    parentDir.mkdirs();
+                    if(parentDir.mkdirs())
+                        System.err.println("Impossible ");
                 }
                 ImageIO.write(bufferedImage, "png", fichier);
-
 
             } catch (Exception e) {
                 e.printStackTrace();

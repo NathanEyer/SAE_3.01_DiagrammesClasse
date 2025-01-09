@@ -10,8 +10,6 @@ import diagrammes.relations.Implementation;
 import diagrammes.relations.Relation;
 import diagrammes.vue.Observateur;
 import diagrammes.vue.VueDiagramme;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -21,7 +19,6 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Diagramme concret
@@ -30,9 +27,11 @@ public class ModeleDiagramme implements Diagramme {
     /**
      * Attributs du diagramme
      */
-    private List<Classe> classes;
-    private List<Relation> relations;
-    private List<Observateur> observateurs;
+    private final List<Classe> classes;
+    private final List<Relation> relations;
+    private final List<Observateur> observateurs;
+    private final List<AssociationIncomplete> associationsIncompletes = new ArrayList<>();
+
 
     /**
      * Construit un ModeleDiagramme par défaut
@@ -45,7 +44,6 @@ public class ModeleDiagramme implements Diagramme {
 
     /**
      * Ajoute une classe au diagramme
-     *
      * @param classe à ajouter
      */
     public void addClass(Classe classe) throws ClassNotFoundException {
@@ -58,7 +56,6 @@ public class ModeleDiagramme implements Diagramme {
 
     /**
      * Ajoute une relation entre les classes
-     *
      * @param relation à ajouter
      */
     public void addRelation(Relation relation){
@@ -106,15 +103,12 @@ public class ModeleDiagramme implements Diagramme {
                         modificateur // Ajout du modificateur
                 ));
 
-
                 // Gérer les associations pour les collections
                 if (Collection.class.isAssignableFrom(field.getType())) {
                     Type genericType = field.getGenericType();
-                    if (genericType instanceof ParameterizedType) {
-                        ParameterizedType parameterizedType = (ParameterizedType) genericType;
+                    if (genericType instanceof ParameterizedType parameterizedType) {
                         Type[] typeArguments = parameterizedType.getActualTypeArguments();
-                        if (typeArguments.length > 0 && typeArguments[0] instanceof Class<?>) {
-                            Class<?> genericClass = (Class<?>) typeArguments[0];
+                        if (typeArguments.length > 0 && typeArguments[0] instanceof Class<?> genericClass) {
                             String nomSimpl = genericClass.getSimpleName();
                             Classe classeDesty = getClasseParNom(nomSimpl);
                             if (classeDesty != null) {
@@ -179,11 +173,14 @@ public class ModeleDiagramme implements Diagramme {
             }
             urlClassLoader.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            e.getLocalizedMessage();
         }
     }
 
-    private void reevaluerAssociations() throws ClassNotFoundException {
+    /**
+     * Évalue à nouveau les associations
+     */
+    private void reevaluerAssociations() {
         List<AssociationIncomplete> resolues = new ArrayList<>();
 
         for (AssociationIncomplete incomplete : associationsIncompletes) {
@@ -209,26 +206,11 @@ public class ModeleDiagramme implements Diagramme {
         associationsIncompletes.removeAll(resolues);
     }
 
-
-    private Classe chargerOuCreerClasse(String nomClasse) throws ClassNotFoundException {
-        // Vérifie si la classe existe déjà dans le modèle
-        Classe classe = getClasseParNom(nomClasse);
-        if (classe == null) {
-            try {
-                // Tente de charger la classe dynamiquement
-                Class<?> classeDynamique = Class.forName(nomClasse);
-                classe = new Classe(classeDynamique.getSimpleName());
-                addClass(classe);
-            } catch (ClassNotFoundException e) {
-                // Si elle n'existe pas, la crée comme une nouvelle classe
-                classe = new Classe(nomClasse);
-                addClass(classe);
-            }
-        }
-        return classe;
-    }
-
-
+    /**
+     * Recherche une classe en fonction de son nom
+     * @param nomClasse nom de la classe
+     * @return Classe trouvée
+     */
     public Classe getClasseParNom(String nomClasse) {
         for (Classe classe : classes) {
             if (classe.getNom().equals(nomClasse)) {
@@ -238,9 +220,13 @@ public class ModeleDiagramme implements Diagramme {
         return null;
     }
 
-    private final List<AssociationIncomplete> associationsIncompletes = new ArrayList<>();
-
+    /**
+     * Sous-classe
+     */
     private static class AssociationIncomplete {
+        /**
+         * Attributs
+         */
         private final Classe source;
         private final String nomClasseAssociee;
         private final String attribut;
@@ -283,13 +269,11 @@ public class ModeleDiagramme implements Diagramme {
 
     /**
      * Exporte le diagramme dans un fichier au format spécifié (PNG ou UML).
-     *
      * @param stage  La fenêtre de l'application pour afficher le FileChooser.
      * @param vue    La vue du diagramme (utile pour l'export PNG).
      * @param format Le format d'exportation ("PNG" ou "UML").
-     * @return true si l'exportation a réussi, false sinon.
      */
-    public boolean exporter(Stage stage, VueDiagramme vue, String format) {
+    public void exporter(Stage stage, VueDiagramme vue, String format) {
         Exporter export = null;
         FileChooser fileChooser = new FileChooser();
 
@@ -317,18 +301,15 @@ public class ModeleDiagramme implements Diagramme {
                 } else if (format.equalsIgnoreCase("JAVA")) {
                     export.exporter(file.getAbsolutePath(), this); // Le modèle est nécessaire pour l'export JAVA
                 }
-                return true;
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
-        return false;
     }
 
 
     /**
      * Permet d'enregistrer un observateur
-     *
      * @param o observateur concerné
      */
     @Override
@@ -338,7 +319,6 @@ public class ModeleDiagramme implements Diagramme {
 
     /**
      * Permet de supprimer un observateur
-     *
      * @param o à supprimer
      */
     @Override
@@ -356,10 +336,8 @@ public class ModeleDiagramme implements Diagramme {
         }
     }
 
-
     /**
      * Renvoie la liste des classes
-     *
      * @return liste
      */
     public List<Classe> getClasses() {
@@ -368,51 +346,9 @@ public class ModeleDiagramme implements Diagramme {
 
     /**
      * Renvoie la liste des relations
-     *
      * @return liste
      */
     public List<Relation> getRelations() {
         return relations;
     }
-
-
-    /**
-     * methode creerClasse
-     */
-    public void creerClasse() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Créer une nouvelle classe");
-        dialog.setHeaderText("Entrez le nom de la nouvelle classe");
-        dialog.setContentText("Nom de la classe:");
-
-        dialog.showAndWait().ifPresent(nomClasse -> {
-            if (nomClasse != null && !nomClasse.trim().isEmpty()) {
-                Classe nouvelleClasse = new Classe(nomClasse);
-                try {
-                    addClass(nouvelleClasse);
-                    VueDiagramme.setMessage(nomClasse + " créé");
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                afficherAlert("Erreur", "Le nom de la classe ne peut pas être vide.");
-            }
-        });
-    }
-
-
-    /**
-     * @param title
-     * @param message
-     */
-
-    private void afficherAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-
 }

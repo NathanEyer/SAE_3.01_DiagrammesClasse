@@ -13,8 +13,7 @@ public class Classe {
      */
     private String nom;
     private List<Attribut> attributs;
-    private List<Methode> methodes;
-
+    private final List<Methode> methodes;
 
     /**
      * Construit une classe à partir de son nom
@@ -24,8 +23,6 @@ public class Classe {
         this.nom = nom;
         this.attributs = new ArrayList<>();
         this.methodes = new ArrayList<>();
-
-
     }
 
     /**
@@ -97,28 +94,25 @@ public class Classe {
     }
 
     /**
-     * Définit les méthodes de la classe.
-     * @param methodes Liste de méthodes à définir
-     */
-    public void setMethodes(List<Methode> methodes) {
-        this.methodes = methodes;
-    }
-
-
-    /**
      * Permet de set le nom de la classe
-     * @param nom
+     * @param nom nom de la classe
      */
     public void setNom(String nom) { this.nom = nom; }
 
-
     /**
-     * redefinition de la méthode equals
-     * @param obj
-     * @return
+     * @return génère un hashCode
      */
+    @Override
+    public int hashCode() {
+        return Objects.hash(nom);
+    }
 
     //REDEFINITION DU EQUALS ET DU HASHCODE POUR COMPARER LES CLASSES CORRECTEMENT
+    /**
+     * redefinition de la méthode equals
+     * @param obj objet comparé
+     * @return boolean
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -127,20 +121,9 @@ public class Classe {
         return nom != null && nom.equals(classe.nom); // Compare uniquement les noms
     }
 
-
-    /**
-     *
-     * @return génère un hashCode
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(nom);
-    }
-
-
     /**
      * méthode toString
-     * @return
+     * @return String
      */
     @Override
     public String toString() {

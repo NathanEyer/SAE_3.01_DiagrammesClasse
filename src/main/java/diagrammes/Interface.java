@@ -13,7 +13,6 @@ import static diagrammes.Main.SCREEN_WIDTH;
  * Permet de raccourcir le Main.java
  */
 public class Interface {
-
     /**
      * Crée la barre de menu avec ses éléments
      * @param controleurBoutons contrôleur des boutons pour gérer les actions
@@ -65,7 +64,6 @@ public class Interface {
         return topBar;
     }
 
-
     /**
      * Affiche l'aide
      */
@@ -73,7 +71,6 @@ public class Interface {
 
         Stage aideStage = new Stage();
         aideStage.setTitle("Aide - Application Diagramme");
-
 
         String contenuAide = "Bienvenue dans Banal UML !\n\n"
                 + "Voici comment utiliser l'application :\n\n"
@@ -86,7 +83,6 @@ public class Interface {
                 + "Si vous avez des questions supplémentaires, consultez la documentation ou contactez le support.\n"
                 + "Lorsqu'une classe est de couleur verte, c'est une interface. Lorsqu'elle est de couleur rouge, c'est une classe parent et lorsqu'elle est bleu c'est une classe normale.\n\n"
                 + "Si vous double cliquez sur une classe, alors les attributs et les méthodes seront masqués, si vous double cliquez a nouveau, les attributs et les méthodes se démasqueront.";
-
 
         TextArea textAreaAide = new TextArea(contenuAide);
         textAreaAide.setEditable(false);

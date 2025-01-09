@@ -1,25 +1,19 @@
 package diagrammes.relations;
 
 public class RelationStrategyFactory {
-
-
     /**
-     *
-     * @param type
-     * @return
+     * Méthode de création du type Relation
+     * @param type type de la relation
+     * @return RelationStrategy
      */
     public static RelationStrategy create(String type) {
         String normalizedType = type.toLowerCase().replace("é", "e");
-        switch (normalizedType) {
-            case "heritage":
-                return new Heritage();
-            case "implementation":
-                return new Implementation();
-            case "association":
-                return new Association();
-            default:
-                throw new IllegalArgumentException("Type de relation non reconnu : " + type);
-        }
+        return switch (normalizedType) {
+            case "heritage" -> new Heritage();
+            case "implementation" -> new Implementation();
+            case "association" -> new Association();
+            default -> throw new IllegalArgumentException("Type de relation non reconnu : " + type);
+        };
     }
 
 }

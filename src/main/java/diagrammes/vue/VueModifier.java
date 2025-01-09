@@ -14,14 +14,21 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
+/**
+ * Vue pour modifier une classe
+ */
 public class VueModifier {
-
+    /**
+     * Attribut
+     */
     private final Classe classe;
 
+    /**
+     * Construit une vue VueModifier
+     * @param classe classe
+     */
     public VueModifier(Classe classe) {
         this.classe = classe;
     }
@@ -57,7 +64,7 @@ public class VueModifier {
         listRelations.getItems().addAll(
                 relations.stream()
                         .filter(rel -> rel.getDepart().equals(classe))
-                        .collect(Collectors.toList())
+                        .toList()
         );
         listRelations.setPrefHeight(100);
 
@@ -172,7 +179,6 @@ public class VueModifier {
             stage.close();
         });
 
-
         // Organisation des éléments dans le layout
         root.getChildren().addAll(
                 lblNomClasse, txtNomClasse,
@@ -191,6 +197,10 @@ public class VueModifier {
         return classe;
     }
 
+    /**
+     * Modification d'une méthode
+     * @param listMethodes liste des méthodes concernées
+     */
     private void modifierMethode(ListView<String> listMethodes) {
         String selectedMethode = listMethodes.getSelectionModel().getSelectedItem();
         if (selectedMethode != null) {
@@ -244,6 +254,10 @@ public class VueModifier {
         }
     }
 
+    /**
+     * Modification d'un attribut
+     * @param listAttributs liste des attributs concernés
+     */
     private void modifierAttribut(ListView<String> listAttributs) {
         String selectedAttribut = listAttributs.getSelectionModel().getSelectedItem();
         if (selectedAttribut != null) {
@@ -281,8 +295,10 @@ public class VueModifier {
         }
     }
 
-
-
+    /**
+     * Ajout d'un attribut
+     * @param listAttributs liste des attributs concernés
+     */
     private void ajouterAttribut(ListView<String> listAttributs) {
         Stage attributStage = new Stage();
         VBox root = new VBox(10);
@@ -308,6 +324,10 @@ public class VueModifier {
         attributStage.showAndWait();
     }
 
+    /**
+     * Ajout d'une méthode
+     * @param listMethodes liste des méthodes concernées
+     */
     private void ajouterMethode(ListView<String> listMethodes) {
         Stage methodeStage = new Stage();
         VBox root = new VBox(10);
@@ -339,6 +359,11 @@ public class VueModifier {
         methodeStage.showAndWait();
     }
 
+    /**
+     * Ajout d'une relation
+     * @param listRelations liste des relations concernées
+     * @param autresClasses liste des classes concernées
+     */
     private void ajouterRelation(ListView<Relation> listRelations, List<Classe> autresClasses) {
         Stage relationStage = new Stage();
         VBox root = new VBox(10);
@@ -369,6 +394,11 @@ public class VueModifier {
         relationStage.showAndWait();
     }
 
+    /**
+     * Modification d'une relation
+     * @param listRelations liste des relations concernées
+     * @param autresClasses liste des classes concernées
+     */
     private void modifierRelation(ListView<Relation> listRelations, List<Classe> autresClasses) {
         Relation selectedRelation = listRelations.getSelectionModel().getSelectedItem();
         if (selectedRelation != null) {
@@ -399,23 +429,28 @@ public class VueModifier {
         }
     }
 
+    /**
+     * Formattage d'un attribut
+     * @param attribut attribut concerné
+     * @return le String formaté
+     */
     private String formatAttribut(Attribut attribut) {
         return attribut.getModificateur() + " " + attribut.getTypeAttribut() + " " + attribut.getNomAttribut();
     }
 
+    /**
+     * Formattage d'une méthode
+     * @param methode méthode concernée
+     * @return String formatté
+     */
     private String formatMethode(Methode methode) {
-        String type = " ";
-        switch(methode.getAbstractStatic()){
-            case 1:
-                type = " abstract ";
-                break;
-            case 2:
-                type = " static ";
-                break;
-        }
-        String s = methode.getModificateur() + type + methode.getTypeRetour() + " " + methode.getNomMethode() +
+        String type = switch (methode.getAbstractStatic()) {
+            case 1 -> " abstract ";
+            case 2 -> " static ";
+            default -> " ";
+        };
+        return methode.getModificateur() + type + methode.getTypeRetour() + " " + methode.getNomMethode() +
                 "( " + String.join(", ", methode.getParametres()) + ")";
-        return s;
     }
 }
 

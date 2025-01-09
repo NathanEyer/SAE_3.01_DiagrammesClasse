@@ -27,7 +27,7 @@ public class Main extends Application {
      * @param primaryStage squelette
      */
     @Override
-    public void start(Stage primaryStage) throws ClassNotFoundException {
+    public void start(Stage primaryStage) {
         // Initialisations
         ModeleDiagramme modele = new ModeleDiagramme();
         VueDiagramme vue = new VueDiagramme(modele);
@@ -52,6 +52,19 @@ public class Main extends Application {
         root.setTop(topBar);
 
         // Récupération et configuration du Label pour les messages
+        HBox bottomBar = getHBox(vue);
+
+        // Ajouter la barre en bas du root
+        root.setBottom(bottomBar);
+
+        // Création et affichage de la scène
+        Scene scene = new Scene(root, SCREEN_WIDTH / 1.5, SCREEN_HEIGHT * 0.95);
+        primaryStage.setTitle("Commencez par ajouter des fichiers .class");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private static HBox getHBox(VueDiagramme vue) {
         Label messageLabel = vue.getMessageLabel();
         messageLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 10; -fx-alignment: center-left;");
         messageLabel.setMaxWidth(Double.MAX_VALUE);
@@ -63,17 +76,7 @@ public class Main extends Application {
         bottomBar.setMinHeight(40);
         bottomBar.setPrefHeight(40);
         bottomBar.setMaxWidth(Double.MAX_VALUE);
-
-        // Ajouter la barre en bas du root
-        root.setBottom(bottomBar);
-
-
-        // Création et affichage de la scène
-        Scene scene = new Scene(root, SCREEN_WIDTH / 1.5, SCREEN_HEIGHT * 0.95);
-        primaryStage.setTitle("Commencez par ajouter des fichiers .class");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
+        return bottomBar;
     }
 
     /**

@@ -13,10 +13,9 @@ public class Relation {
 
     /**
      * Construit une relation
-     *
-     * @param depart      classe de départ
+     * @param depart classe de départ
      * @param destination classe de destination
-     * @param type        type de relation
+     * @param type type de relation
      */
     public Relation(Classe depart, Classe destination, RelationStrategy type) {
         this.depart = depart;
@@ -27,18 +26,22 @@ public class Relation {
 
     /**
      * Retourne l'attribut enregistré pour la relation
+     * @return attribut
      */
     public String getAttribut() {
         return attribut;
     }
 
+    /**
+     * Permet de modifier l'attribut
+     * @param attribut nouvel attribut
+     */
     public void setAttribut(String attribut) {
         this.attribut = attribut;
     }
 
     /**
      * Retourne la classe de départ
-     *
      * @return Classe
      */
     public Classe getDepart() {
@@ -47,17 +50,14 @@ public class Relation {
 
     /**
      * Retourne la classe de destination
-     *
      * @return Classe
      */
     public Classe getDestination() {
         return destination;
     }
 
-
     /**
      * Retourne le type de relation
-     *
      * @return RelationStrategy
      */
     public RelationStrategy getType() {
@@ -66,7 +66,7 @@ public class Relation {
 
     /**
      * Méthode toString
-     * @return
+     * @return String formatté
      */
     @Override
     public String toString() {

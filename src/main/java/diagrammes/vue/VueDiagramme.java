@@ -19,7 +19,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,7 +37,6 @@ public class VueDiagramme extends Canvas implements Observateur {
     private final HashMap<Classe, Boolean> methodesMasquees = new HashMap<>();
     private final HashMap<Relation, Boolean> relationsMasquees = new HashMap<>();
     private static Label messageLabel;
-
 
     /**
      * Initialise le diagramme
@@ -230,24 +228,17 @@ public class VueDiagramme extends Canvas implements Observateur {
 
     /**
      * Convertit un modificateur d'accès en son symbole UML.
-     *
      * @param modificateur Le modificateur d'accès sous forme de texte (e.g., "public", "private", "protected").
      * @return Le symbole correspondant ("+", "-", "#").
      */
     private String convertirModificateur(String modificateur) {
-        switch (modificateur) {
-            case "public":
-                return "+";
-            case "private":
-                return "-";
-            case "protected":
-                return "#";
-            default:
-                return ""; // Pas de symbole pour package-private ou autres
-        }
+        return switch (modificateur) {
+            case "public" -> "+";
+            case "private" -> "-";
+            case "protected" -> "#";
+            default -> ""; // Pas de symbole pour package-private ou autres
+        };
     }
-
-
 
     /**
      * Vérifie que c'est une interface
@@ -295,7 +286,6 @@ public class VueDiagramme extends Canvas implements Observateur {
             dessinerFlecheAssociation(gc, relation);
         }
     }
-
 
     /**
      * Dessine une flèche d'héritage
@@ -429,7 +419,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         double targetHeight = targetRect.getHeight();
 
         double closestX = sourceCenterX;
-        double closestY = sourceCenterY;
+        double closestY;
 
         if (sourceCenterX < targetX) {
             closestX = targetX;
@@ -464,15 +454,11 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
 
         for (Methode methode : classe.getMethodes()) {
-            String type = "";
-            switch(methode.getAbstractStatic()){
-                case 1:
-                    type = "abstract";
-                    break;
-                case 2:
-                    type = "static";
-                    break;
-            }
+            String type = switch (methode.getAbstractStatic()) {
+                case 1 -> "abstract";
+                case 2 -> "static";
+                default -> "";
+            };
             StringBuilder s = new StringBuilder("+ " + type + methode.getNomMethode() + "(");
             for(String p: methode.getParametres()){
                 s.append(p).append(",");
@@ -484,7 +470,6 @@ public class VueDiagramme extends Canvas implements Observateur {
 
         return maxLength + 35;
     }
-
 
     /**
      * Renvoie la hauteur de la classe à dessiner
@@ -537,45 +522,19 @@ public class VueDiagramme extends Canvas implements Observateur {
                     // Masquer/Démasquer les attributs
                     boolean attributsMasquesActuels = attributsMasques.getOrDefault(classeCible, false);
                     if (!classeCible.getAttributs().isEmpty()) {
-                        MenuItem masquerAttributs = new MenuItem(attributsMasquesActuels ? "Démasquer Attributs" : "Masquer Attributs");
-                        masquerAttributs.setOnAction(e -> {
-                            attributsMasques.put(classeCible, !attributsMasquesActuels);
-                            dessinerDiagramme();
-                            setMessage(attributsMasquesActuels ? "Attributs démasqués pour : " + classeCible.getNom() : "Attributs masqués pour : " + classeCible.getNom());
-                        });
+                        MenuItem masquerAttributs = getMasquerAttributs(attributsMasquesActuels, classeCible);
                         contextMenu.getItems().add(masquerAttributs);
                     }
 
                     // Masquer/Démasquer les méthodes
                     if (!classeCible.getMethodes().isEmpty()) {
                         boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
-                        MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
-                        masquerMethodes.setOnAction(e -> {
-                            methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
-                            dessinerDiagramme();
-                            setMessage(methodesMasqueesActuelles ? "Méthodes démasquées pour : " + classeCible.getNom() : "Méthodes masquées pour : " + classeCible.getNom());
-                        });
+                        MenuItem masquerMethodes = getMasquerMethodes(methodesMasqueesActuelles, classeCible);
                         contextMenu.getItems().add(masquerMethodes);
                     }
 
                     // Ajouter le bouton Modifier
-                    MenuItem modifier = new MenuItem("Modifier");
-                    modifier.setOnAction(e -> {
-                        List<Relation> relations = modele.getRelations(); // Vérifiez que cette liste est mutable
-                        List<Classe> autresClasses = modele.getClasses().stream()
-                                .filter(c -> !c.equals(classeCible))
-                                .toList(); // Convertissez en mutable si nécessaire avec .collect(Collectors.toList())
-                        VueModifier vueModifier = new VueModifier(classeCible);
-                        Classe classeModifiee = vueModifier.afficher(relations, autresClasses);
-
-                        // Mettre à jour la classe modifiée dans le modèle
-                        int indexClasse = modele.getClasses().indexOf(classeCible);
-                        if (indexClasse >= 0) {
-                            modele.getClasses().set(indexClasse, classeModifiee);
-                            dessinerDiagramme(); // Redessiner le diagramme
-                            setMessage("Classe modifiée : " + classeModifiee.getNom());
-                        }
-                    });
+                    MenuItem modifier = getModifier(classeCible);
                     contextMenu.getItems().add(modifier);
 
                     // Masquer/Démasquer les relations
@@ -583,18 +542,7 @@ public class VueDiagramme extends Canvas implements Observateur {
                             .filter(relation -> relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible))
                             .allMatch(relation -> relationsMasquees.getOrDefault(relation, false));
 
-                    MenuItem masquerDemasquerRelations = new MenuItem(
-                            relationsMasqueesActuelles ? "Démasquer Relations" : "Masquer Relations"
-                    );
-                    masquerDemasquerRelations.setOnAction(e -> {
-                        for (Relation relation : modele.getRelations()) {
-                            if (relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible)) {
-                                relationsMasquees.put(relation, !relationsMasqueesActuelles);
-                            }
-                        }
-                        dessinerDiagramme();
-                        setMessage(relationsMasqueesActuelles ? "Relations démasquées pour : " + classeCible.getNom() : "Relations masquées pour : " + classeCible.getNom());
-                    });
+                    MenuItem masquerDemasquerRelations = getMasquerDemasquerRelations(relationsMasqueesActuelles, classeCible);
 
                     contextMenu.getItems().addAll(masquerDemasquerRelations, supprimer);
                     contextMenu.show(this, event.getScreenX(), event.getScreenY());
@@ -604,6 +552,86 @@ public class VueDiagramme extends Canvas implements Observateur {
                 }
             }
         }
+    }
+
+    /**
+     * Renvoie le MenuItem de MasquerDemasquerRelations
+     * @param relationsMasqueesActuelles boolean
+     * @param classeCible classe concernée
+     * @return MenuItem
+     */
+    private MenuItem getMasquerDemasquerRelations(boolean relationsMasqueesActuelles, Classe classeCible) {
+        MenuItem masquerDemasquerRelations = new MenuItem(
+                relationsMasqueesActuelles ? "Démasquer Relations" : "Masquer Relations"
+        );
+        masquerDemasquerRelations.setOnAction(e -> {
+            for (Relation relation : modele.getRelations()) {
+                if (relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible)) {
+                    relationsMasquees.put(relation, !relationsMasqueesActuelles);
+                }
+            }
+            dessinerDiagramme();
+            setMessage(relationsMasqueesActuelles ? "Relations démasquées pour : " + classeCible.getNom() : "Relations masquées pour : " + classeCible.getNom());
+        });
+        return masquerDemasquerRelations;
+    }
+
+    /**
+     * Renvoie le menuItem de Modifier
+     * @param classeCible classe concernée
+     * @return MenuItem
+     */
+    private MenuItem getModifier(Classe classeCible) {
+        MenuItem modifier = new MenuItem("Modifier");
+        modifier.setOnAction(e -> {
+            List<Relation> relations = modele.getRelations(); // Vérifiez que cette liste est mutable
+            List<Classe> autresClasses = modele.getClasses().stream()
+                    .filter(c -> !c.equals(classeCible))
+                    .toList(); // Convertissez en mutable si nécessaire avec .collect(Collectors.toList())
+            VueModifier vueModifier = new VueModifier(classeCible);
+            Classe classeModifiee = vueModifier.afficher(relations, autresClasses);
+
+            // Mettre à jour la classe modifiée dans le modèle
+            int indexClasse = modele.getClasses().indexOf(classeCible);
+            if (indexClasse >= 0) {
+                modele.getClasses().set(indexClasse, classeModifiee);
+                dessinerDiagramme(); // Redessiner le diagramme
+                setMessage("Classe modifiée : " + classeModifiee.getNom());
+            }
+        });
+        return modifier;
+    }
+
+    /**
+     * Renvoie le menuItem de masquerMethodes
+     * @param methodesMasqueesActuelles boolean
+     * @param classeCible classe concernée
+     * @return MenuItem
+     */
+    private MenuItem getMasquerMethodes(boolean methodesMasqueesActuelles, Classe classeCible) {
+        MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
+        masquerMethodes.setOnAction(e -> {
+            methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
+            dessinerDiagramme();
+            setMessage(methodesMasqueesActuelles ? "Méthodes démasquées pour : " + classeCible.getNom() : "Méthodes masquées pour : " + classeCible.getNom());
+        });
+        return masquerMethodes;
+    }
+
+    /**
+     * Renvoie le menuItem de masquerAttributs
+     * @param attributsMasquesActuels boolean
+     * @param classeCible classe concernée
+     * @return MenuItem
+     */
+    private MenuItem getMasquerAttributs(boolean attributsMasquesActuels, Classe classeCible) {
+        MenuItem masquerAttributs = new MenuItem(attributsMasquesActuels ? "Démasquer Attributs" : "Masquer Attributs");
+        masquerAttributs.setOnAction(e -> {
+            attributsMasques.put(classeCible, !attributsMasquesActuels);
+            dessinerDiagramme();
+            setMessage(attributsMasquesActuels ? "Attributs démasqués pour : " + classeCible.getNom() : "Attributs masqués pour : " + classeCible.getNom());
+        });
+        return masquerAttributs;
     }
 
     /**
@@ -622,10 +650,17 @@ public class VueDiagramme extends Canvas implements Observateur {
         return messageLabel;
     }
 
+    /**
+     * Réinitialise les classes
+     */
     public static void reinitialiser(){
         positionsClasses.clear();
     }
 
+    /**
+     * Cache les méthodes et les attributs
+     * @param event MouseEvent
+     */
     private void gererDoubleClic(MouseEvent event) {
         if (event.getClickCount() == 2) {
             double mouseX = event.getX();

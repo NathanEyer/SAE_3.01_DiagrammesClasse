@@ -55,7 +55,6 @@ public class ExporterUml implements Exporter {
                 String type = getRelationArrow(relation.getType());
                 writer.write(source + " " + type + " " + target + "\n");
             }
-
             writer.write("@enduml\n");
         }
     }

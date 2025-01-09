@@ -19,6 +19,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -285,6 +286,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         if (relationsMasquees.getOrDefault(relation, false)) {
             return;
         }
+
         if (relation.getType() instanceof Heritage) {
             dessinerFlecheHeritage(gc, relation);
         } else if (relation.getType() instanceof Implementation) {
@@ -442,7 +444,6 @@ public class VueDiagramme extends Canvas implements Observateur {
         } else {
             closestY = Math.max(targetY, Math.min(sourceCenterY, targetY + targetHeight));
         }
-
         return new double[]{closestX, closestY};
     }
 
@@ -463,11 +464,20 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
 
         for (Methode methode : classe.getMethodes()) {
-            StringBuilder s = new StringBuilder("+ " + methode.getNomMethode() + "(");
+            String type = "";
+            switch(methode.getAbstractStatic()){
+                case 1:
+                    type = "abstract";
+                    break;
+                case 2:
+                    type = "static";
+                    break;
+            }
+            StringBuilder s = new StringBuilder("+ " + type + methode.getNomMethode() + "(");
             for(String p: methode.getParametres()){
                 s.append(p).append(",");
             }
-            s.append("): ").append(methode.getTypeRetour()).append(methode.getAbstractStatic());
+            s.append("): ").append(methode.getTypeRetour());
             text = new Text(s.toString());
             maxLength = Math.max(maxLength, text.getLayoutBounds().getWidth());
         }
@@ -596,12 +606,6 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
     }
 
-
-
-
-
-
-
     /**
      * Met à jour le texte du message affiché en bas de l'écran.
      * @param message Le message à afficher.
@@ -621,8 +625,6 @@ public class VueDiagramme extends Canvas implements Observateur {
     public static void reinitialiser(){
         positionsClasses.clear();
     }
-
-
 
     private void gererDoubleClic(MouseEvent event) {
         if (event.getClickCount() == 2) {
@@ -645,9 +647,4 @@ public class VueDiagramme extends Canvas implements Observateur {
             }
         }
     }
-
-
-
-
-
 }

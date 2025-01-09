@@ -54,15 +54,15 @@ public class Main extends Application {
         // Récupération et configuration du Label pour les messages
         Label messageLabel = vue.getMessageLabel();
         messageLabel.setStyle("-fx-background-color: lightgray; -fx-padding: 10; -fx-alignment: center-left;");
-        messageLabel.setMaxWidth(Double.MAX_VALUE); // Étendre le Label à toute la largeur
-        messageLabel.setMinHeight(30); // Hauteur minimale pour une meilleure apparence
+        messageLabel.setMaxWidth(Double.MAX_VALUE);
+        messageLabel.setMinHeight(30);
 
         // Utilisation d'un conteneur HBox pour s'assurer du bon alignement
         HBox bottomBar = new HBox(messageLabel);
-        bottomBar.setStyle("-fx-background-color: lightgray;"); // Couleur de fond pour correspondre au style global
-        bottomBar.setMinHeight(40); // Fixer une hauteur minimale
+        bottomBar.setStyle("-fx-background-color: lightgray;");
+        bottomBar.setMinHeight(40);
         bottomBar.setPrefHeight(40);
-        bottomBar.setMaxWidth(Double.MAX_VALUE); // Étendre la barre à toute la largeur
+        bottomBar.setMaxWidth(Double.MAX_VALUE);
 
         // Ajouter la barre en bas du root
         root.setBottom(bottomBar);

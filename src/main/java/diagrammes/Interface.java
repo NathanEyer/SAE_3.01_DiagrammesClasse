@@ -6,6 +6,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import static diagrammes.Main.SCREEN_HEIGHT;
+import static diagrammes.Main.SCREEN_WIDTH;
+
 /**
  * Permet de raccourcir le Main.java
  */
@@ -89,8 +92,10 @@ public class Interface {
         textAreaAide.setEditable(false);
         textAreaAide.setWrapText(true);
         textAreaAide.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
-        Scene sceneAide = new Scene(textAreaAide, 400, 300);
+        Scene sceneAide = new Scene(textAreaAide, SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.7);
+
         aideStage.setScene(sceneAide);
+        aideStage.setResizable(true);
         aideStage.show();
     }
 }

@@ -1,4 +1,5 @@
 package diagrammes.vue;
+
 import diagrammes.Main;
 import diagrammes.classe.Attribut;
 import diagrammes.classe.Methode;
@@ -220,16 +221,12 @@ public class VueDiagramme extends Canvas implements Observateur {
      * @return Le symbole correspondant ("+", "-", "#").
      */
     private String convertirModificateur(String modificateur) {
-        switch (modificateur) {
-            case "public":
-                return "+";
-            case "private":
-                return "-";
-            case "protected":
-                return "#";
-            default:
-                return ""; // Pas de symbole pour package-private ou autres
-        }
+        return switch (modificateur) {
+            case "public" -> "+";
+            case "private" -> "-";
+            case "protected" -> "#";
+            default -> ""; // Pas de symbole pour package private ou autres
+        };
     }
 
 
@@ -247,6 +244,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
         return false;
     }
+
     /**
      * Vérifie que c'est une classe parente
      * @param classe Classe concernée
@@ -270,131 +268,66 @@ public class VueDiagramme extends Canvas implements Observateur {
         if (relationsMasquees.getOrDefault(relation, false)) {
             return;
         }
-        if (relation.getType() instanceof Heritage) {
-            dessinerFlecheHeritage(gc, relation);
-        } else if (relation.getType() instanceof Implementation) {
-            dessinerFlecheImplementation(gc, relation);
-        } else {
-            dessinerFlecheAssociation(gc, relation);
-        }
-    }
+        if (positionsClasses.containsKey(relation.getDepart()) && positionsClasses.containsKey(relation.getDestination())) {
+            double[] start = getClosestPoint(positionsClasses.get(relation.getDestination()), positionsClasses.get(relation.getDepart()));
+            double[] end = getClosestPoint(positionsClasses.get(relation.getDepart()), positionsClasses.get(relation.getDestination()));
 
-
-    /**
-     * Dessine une flèche d'héritage
-     * @param gc contexte graphique
-     * @param r relation à dessiner
-     */
-    private void dessinerFlecheHeritage(GraphicsContext gc, Relation r) {
-        Classe source = r.getDepart();
-        Classe cible = r.getDestination();
-        if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            double[] start = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
-            double[] end = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
-
-            // Dessiner la ligne
-            gc.setStroke(Color.BLACK);
-            gc.setLineWidth(1);
-            gc.strokeLine(start[0], start[1], end[0], end[1]);
-
-            // Dessiner la flèche
-            double arrowLength = 15;
-            double arrowWidth = 10;
-            double angle = Math.atan2(end[1] - start[1], end[0] - start[0]);
-            double sin = Math.sin(angle);
-            double cos = Math.cos(angle);
-
-            double x1 = end[0] - arrowLength * cos + arrowWidth * sin;
-            double y1 = end[1] - arrowLength * sin - arrowWidth * cos;
-            double x2 = end[0] - arrowLength * cos - arrowWidth * sin;
-            double y2 = end[1] - arrowLength * sin + arrowWidth * cos;
-
-            gc.setFill(Color.WHITE);
-            gc.fillPolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
-            gc.strokePolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
-        }
-    }
-
-    /**
-     * Dessine une flèche d'implémentation
-     * @param gc contexte graphique
-     * @param r relation à dessiner
-     */
-    private void dessinerFlecheImplementation(GraphicsContext gc, Relation r) {
-        Classe source = r.getDepart();
-        Classe cible = r.getDestination();
-
-        if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            double[] start = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
-            double[] end = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
-
-            // Dessiner la ligne en pointillés
-            gc.setStroke(Color.BLACK);
-            gc.setLineWidth(1);
-            gc.setLineDashes(5);
-            gc.strokeLine(start[0], start[1], end[0], end[1]);
-            gc.setLineDashes(0);
-
-            // Dessiner la flèche
-            double arrowLength = 15;
-            double arrowWidth = 10;
-            double angle = Math.atan2(end[1] - start[1], end[0] - start[0]);
-            double sin = Math.sin(angle);
-            double cos = Math.cos(angle);
-
-            double x1 = end[0] - arrowLength * cos + arrowWidth * sin;
-            double y1 = end[1] - arrowLength * sin - arrowWidth * cos;
-            double x2 = end[0] - arrowLength * cos - arrowWidth * sin;
-            double y2 = end[1] - arrowLength * sin + arrowWidth * cos;
-
-            gc.setFill(Color.WHITE);
-            gc.fillPolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
-            gc.strokePolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
-        }
-
-    }
-
-    /**
-     * Dessine une flèche d'association
-     * @param gc contexte graphique
-     * @param r relation à dessiner
-     */
-    private void dessinerFlecheAssociation(GraphicsContext gc, Relation r) {
-        Classe source = r.getDepart();
-        Classe cible = r.getDestination();
-
-        if (positionsClasses.containsKey(source) && positionsClasses.containsKey(cible)) {
-            double[] start = getClosestPoint(positionsClasses.get(cible), positionsClasses.get(source));
-            double[] end = getClosestPoint(positionsClasses.get(source), positionsClasses.get(cible));
-
-            // Dessiner la ligne
-            gc.setStroke(Color.BLACK);
-            gc.setLineWidth(1);
-            gc.strokeLine(start[0], start[1], end[0], end[1]);
-
-            // Dessiner la flèche
-            double arrowLength = 15;
-            double arrowWidth = 10;
-            double angle = Math.atan2(end[1] - start[1], end[0] - start[0]);
-            double sin = Math.sin(angle);
-            double cos = Math.cos(angle);
-
-            double x1 = end[0] - arrowLength * cos + arrowWidth * sin;
-            double y1 = end[1] - arrowLength * sin - arrowWidth * cos;
-            double x2 = end[0] - arrowLength * cos - arrowWidth * sin;
-            double y2 = end[1] - arrowLength * sin + arrowWidth * cos;
-
-            gc.strokeLine(end[0], end[1], x1, y1);
-            gc.strokeLine(end[0], end[1], x2, y2);
-
-            if (r.getAttribut() != null) {
-                double textX = (start[0] + end[0]) / 2;
-                double textY = (start[1] + end[1]) / 2;
-                gc.setFill(Color.BLACK);
-                gc.fillText(r.getAttribut(), textX,textY);
+            switch (relation.getType().getClass().getSimpleName()) {
+                case "Heritage":
+                    dessinerFleche(gc, start, end, false, true);
+                    break;
+                case "Implementation":
+                    dessinerFleche(gc, start, end, true, true);
+                    break;
+                default:
+                    dessinerFleche(gc, start, end, false, false);
+                    if (relation.getAttribut() != null) {
+                        double textX = (start[0] + end[0]) / 2;
+                        double textY = (start[1] + end[1]) / 2;
+                        gc.setFill(Color.BLACK);
+                        gc.fillText(relation.getAttribut(), textX, textY);
+                    }
+                    break;
             }
-
         }
+    }
+
+    /**
+     * Dessine une flèche entre deux points
+     * @param gc contexte graphique
+     * @param start point de départ de la flèche
+     * @param end point d'arrivée de la flèche
+     * @param pointille vrai si la ligne doit être en pointillés
+     * @param remplie vrai si la pointe de flèche doit être remplie
+     */
+    private void dessinerFleche(GraphicsContext gc, double[] start, double[] end, boolean pointille, boolean remplie) {
+        // Dessiner la ligne
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(1);
+        if (pointille) {
+            gc.setLineDashes(5);
+        }
+        gc.strokeLine(start[0], start[1], end[0], end[1]);
+        gc.setLineDashes(0);
+
+        // Calculer la flèche
+        double arrowLength = 15;
+        double arrowWidth = 10;
+        double angle = Math.atan2(end[1] - start[1], end[0] - start[0]);
+        double sin = Math.sin(angle);
+        double cos = Math.cos(angle);
+
+        double x1 = end[0] - arrowLength * cos + arrowWidth * sin;
+        double y1 = end[1] - arrowLength * sin - arrowWidth * cos;
+        double x2 = end[0] - arrowLength * cos - arrowWidth * sin;
+        double y2 = end[1] - arrowLength * sin + arrowWidth * cos;
+
+        // Dessiner la flèche
+        if (remplie) {
+            gc.setFill(Color.WHITE);
+            gc.fillPolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
+        }
+        gc.strokePolygon(new double[]{end[0], x1, x2}, new double[]{end[1], y1, y2}, 3);
     }
 
     /**
@@ -413,7 +346,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         double targetHeight = targetRect.getHeight();
 
         double closestX = sourceCenterX;
-        double closestY = sourceCenterY;
+        double closestY;
 
         if (sourceCenterX < targetX) {
             closestX = targetX;
@@ -512,59 +445,26 @@ public class VueDiagramme extends Canvas implements Observateur {
                     // Masquer/Démasquer les attributs
                     boolean attributsMasquesActuels = attributsMasques.getOrDefault(classeCible, false);
                     if (!classeCible.getAttributs().isEmpty()) {
-                        MenuItem masquerAttributs = new MenuItem(attributsMasquesActuels ? "Démasquer Attributs" : "Masquer Attributs");
-                        masquerAttributs.setOnAction(e -> {
-                            attributsMasques.put(classeCible, !attributsMasquesActuels);
-                            dessinerDiagramme();
-                            setMessage(attributsMasquesActuels ? "Attributs démasqués pour : " + classeCible.getNom() : "Attributs masqués pour : " + classeCible.getNom());
-                        });
+                        MenuItem masquerAttributs = getMasquerAttributs(attributsMasquesActuels, classeCible);
                         contextMenu.getItems().add(masquerAttributs);
                     }
 
                     // Masquer/Démasquer les méthodes
                     if (!classeCible.getMethodes().isEmpty()) {
                         boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
-                        MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
-                        masquerMethodes.setOnAction(e -> {
-                            methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
-                            dessinerDiagramme();
-                            setMessage(methodesMasqueesActuelles ? "Méthodes démasquées pour : " + classeCible.getNom() : "Méthodes masquées pour : " + classeCible.getNom());
-                        });
+                        MenuItem masquerMethodes = getMasquerMethodes(methodesMasqueesActuelles, classeCible);
                         contextMenu.getItems().add(masquerMethodes);
                     }
 
                     // Ajouter le bouton Modifier
-                    MenuItem modifier = new MenuItem("Modifier");
-                    modifier.setOnAction(e -> {
-                        VueModifier vueModifier = new VueModifier(classeCible);
-                        Classe classeModifiee = vueModifier.afficher();
-
-                        // Mettre à jour la classe modifiée dans le modèle
-                        int indexClasse = modele.getClasses().indexOf(classeCible);
-                        if (indexClasse >= 0) {
-                            modele.getClasses().set(indexClasse, classeModifiee);
-                            dessinerDiagramme(); // Redessiner le diagramme
-                            setMessage("Classe modifiée : " + classeModifiee.getNom());
-                        }
-                    });
+                    MenuItem modifier = getModifier(classeCible);
 
                     // Masquer/Démasquer les relations
                     boolean relationsMasqueesActuelles = modele.getRelations().stream()
                             .filter(relation -> relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible))
                             .allMatch(relation -> relationsMasquees.getOrDefault(relation, false));
 
-                    MenuItem masquerDemasquerRelations = new MenuItem(
-                            relationsMasqueesActuelles ? "Démasquer Relations" : "Masquer Relations"
-                    );
-                    masquerDemasquerRelations.setOnAction(e -> {
-                        for (Relation relation : modele.getRelations()) {
-                            if (relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible)) {
-                                relationsMasquees.put(relation, !relationsMasqueesActuelles);
-                            }
-                        }
-                        dessinerDiagramme();
-                        setMessage(relationsMasqueesActuelles ? "Relations démasquées pour : " + classeCible.getNom() : "Relations masquées pour : " + classeCible.getNom());
-                    });
+                    MenuItem masquerDemasquerRelations = getMasquerDemasquerRelations(relationsMasqueesActuelles, classeCible);
 
                     contextMenu.getItems().addAll(modifier, masquerDemasquerRelations, supprimer);
                     contextMenu.show(this, event.getScreenX(), event.getScreenY());
@@ -574,13 +474,60 @@ public class VueDiagramme extends Canvas implements Observateur {
                 }
             }
         }
-
     }
 
+    private MenuItem getMasquerMethodes(boolean methodesMasqueesActuelles, Classe classeCible) {
+        MenuItem masquerMethodes = new MenuItem(methodesMasqueesActuelles ? "Démasquer Méthodes" : "Masquer Méthodes");
+        masquerMethodes.setOnAction(e -> {
+            methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
+            dessinerDiagramme();
+            setMessage(methodesMasqueesActuelles ? "Méthodes démasquées pour : " + classeCible.getNom() : "Méthodes masquées pour : " + classeCible.getNom());
+        });
+        return masquerMethodes;
+    }
 
+    private MenuItem getMasquerAttributs(boolean attributsMasquesActuels, Classe classeCible) {
+        MenuItem masquerAttributs = new MenuItem(attributsMasquesActuels ? "Démasquer Attributs" : "Masquer Attributs");
+        masquerAttributs.setOnAction(e -> {
+            attributsMasques.put(classeCible, !attributsMasquesActuels);
+            dessinerDiagramme();
+            setMessage(attributsMasquesActuels ? "Attributs démasqués pour : " + classeCible.getNom() : "Attributs masqués pour : " + classeCible.getNom());
+        });
+        return masquerAttributs;
+    }
 
+    private MenuItem getMasquerDemasquerRelations(boolean relationsMasqueesActuelles, Classe classeCible) {
+        MenuItem masquerDemasquerRelations = new MenuItem(
+                relationsMasqueesActuelles ? "Démasquer Relations" : "Masquer Relations"
+        );
+        masquerDemasquerRelations.setOnAction(e -> {
+            for (Relation relation : modele.getRelations()) {
+                if (relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible)) {
+                    relationsMasquees.put(relation, !relationsMasqueesActuelles);
+                }
+            }
+            dessinerDiagramme();
+            setMessage(relationsMasqueesActuelles ? "Relations démasquées pour : " + classeCible.getNom() : "Relations masquées pour : " + classeCible.getNom());
+        });
+        return masquerDemasquerRelations;
+    }
 
+    private MenuItem getModifier(Classe classeCible) {
+        MenuItem modifier = new MenuItem("Modifier");
+        modifier.setOnAction(e -> {
+            VueModifier vueModifier = new VueModifier(classeCible);
+            Classe classeModifiee = vueModifier.afficher();
 
+            // Mettre à jour la classe modifiée dans le modèle
+            int indexClasse = modele.getClasses().indexOf(classeCible);
+            if (indexClasse >= 0) {
+                modele.getClasses().set(indexClasse, classeModifiee);
+                dessinerDiagramme(); // Redessiner le diagramme
+                setMessage("Classe modifiée : " + classeModifiee.getNom());
+            }
+        });
+        return modifier;
+    }
 
     /**
      * Met à jour le texte du message affiché en bas de l'écran.
@@ -601,8 +548,6 @@ public class VueDiagramme extends Canvas implements Observateur {
     public static void reinitialiser(){
         positionsClasses.clear();
     }
-
-
 
     private void gererDoubleClic(MouseEvent event) {
         if (event.getClickCount() == 2) {
@@ -625,9 +570,4 @@ public class VueDiagramme extends Canvas implements Observateur {
             }
         }
     }
-
-
-
-
-
 }

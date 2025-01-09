@@ -14,11 +14,9 @@ public class Association implements RelationStrategy{
     * @return void
     */
     public void creerLien(String nomClasse)throws ClassNotFoundException {
-        System.out.println("Création d'un lien d'association entre les classes.");
         // Logique spécifique pour créer un lien d'association}
        Class<?> classe = Class.forName(nomClasse);
        Field[] champs = classe.getDeclaredFields();
-       System.out.println("champs=" + Arrays.toString(champs));
     }
 
     /**

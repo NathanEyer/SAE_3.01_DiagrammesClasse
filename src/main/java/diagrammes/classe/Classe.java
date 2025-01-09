@@ -107,25 +107,22 @@ public class Classe {
 
     public void setNom(String nom) { this.nom = nom; }
     //REDEFINITION DU EQUALS ET DU HASHCODE POUR COMPARER LES CLASSES CORRECTEMENT
-    /**
-     * Redéfinition du equals
-     * @param o Object
-     * @return boolean
-     */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Classe classe = (Classe) o;
-        return Objects.equals(attributs, classe.attributs);
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Classe classe = (Classe) obj;
+        return nom != null && nom.equals(classe.nom); // Compare uniquement les noms
     }
 
-    /**
-     * Redéfinition du hashCode
-     * @return int
-     */
     @Override
     public int hashCode() {
-        return Objects.hash(nom); //Générer un hashcode basé sur le même attribut que equals
+        return Objects.hash(nom); // Générer un hashCode basé uniquement sur le nom
+    }
+
+
+    @Override
+    public String toString() {
+        return nom;
     }
 }

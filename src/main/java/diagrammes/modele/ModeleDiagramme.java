@@ -49,9 +49,11 @@ public class ModeleDiagramme implements Diagramme {
      * @param classe à ajouter
      */
     public void addClass(Classe classe) throws ClassNotFoundException {
-        classes.add(classe);
-        reevaluerAssociations();
-        notifierObservateur();
+        if(!classes.contains(classe)) {
+            classes.add(classe);
+            reevaluerAssociations();
+            notifierObservateur();
+        }
     }
 
     /**
@@ -191,11 +193,9 @@ public class ModeleDiagramme implements Diagramme {
                         modificateur // Ajout du modificateur
                 ));
             }
-
-            // Ajouter la classe au modèle
+            System.out.println(nouvelleClasse.getNom() + this.classes);
             addClass(nouvelleClasse);
             Class<?> classeParente = classe.getSuperclass();
-
             if (classeParente != null && !classeParente.getSimpleName().equals("Object")) {
                 Relation relation = new Relation(nouvelleClasse, new Classe(classeParente.getSimpleName()), new Heritage());
                 addRelation(relation);
@@ -230,7 +230,6 @@ public class ModeleDiagramme implements Diagramme {
 
                 addRelation(association);
                 resolues.add(incomplete);
-                System.out.println("Association résolue : " + incomplete.getSource().getNom() + " -> " + classeDestination.getNom());
             }
         }
 
@@ -260,15 +259,11 @@ public class ModeleDiagramme implements Diagramme {
 
 
     public Classe getClasseParNom(String nomClasse) {
-        System.out.println("Recherche de la classe : " + nomClasse);
         for (Classe classe : classes) {
-            System.out.println("Comparaison avec : " + classe.getNom());
             if (classe.getNom().equals(nomClasse)) {
-                System.out.println("Classe trouvée : " + classe.getNom());
                 return classe;
             }
         }
-        System.out.println("Classe non trouvée : " + nomClasse);
         return null;
     }
 

@@ -73,6 +73,7 @@ public class Main extends Application {
         primaryStage.setTitle("Commencez par ajouter des fichiers .class");
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 
     /**

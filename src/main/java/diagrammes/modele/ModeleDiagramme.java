@@ -133,11 +133,6 @@ public class ModeleDiagramme implements Diagramme {
             Classe nouvelleClasse = new Classe(classe.getSimpleName());
 
             for (Field field : classe.getDeclaredFields()) {
-                // Debug
-                System.out.println("Analyse du champ : " + field.getName());
-                System.out.println("Type : " + field.getType());
-                System.out.println("Type générique : " + field.getGenericType());
-
                 String modificateur = Modifier.toString(field.getModifiers()); // Récupération du modificateur
                 nouvelleClasse.ajouterAttribut(new Attribut(
                         field.getName(),
@@ -166,7 +161,6 @@ public class ModeleDiagramme implements Diagramme {
                 if (!field.getType().isPrimitive() && !field.getType().getName().startsWith("java.")) {
                     Classe classeDestination = chargerOuCreerClasse(field.getType().getSimpleName());
                     Relation association = new Relation(nouvelleClasse, classeDestination, new Association());
-                    System.out.println(classe.getSimpleName() + " possède un attribut de type " + field.getType().getSimpleName());
                     addRelation(association);
                 }
             }
@@ -203,8 +197,6 @@ public class ModeleDiagramme implements Diagramme {
             e.printStackTrace();
         }
 
-        // Debug
-        System.out.println("Classes détectées dans le modèle :");
         for (Classe classe : classes) {
             System.out.println("- " + classe.getNom());
         }

@@ -117,7 +117,7 @@ public class Classe {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Classe classe = (Classe) o;
-        return Objects.equals(nom, classe.nom); //Comparer par le nom ou un autre attribut unique
+        return Objects.equals(attributs, classe.attributs);
     }
 
     /**
@@ -128,8 +128,4 @@ public class Classe {
     public int hashCode() {
         return Objects.hash(nom); //Générer un hashcode basé sur le même attribut que equals
     }
-
-
-
-
 }

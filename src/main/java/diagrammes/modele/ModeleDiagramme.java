@@ -61,22 +61,7 @@ public class ModeleDiagramme implements Diagramme {
      *
      * @param relation à ajouter
      */
-    public void addRelation(Relation relation) throws ClassNotFoundException {
-        //debug//
-        if (relation.getDestination() == null || relation.getDepart() == null) {
-            System.out.println("Relation invalide détectée : ");
-            if (relation.getDepart() != null) {
-                System.out.println("Source : " + relation.getDepart().getNom());
-            } else {
-                System.out.println("Source est null");
-            }
-            if (relation.getDestination() != null) {
-                System.out.println("Destination : " + relation.getDestination().getNom());
-            } else {
-                System.out.println("Destination est null");
-            }
-        }
-        ////
+    public void addRelation(Relation relation){
         relations.add(relation);
         notifierObservateur();
     }
@@ -170,7 +155,6 @@ public class ModeleDiagramme implements Diagramme {
                     Classe classeDestination = getClasseParNom(field.getType().getSimpleName());
                     if (classeDestination != null) {
                         Relation association = new Relation(nouvelleClasse, classeDestination, new Association());
-                        System.out.println(classe.getSimpleName() + " possède un attribut de type " + field.getType().getSimpleName());
                         association.setAttribut(field.getName());
                         addRelation(association);
                     } else {
@@ -249,7 +233,6 @@ public class ModeleDiagramme implements Diagramme {
                 addClass(classe);
             } catch (ClassNotFoundException e) {
                 // Si elle n'existe pas, la crée comme une nouvelle classe
-                System.out.println("Classe introuvable : " + nomClasse + ". Création d'une classe par défaut.");
                 classe = new Classe(nomClasse);
                 addClass(classe);
             }

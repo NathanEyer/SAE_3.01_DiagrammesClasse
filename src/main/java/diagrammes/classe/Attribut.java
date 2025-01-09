@@ -53,4 +53,5 @@ public class Attribut {
      * @return modificateur
      */
     public String getModificateur() { return modificateur; }
+
 }

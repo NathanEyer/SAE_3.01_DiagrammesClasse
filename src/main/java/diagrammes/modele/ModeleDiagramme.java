@@ -134,11 +134,6 @@ public class ModeleDiagramme implements Diagramme {
             Classe nouvelleClasse = new Classe(classe.getSimpleName());
 
             for (Field field : classe.getDeclaredFields()) {
-                // Debug
-                System.out.println("Analyse du champ : " + field.getName());
-                System.out.println("Type : " + field.getType());
-                System.out.println("Type générique : " + field.getGenericType());
-
                 String modificateur = Modifier.toString(field.getModifiers()); // Récupération du modificateur
                 nouvelleClasse.ajouterAttribut(new Attribut(
                         field.getName(),
@@ -179,6 +174,7 @@ public class ModeleDiagramme implements Diagramme {
                     } else {
                         associationsIncompletes.add(new AssociationIncomplete(nouvelleClasse, field.getType().getSimpleName(), field.getName(), false));
                     }
+
                 }
             }
 
@@ -213,14 +209,6 @@ public class ModeleDiagramme implements Diagramme {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // Debug
-        System.out.println("Classes détectées dans le modèle :");
-        for (Classe classe : classes) {
-            System.out.println("- " + classe.getNom());
-        }
-
-
     }
 
     private void reevaluerAssociations() throws ClassNotFoundException {

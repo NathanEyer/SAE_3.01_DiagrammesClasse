@@ -126,7 +126,6 @@ public class VueModifier {
             String type = parts[1];
             String nom = parts[2];
 
-            // Fenêtre pour modifier l'attribut
             Stage attributStage = new Stage();
             VBox root = new VBox(10);
             root.setPadding(new Insets(10));
@@ -199,7 +198,6 @@ public class VueModifier {
     }
 
     private void ajouterAttribut(ListView<String> listAttributs) {
-        // Même logique que pour modifier, mais pour ajouter un nouvel attribut
         Stage attributStage = new Stage();
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
@@ -218,7 +216,6 @@ public class VueModifier {
             );
             attributStage.close();
         });
-
         root.getChildren().addAll(new Label("Ajouter un attribut"), txtNom, comboType, comboModificateur, btnValider);
         Scene scene = new Scene(root, 300, 200);
         attributStage.setScene(scene);
@@ -226,7 +223,6 @@ public class VueModifier {
     }
 
     private void ajouterMethode(ListView<String> listMethodes) {
-        // Même logique que pour modifier, mais pour ajouter une nouvelle méthode
         Stage methodeStage = new Stage();
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
@@ -249,7 +245,6 @@ public class VueModifier {
             );
             methodeStage.close();
         });
-
         root.getChildren().addAll(new Label("Ajouter une méthode"), txtNom, comboRetour, comboModificateur, txtParametres, btnValider);
         Scene scene = new Scene(root, 400, 250);
         methodeStage.setScene(scene);

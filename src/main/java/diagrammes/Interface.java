@@ -98,6 +98,7 @@ public class Interface {
                 + "Lorsqu'une classe est de couleur verte, c'est une interface. Lorsqu'elle est de couleur rouge, c'est une classe parent et lorsqu'elle est bleu c'est une classe normale.\n\n"
                 + "Si vous double cliquez sur une classe, alors les attributs et les méthodes seront masqués, si vous double cliquez a nouveau, les attributs et les méthodes se démasqueront.";
 
+
         TextArea textAreaAide = new TextArea(contenuAide);
         textAreaAide.setEditable(false);
         textAreaAide.setWrapText(true);

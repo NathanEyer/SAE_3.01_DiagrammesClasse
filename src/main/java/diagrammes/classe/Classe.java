@@ -11,7 +11,7 @@ public class Classe {
     /**
      * Attributs d'une classe
      */
-    private final String nom;
+    private String nom;
     private List<Attribut> attributs;
     private List<Methode> methodes;
 
@@ -104,6 +104,8 @@ public class Classe {
         this.methodes = methodes;
     }
 
+
+    public void setNom(String nom) { this.nom = nom; }
     //REDEFINITION DU EQUALS ET DU HASHCODE POUR COMPARER LES CLASSES CORRECTEMENT
     /**
      * Redéfinition du equals
@@ -115,7 +117,7 @@ public class Classe {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Classe classe = (Classe) o;
-        return Objects.equals(nom, classe.nom); //Comparer par le nom ou un autre attribut unique
+        return Objects.equals(attributs, classe.attributs);
     }
 
     /**
@@ -126,8 +128,4 @@ public class Classe {
     public int hashCode() {
         return Objects.hash(nom); //Générer un hashcode basé sur le même attribut que equals
     }
-
-
-
-
 }

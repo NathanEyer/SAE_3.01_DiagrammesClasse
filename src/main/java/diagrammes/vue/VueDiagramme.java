@@ -359,6 +359,13 @@ public class VueDiagramme extends Canvas implements Observateur {
             gc.strokeLine(end[0], end[1], x1, y1);
             gc.strokeLine(end[0], end[1], x2, y2);
 
+            if (r.getAttribut() != null) {
+                double textX = (start[0] + end[0]) / 2;
+                double textY = (start[1] + end[1]) / 2;
+                gc.setFill(Color.BLACK);
+                gc.fillText(r.getAttribut(), textX,textY);
+            }
+
         }
     }
 

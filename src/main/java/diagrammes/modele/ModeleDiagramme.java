@@ -50,6 +50,7 @@ public class ModeleDiagramme implements Diagramme {
      */
     public void addClass(Classe classe) throws ClassNotFoundException {
         classes.add(classe);
+        reevaluerAssociations();
         notifierObservateur();
     }
 
@@ -155,19 +156,29 @@ public class ModeleDiagramme implements Diagramme {
                         if (typeArguments.length > 0 && typeArguments[0] instanceof Class<?>) {
                             Class<?> genericClass = (Class<?>) typeArguments[0];
                             String nomSimpl = genericClass.getSimpleName();
-                            Classe classeCollection = chargerOuCreerClasse(nomSimpl);
-                            Relation collectionRelation = new Relation(nouvelleClasse, classeCollection, new Association());
-                            addRelation(collectionRelation);
+                            Classe classeDesty = getClasseParNom(nomSimpl);
+                            if (classeDesty != null) {
+                                Relation collectionRelation = new Relation(nouvelleClasse, classeDesty, new Association());
+                                collectionRelation.setAttribut(field.getName());
+                                addRelation(collectionRelation);
+                            } else {
+                                associationsIncompletes.add(new AssociationIncomplete(nouvelleClasse, nomSimpl, field.getName(),true));
+                            }
                         }
                     }
                 }
 
                 // Gérer les associations pour les types non primitifs
                 if (!field.getType().isPrimitive() && !field.getType().getName().startsWith("java.")) {
-                    Classe classeDestination = chargerOuCreerClasse(field.getType().getSimpleName());
-                    Relation association = new Relation(nouvelleClasse, classeDestination, new Association());
-                    System.out.println(classe.getSimpleName() + " possède un attribut de type " + field.getType().getSimpleName());
-                    addRelation(association);
+                    Classe classeDestination = getClasseParNom(field.getType().getSimpleName());
+                    if (classeDestination != null) {
+                        Relation association = new Relation(nouvelleClasse, classeDestination, new Association());
+                        System.out.println(classe.getSimpleName() + " possède un attribut de type " + field.getType().getSimpleName());
+                        association.setAttribut(field.getName());
+                        addRelation(association);
+                    } else {
+                        associationsIncompletes.add(new AssociationIncomplete(nouvelleClasse, field.getType().getSimpleName(), field.getName(), false));
+                    }
                 }
             }
 
@@ -212,6 +223,34 @@ public class ModeleDiagramme implements Diagramme {
 
     }
 
+    private void reevaluerAssociations() throws ClassNotFoundException {
+        List<AssociationIncomplete> resolues = new ArrayList<>();
+
+        for (AssociationIncomplete incomplete : associationsIncompletes) {
+            Classe classeDestination = getClasseParNom(incomplete.getNomClasseAssociee());
+            if (classeDestination != null) {
+                Relation association;
+                if (incomplete.isCollection()) {
+                    // Si c'est une collection
+                    association = new Relation(incomplete.getSource(), classeDestination, new Association());
+                    association.setAttribut(incomplete.getAttribut() + " (Collection)");
+                } else {
+                    // Si ce n'est pas une collection
+                    association = new Relation(incomplete.getSource(), classeDestination, new Association());
+                    association.setAttribut(incomplete.getAttribut());
+                }
+
+                addRelation(association);
+                resolues.add(incomplete);
+                System.out.println("Association résolue : " + incomplete.getSource().getNom() + " -> " + classeDestination.getNom());
+            }
+        }
+
+        // Supprimer les associations résolues de la liste des incomplètes
+        associationsIncompletes.removeAll(resolues);
+    }
+
+
     private Classe chargerOuCreerClasse(String nomClasse) throws ClassNotFoundException {
         // Vérifie si la classe existe déjà dans le modèle
         Classe classe = getClasseParNom(nomClasse);
@@ -232,7 +271,6 @@ public class ModeleDiagramme implements Diagramme {
     }
 
 
-
     public Classe getClasseParNom(String nomClasse) {
         System.out.println("Recherche de la classe : " + nomClasse);
         for (Classe classe : classes) {
@@ -246,7 +284,37 @@ public class ModeleDiagramme implements Diagramme {
         return null;
     }
 
+    private final List<AssociationIncomplete> associationsIncompletes = new ArrayList<>();
 
+    private static class AssociationIncomplete {
+        private final Classe source;
+        private final String nomClasseAssociee;
+        private final String attribut;
+        private final boolean isCollection;
+
+        public AssociationIncomplete(Classe source, String nomClasseAssociee, String attribut, boolean isCollection) {
+            this.source = source;
+            this.nomClasseAssociee = nomClasseAssociee;
+            this.attribut = attribut;
+            this.isCollection = isCollection;
+        }
+
+        public Classe getSource() {
+            return source;
+        }
+
+        public String getNomClasseAssociee() {
+            return nomClasseAssociee;
+        }
+
+        public String getAttribut() {
+            return attribut;
+        }
+
+        public boolean isCollection() {
+            return isCollection;
+        }
+    }
 
 
     /**

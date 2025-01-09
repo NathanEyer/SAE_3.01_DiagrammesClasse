@@ -64,6 +64,10 @@ public class Relation {
         return type;
     }
 
+    /**
+     * Méthode toString
+     * @return
+     */
     @Override
     public String toString() {
         return "Relation: " + type.getClass().getSimpleName() + " entre " + depart.getNom() + " et " + destination.getNom();

@@ -71,6 +71,9 @@ public class Interface {
     }
 
 
+    /**
+     * Affiche l'aide
+     */
     public static void afficherAide() {
 
         Stage aideStage = new Stage();

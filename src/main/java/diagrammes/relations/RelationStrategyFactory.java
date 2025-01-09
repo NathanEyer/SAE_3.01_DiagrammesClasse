@@ -2,6 +2,12 @@ package diagrammes.relations;
 
 public class RelationStrategyFactory {
 
+
+    /**
+     *
+     * @param type
+     * @return
+     */
     public static RelationStrategy create(String type) {
         String normalizedType = type.toLowerCase().replace("é", "e");
         switch (normalizedType) {

@@ -52,7 +52,13 @@ public class VueDiagramme extends Canvas implements Observateur {
         this.setOnMousePressed(this::gererMousePressed);
         this.setOnMouseDragged(this::gererMouseDragged);
         this.setOnMouseReleased(this::gererMouseReleased);
-        this.setOnMouseClicked(this::gererClicDroit);
+        this.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1) {
+                gererClicDroit(event);
+            } else {
+                gererDoubleClic(event);
+            }
+        });
     }
 
     /**
@@ -556,6 +562,29 @@ public class VueDiagramme extends Canvas implements Observateur {
         positionsClasses.clear();
     }
 
+
+
+    private void gererDoubleClic(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            double mouseX = event.getX();
+            double mouseY = event.getY();
+            for (var entry : positionsClasses.entrySet()) {
+                Rectangle rect = entry.getValue();
+                if (rect.contains(mouseX, mouseY)) {
+                    Classe classeCible = entry.getKey();
+                    boolean attributsMasquesActuels = attributsMasques.getOrDefault(classeCible, false);
+                    boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
+                    attributsMasques.put(classeCible, !attributsMasquesActuels);
+                    methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
+                    dessinerDiagramme();
+                    setMessage((attributsMasquesActuels ? "Attributs démasqués" : "Attributs masqués") +
+                            " et " + (methodesMasqueesActuelles ? "méthodes démasquées" : "méthodes masquées") +
+                            " pour : " + classeCible.getNom());
+                    return;
+                }
+            }
+        }
+    }
 
 
 

@@ -52,5 +52,9 @@ public class Attribut {
      * Retourne la visibilité de l'attribut
      * @return modificateur
      */
-    public String getModificateur() { return modificateur; }
+    public String getModificateur() {
+        System.out.println("Méthode modificateur récupéré : " + modificateur);
+        return modificateur;
+    }
+
 }

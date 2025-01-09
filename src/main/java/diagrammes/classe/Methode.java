@@ -63,5 +63,9 @@ public class  Methode {
      * Retourne la visibilité
      * @return modificateur
      */
-    public String getModificateur() { return modificateur; }
+    public String getModificateur() {
+        System.out.println("Méthode modificateur récupéré : " + modificateur);
+        return modificateur;
+    }
+
 }

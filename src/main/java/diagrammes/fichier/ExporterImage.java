@@ -37,7 +37,7 @@ public class ExporterImage implements Exporter {
                 }
                 ImageIO.write(bufferedImage, "png", fichier);
 
-                System.out.println("Exportation réussie en PNG vers : " + chemin);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

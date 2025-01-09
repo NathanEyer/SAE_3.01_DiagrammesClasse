@@ -23,13 +23,11 @@ public class ExporterJava implements Exporter {
                     String typeAttribut = classe.getAttributs().get(i).getTypeAttribut();
                     String nomAttribut = classe.getAttributs().get(i).getNomAttribut();
 
+                    // Log pour vérifier les valeurs des attributs
+                    System.out.println("Attribut: modificateur = " + modificateur + ", type = " + typeAttribut + ", nom = " + nomAttribut);
+
                     if (modificateur != null && typeAttribut != null && nomAttribut != null) {
-                        switch (modificateur) {
-                            case "-" -> writer.write("    private " + typeAttribut + " " + nomAttribut + ";\n");
-                            case "+" -> writer.write("    public " + typeAttribut + " " + nomAttribut + ";\n");
-                            case "#" -> writer.write("    protected " + typeAttribut + " " + nomAttribut + ";\n");
-                            default -> writer.write("    " + typeAttribut + " " + nomAttribut + ";\n"); // Aucun modificateur
-                        }
+                        writer.write("    " + modificateur + " " + typeAttribut + " " + nomAttribut + ";\n");
                     }
                 }
             } else {
@@ -45,13 +43,11 @@ public class ExporterJava implements Exporter {
                     String typeRetour = classe.getMethodes().get(j).getTypeRetour();
                     String nomMethode = classe.getMethodes().get(j).getNomMethode();
 
+                    // Log pour vérifier les valeurs des méthodes
+                    System.out.println("Méthode: modificateur = " + modificateur + ", typeRetour = " + typeRetour + ", nom = " + nomMethode);
+
                     if (modificateur != null && typeRetour != null && nomMethode != null) {
-                        switch (modificateur) {
-                            case "-" -> writer.write("    private " + typeRetour + " " + nomMethode + "() {\n");
-                            case "+" -> writer.write("    public " + typeRetour + " " + nomMethode + "() {\n");
-                            case "#" -> writer.write("    protected " + typeRetour + " " + nomMethode + "() {\n");
-                            default -> writer.write("    " + typeRetour + " " + nomMethode + "() {\n"); // Aucun modificateur
-                        }
+                        writer.write("    " + modificateur + " " + typeRetour + " " + nomMethode + "() {\n");
                         writer.write("        // TODO: Implémentez cette méthode\n");
                         writer.write("    }\n\n");
                     }

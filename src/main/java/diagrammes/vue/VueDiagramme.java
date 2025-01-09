@@ -175,11 +175,11 @@ public class VueDiagramme extends Canvas implements Observateur {
         gc.strokeRect(x, y, largeur, hauteur);
 
         Color couleurFond = Color.LIGHTBLUE;
-        if(estInterface(classe)) {
+        if (estInterface(classe)) {
             couleurFond = Color.LIGHTGREEN;
-        }else if(estParente(classe)) {
+        } else if (estParente(classe)) {
             couleurFond = Color.RED;
-        }else if(estParente(classe) && estInterface(classe)) {
+        } else if (estParente(classe) && estInterface(classe)) {
             couleurFond = Color.GREEN;
         }
         gc.setFill(couleurFond);
@@ -193,7 +193,10 @@ public class VueDiagramme extends Canvas implements Observateur {
         double currentY = y + hauteurNom;
         if (!attributsMasquesActuels) {
             for (Attribut attribut : classe.getAttributs()) {
-                gc.fillText("- " + attribut.getNomAttribut() + " : " + attribut.getTypeAttribut(), x + padding, currentY + 15);
+                // Convertir le modificateur en signe
+                String modificateur = convertirModificateur(attribut.getModificateur());
+                gc.fillText(modificateur + " " + attribut.getNomAttribut() + " : " + attribut.getTypeAttribut(),
+                        x + padding, currentY + 15);
                 currentY += hauteurSection;
             }
             gc.strokeLine(x, currentY, x + largeur, currentY);
@@ -201,11 +204,36 @@ public class VueDiagramme extends Canvas implements Observateur {
 
         if (!methodesMasqueesActuelles) {
             for (Methode methode : classe.getMethodes()) {
-                gc.fillText("+ " + methode.getNomMethode() + "()", x + padding, currentY + 15);
+                // Convertir le modificateur en signe et afficher les paramètres
+                String modificateur = convertirModificateur(methode.getModificateur());
+                String params = String.join(", ", methode.getParametres());
+                gc.fillText(modificateur + " " + methode.getNomMethode() + "(" + params + ") : " + methode.getTypeRetour(),
+                        x + padding, currentY + 15);
                 currentY += hauteurSection;
             }
         }
     }
+
+    /**
+     * Convertit un modificateur d'accès en son symbole UML.
+     *
+     * @param modificateur Le modificateur d'accès sous forme de texte (e.g., "public", "private", "protected").
+     * @return Le symbole correspondant ("+", "-", "#").
+     */
+    private String convertirModificateur(String modificateur) {
+        switch (modificateur) {
+            case "public":
+                return "+";
+            case "private":
+                return "-";
+            case "protected":
+                return "#";
+            default:
+                return ""; // Pas de symbole pour package-private ou autres
+        }
+    }
+
+
 
     /**
      * Vérifie que c'est une interface
@@ -422,7 +450,12 @@ public class VueDiagramme extends Canvas implements Observateur {
         }
 
         for (Methode methode : classe.getMethodes()) {
-            text = new Text("+ " + methode.getNomMethode() + "()");
+            StringBuilder s = new StringBuilder("+ " + methode.getNomMethode() + "(");
+            for(String p: methode.getParametres()){
+                s.append(p).append(",");
+            }
+            s.append("): ").append(methode.getTypeRetour());
+            text = new Text(s.toString());
             maxLength = Math.max(maxLength, text.getLayoutBounds().getWidth());
         }
 

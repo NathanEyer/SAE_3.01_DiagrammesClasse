@@ -265,10 +265,10 @@ public class ModeleDiagramme implements Diagramme {
             export = new ExporterUml();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PlantUML files (*.puml)", "*.puml"));
 
-        } //else if (format.equalsIgnoreCase("JAVA")) {
-        //export = new ExporterJava();
-        //fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PlantUML files (*.puml)", "*.puml"));
-        //}
+        } else if (format.equalsIgnoreCase("JAVA")) {
+        export = new ExporterJava();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Java files (*.java)", "*.java"));
+        }
         // Affiche le FileChooser pour choisir l'emplacement du fichier
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
@@ -278,6 +278,8 @@ public class ModeleDiagramme implements Diagramme {
                     export.exporter(file.getAbsolutePath(), vue); // La vue est nécessaire pour l'export PNG
                 } else if (format.equalsIgnoreCase("UML")) {
                     export.exporter(file.getAbsolutePath(), this); // Le modèle est nécessaire pour l'export UML
+                } else if (format.equalsIgnoreCase("JAVA")) {
+                    export.exporter(file.getAbsolutePath(), this); // Le modèle est nécessaire pour l'export JAVA
                 }
                 return true;
             } catch (Exception e) {

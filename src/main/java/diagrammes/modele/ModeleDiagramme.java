@@ -318,15 +318,6 @@ public class ModeleDiagramme implements Diagramme {
     }
 
     /**
-     * Permet de supprimer un observateur
-     * @param o à supprimer
-     */
-    @Override
-    public void supprimerObservateur(Observateur o) {
-        observateurs.remove(o);
-    }
-
-    /**
      * Notifie les observateurs
      */
     @Override

@@ -80,18 +80,22 @@ public class Interface {
                 + "- Pour masquer les méthodes ou attributs cliquez deux fois sur n'importe quelle classe'.\n"
                 + "- Pour réinitialiser le diagramme, utilisez l'option 'Réinitialiser' dans le menu 'Éditer'.\n"
                 + "- Pour avoir plus de fonctionnalités, cliquez droit sur une classe et vous pourrez la modifier a votre guise.\n"
-                + "Si vous avez des questions supplémentaires, consultez la documentation ou contactez le support.\n"
-                + "Lorsqu'une classe est de couleur verte, c'est une interface. Lorsqu'elle est de couleur rouge, c'est une classe parent et lorsqu'elle est bleu c'est une classe normale.\n\n"
-                + "Si vous double cliquez sur une classe, alors les attributs et les méthodes seront masqués, si vous double cliquez a nouveau, les attributs et les méthodes se démasqueront.";
+                + "- Si vous double cliquez sur une classe, alors les attributs et les méthodes seront masqués, si vous double cliquez a nouveau, les attributs et les méthodes se démasqueront.\n"
+                + "- Lorsqu'une classe est de couleur verte, c'est une interface. Lorsqu'elle est de couleur rouge, c'est une classe parent et lorsqu'elle est bleu c'est une classe normale.\n\n"
+                + "- Si vous avez des questions supplémentaires, consultez la documentation ou contactez le support.\n";
+
+
 
         TextArea textAreaAide = new TextArea(contenuAide);
         textAreaAide.setEditable(false);
         textAreaAide.setWrapText(true);
         textAreaAide.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
-        Scene sceneAide = new Scene(textAreaAide, SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.7);
 
+
+
+
+        Scene sceneAide = new Scene(textAreaAide, 400, 300);
         aideStage.setScene(sceneAide);
-        aideStage.setResizable(true);
         aideStage.show();
     }
 }

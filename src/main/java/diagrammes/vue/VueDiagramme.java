@@ -21,6 +21,7 @@ import javafx.scene.text.Text;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * VueDiagramme affiche le diagramme à l'utilisateur en utilisant un Canvas.
@@ -236,7 +237,7 @@ public class VueDiagramme extends Canvas implements Observateur {
             case "public" -> "+";
             case "private" -> "-";
             case "protected" -> "#";
-            default -> ""; // Pas de symbole pour package-private ou autres
+            default -> "";
         };
     }
 
@@ -587,15 +588,15 @@ public class VueDiagramme extends Canvas implements Observateur {
             List<Relation> relations = modele.getRelations(); // Vérifiez que cette liste est mutable
             List<Classe> autresClasses = modele.getClasses().stream()
                     .filter(c -> !c.equals(classeCible))
-                    .toList(); // Convertissez en mutable si nécessaire avec .collect(Collectors.toList())
+                    .toList();
             VueModifier vueModifier = new VueModifier(classeCible);
             Classe classeModifiee = vueModifier.afficher(relations, autresClasses);
 
-            // Mettre à jour la classe modifiée dans le modèle
+
             int indexClasse = modele.getClasses().indexOf(classeCible);
             if (indexClasse >= 0) {
                 modele.getClasses().set(indexClasse, classeModifiee);
-                dessinerDiagramme(); // Redessiner le diagramme
+                dessinerDiagramme();
                 setMessage("Classe modifiée : " + classeModifiee.getNom());
             }
         });
@@ -682,4 +683,5 @@ public class VueDiagramme extends Canvas implements Observateur {
             }
         }
     }
+
 }

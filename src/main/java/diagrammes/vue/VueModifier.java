@@ -3,6 +3,9 @@ package diagrammes.vue;
 import diagrammes.classe.Attribut;
 import diagrammes.classe.Classe;
 import diagrammes.classe.Methode;
+import diagrammes.relations.Relation;
+import diagrammes.relations.RelationStrategy;
+import diagrammes.relations.RelationStrategyFactory;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -12,16 +15,17 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class VueModifier {
 
-    private Classe classe;
+    private final Classe classe;
 
     public VueModifier(Classe classe) {
         this.classe = classe;
     }
 
-    public Classe afficher() {
+    public Classe afficher(List<Relation> relations, List<Classe> autresClasses) {
         Stage stage = new Stage();
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
@@ -72,6 +76,29 @@ public class VueModifier {
         });
         btnAjouterMethode.setOnAction(e -> ajouterMethode(listMethodes));
 
+        // Section pour les relations
+        Label lblRelations = new Label("Relations :");
+        ListView<Relation> listRelations = new ListView<>();
+        listRelations.getItems().addAll(
+                relations.stream()
+                        .filter(rel -> rel.getDepart().equals(classe))
+                        .collect(Collectors.toList())
+        );
+        listRelations.setPrefHeight(100);
+
+        Button btnModifierRelation = new Button("Modifier Relation");
+        Button btnSupprimerRelation = new Button("Supprimer Relation");
+        Button btnAjouterRelation = new Button("Ajouter Relation");
+
+        btnModifierRelation.setOnAction(e -> modifierRelation(listRelations, autresClasses));
+        btnSupprimerRelation.setOnAction(e -> {
+            Relation selectedRelation = listRelations.getSelectionModel().getSelectedItem();
+            if (selectedRelation != null) {
+                listRelations.getItems().remove(selectedRelation);
+            }
+        });
+        btnAjouterRelation.setOnAction(e -> ajouterRelation(listRelations, autresClasses));
+
         // Bouton de validation
         Button btnValider = new Button("Valider");
         btnValider.setOnAction(e -> {
@@ -99,6 +126,10 @@ public class VueModifier {
                 classe.ajouterMethode(new Methode(nom, retour, parametresListe, modificateur));
             }
 
+            // Mettre à jour les relations
+            relations.removeIf(rel -> rel.getDepart().equals(classe));
+            relations.addAll(listRelations.getItems());
+
             stage.close();
         });
 
@@ -107,54 +138,17 @@ public class VueModifier {
                 lblNomClasse, txtNomClasse,
                 lblAttributs, new HBox(10, listAttributs, btnModifierAttribut, btnSupprimerAttribut, btnAjouterAttribut),
                 lblMethodes, new HBox(10, listMethodes, btnModifierMethode, btnSupprimerMethode, btnAjouterMethode),
+                lblRelations, new HBox(10, listRelations, btnModifierRelation, btnSupprimerRelation, btnAjouterRelation),
                 btnValider
         );
 
-        Scene scene = new Scene(root, 800, 600); // Taille ajustée pour afficher tous les éléments
+        Scene scene = new Scene(root, 800, 600);
         stage.setScene(scene);
         stage.setTitle("Modifier une classe");
         stage.showAndWait();
 
         return classe;
     }
-
-    private void modifierAttribut(ListView<String> listAttributs) {
-        String selectedAttribut = listAttributs.getSelectionModel().getSelectedItem();
-        if (selectedAttribut != null) {
-            String[] parts = selectedAttribut.split(" ");
-            String modificateur = parts[0];
-            String type = parts[1];
-            String nom = parts[2];
-
-            Stage attributStage = new Stage();
-            VBox root = new VBox(10);
-            root.setPadding(new Insets(10));
-
-            TextField txtNom = new TextField(nom);
-            ComboBox<String> comboType = new ComboBox<>();
-            comboType.getItems().addAll("String", "int", "double", "boolean", "float");
-            comboType.setValue(type);
-
-            ComboBox<String> comboModificateur = new ComboBox<>();
-            comboModificateur.getItems().addAll("private", "public", "protected");
-            comboModificateur.setValue(modificateur);
-
-            Button btnValider = new Button("Valider");
-            btnValider.setOnAction(e -> {
-                listAttributs.getItems().set(
-                        listAttributs.getSelectionModel().getSelectedIndex(),
-                        comboModificateur.getValue() + " " + comboType.getValue() + " " + txtNom.getText()
-                );
-                attributStage.close();
-            });
-
-            root.getChildren().addAll(new Label("Modifier l'attribut"), txtNom, comboType, comboModificateur, btnValider);
-            Scene scene = new Scene(root, 300, 200);
-            attributStage.setScene(scene);
-            attributStage.showAndWait();
-        }
-    }
-
     private void modifierMethode(ListView<String> listMethodes) {
         String selectedMethode = listMethodes.getSelectionModel().getSelectedItem();
         if (selectedMethode != null) {
@@ -196,6 +190,45 @@ public class VueModifier {
             methodeStage.showAndWait();
         }
     }
+
+    private void modifierAttribut(ListView<String> listAttributs) {
+        String selectedAttribut = listAttributs.getSelectionModel().getSelectedItem();
+        if (selectedAttribut != null) {
+            String[] parts = selectedAttribut.split(" ");
+            String modificateur = parts[0];
+            String type = parts[1];
+            String nom = parts[2];
+
+            Stage attributStage = new Stage();
+            VBox root = new VBox(10);
+            root.setPadding(new Insets(10));
+
+            TextField txtNom = new TextField(nom);
+            ComboBox<String> comboType = new ComboBox<>();
+            comboType.getItems().addAll("String", "int", "double", "boolean", "float");
+            comboType.setValue(type);
+
+            ComboBox<String> comboModificateur = new ComboBox<>();
+            comboModificateur.getItems().addAll("private", "public", "protected");
+            comboModificateur.setValue(modificateur);
+
+            Button btnValider = new Button("Valider");
+            btnValider.setOnAction(e -> {
+                listAttributs.getItems().set(
+                        listAttributs.getSelectionModel().getSelectedIndex(),
+                        comboModificateur.getValue() + " " + comboType.getValue() + " " + txtNom.getText()
+                );
+                attributStage.close();
+            });
+
+            root.getChildren().addAll(new Label("Modifier l'attribut"), txtNom, comboType, comboModificateur, btnValider);
+            Scene scene = new Scene(root, 300, 200);
+            attributStage.setScene(scene);
+            attributStage.showAndWait();
+        }
+    }
+
+
 
     private void ajouterAttribut(ListView<String> listAttributs) {
         Stage attributStage = new Stage();
@@ -249,6 +282,66 @@ public class VueModifier {
         Scene scene = new Scene(root, 400, 250);
         methodeStage.setScene(scene);
         methodeStage.showAndWait();
+    }
+
+    private void ajouterRelation(ListView<Relation> listRelations, List<Classe> autresClasses) {
+        Stage relationStage = new Stage();
+        VBox root = new VBox(10);
+        root.setPadding(new Insets(10));
+
+        ComboBox<String> comboType = new ComboBox<>();
+        comboType.getItems().addAll("Association", "Héritage", "Implémentation");
+
+        ComboBox<Classe> comboCible = new ComboBox<>();
+        comboCible.getItems().addAll(autresClasses);
+
+        Button btnValider = new Button("Valider");
+        btnValider.setOnAction(e -> {
+            String type = comboType.getValue();
+            Classe classeCible = comboCible.getValue();
+
+            if (classeCible != null) {
+                RelationStrategy strategy = RelationStrategyFactory.create(type);
+                Relation relation = new Relation(classe, classeCible, strategy);
+                listRelations.getItems().add(relation);
+                relationStage.close();
+            }
+        });
+
+        root.getChildren().addAll(new Label("Type de relation"), comboType, new Label("Classe cible"), comboCible, btnValider);
+        Scene scene = new Scene(root, 300, 200);
+        relationStage.setScene(scene);
+        relationStage.showAndWait();
+    }
+
+    private void modifierRelation(ListView<Relation> listRelations, List<Classe> autresClasses) {
+        Relation selectedRelation = listRelations.getSelectionModel().getSelectedItem();
+        if (selectedRelation != null) {
+            Stage relationStage = new Stage();
+            VBox root = new VBox(10);
+            root.setPadding(new Insets(10));
+
+            ComboBox<String> comboType = new ComboBox<>();
+            comboType.getItems().addAll("Association", "Héritage", "Implémentation");
+            comboType.setValue(selectedRelation.getType().getClass().getSimpleName());
+
+            ComboBox<Classe> comboCible = new ComboBox<>();
+            comboCible.getItems().addAll(autresClasses);
+            comboCible.setValue(selectedRelation.getDestination());
+
+            Button btnValider = new Button("Valider");
+            btnValider.setOnAction(e -> {
+                RelationStrategy strategy = RelationStrategyFactory.create(comboType.getValue());
+                Relation updatedRelation = new Relation(classe, comboCible.getValue(), strategy);
+                listRelations.getItems().set(listRelations.getSelectionModel().getSelectedIndex(), updatedRelation);
+                relationStage.close();
+            });
+
+            root.getChildren().addAll(new Label("Modifier la relation"), comboType, comboCible, btnValider);
+            Scene scene = new Scene(root, 300, 200);
+            relationStage.setScene(scene);
+            relationStage.showAndWait();
+        }
     }
 
     private String formatAttribut(Attribut attribut) {

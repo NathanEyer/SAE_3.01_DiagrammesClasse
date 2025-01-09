@@ -63,4 +63,10 @@ public class Relation {
     public RelationStrategy getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "Relation: " + type.getClass().getSimpleName() + " entre " + depart.getNom() + " et " + destination.getNom();
+    }
+
 }

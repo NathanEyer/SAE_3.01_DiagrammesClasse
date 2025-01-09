@@ -207,10 +207,15 @@ public class VueDiagramme extends Canvas implements Observateur {
                 // Convertir le modificateur en signe et afficher les paramètres
                 String modificateur = convertirModificateur(methode.getModificateur());
                 String params = String.join(", ", methode.getParametres());
-                gc.fillText(modificateur + " " + methode.getNomMethode() + "(" + params + ") : " + methode.getTypeRetour(),
+
+                // Évitez de rajouter des parenthèses si elles existent déjà
+                String parametresAvecParentheses = "(" + params + ")";
+
+                gc.fillText(modificateur + " " + methode.getNomMethode() + parametresAvecParentheses + " : " + methode.getTypeRetour(),
                         x + padding, currentY + 15);
                 currentY += hauteurSection;
             }
+
         }
     }
 
@@ -537,8 +542,12 @@ public class VueDiagramme extends Canvas implements Observateur {
                     // Ajouter le bouton Modifier
                     MenuItem modifier = new MenuItem("Modifier");
                     modifier.setOnAction(e -> {
+                        List<Relation> relations = modele.getRelations(); // Vérifiez que cette liste est mutable
+                        List<Classe> autresClasses = modele.getClasses().stream()
+                                .filter(c -> !c.equals(classeCible))
+                                .toList(); // Convertissez en mutable si nécessaire avec .collect(Collectors.toList())
                         VueModifier vueModifier = new VueModifier(classeCible);
-                        Classe classeModifiee = vueModifier.afficher();
+                        Classe classeModifiee = vueModifier.afficher(relations, autresClasses);
 
                         // Mettre à jour la classe modifiée dans le modèle
                         int indexClasse = modele.getClasses().indexOf(classeCible);
@@ -548,6 +557,7 @@ public class VueDiagramme extends Canvas implements Observateur {
                             setMessage("Classe modifiée : " + classeModifiee.getNom());
                         }
                     });
+                    contextMenu.getItems().add(modifier);
 
                     // Masquer/Démasquer les relations
                     boolean relationsMasqueesActuelles = modele.getRelations().stream()
@@ -567,7 +577,7 @@ public class VueDiagramme extends Canvas implements Observateur {
                         setMessage(relationsMasqueesActuelles ? "Relations démasquées pour : " + classeCible.getNom() : "Relations masquées pour : " + classeCible.getNom());
                     });
 
-                    contextMenu.getItems().addAll(modifier, masquerDemasquerRelations, supprimer);
+                    contextMenu.getItems().addAll(masquerDemasquerRelations, supprimer);
                     contextMenu.show(this, event.getScreenX(), event.getScreenY());
 
                     this.getProperties().put("activeMenu", contextMenu);
@@ -575,8 +585,8 @@ public class VueDiagramme extends Canvas implements Observateur {
                 }
             }
         }
-
     }
+
 
 
 

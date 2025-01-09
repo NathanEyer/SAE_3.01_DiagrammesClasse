@@ -1,0 +1,14 @@
+Itération 6 :
+Liste des fonctionnalités :
+Debug des relations et gestion des attributs abstract et static.
+Style de l'application.
+Finalisation des relations.
+Finalisation de la modification complète de classe (relations) et debug.
+Préparation du rapport final et création du diaporama.
+
+Répartition des tâches :
+Nathan : Gestion complète des abstract et static, finalisation de la modification complète de classe (relations) et débugage.
+Luka : Préparation du diaporama et rapport final, debug, style de l'application.
+Robin : Style de l'application, rapport Trello, finalisation de la modification complète de la classe (modification et ajout/suppression de relation), debug.
+Joey : Finalisation de la génération du code source, debug.
+Pacôme : Finalisation des relations, debug, style de l'application.

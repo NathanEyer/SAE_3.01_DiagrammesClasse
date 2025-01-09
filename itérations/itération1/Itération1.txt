@@ -1,0 +1,11 @@
+Itération 1
+1. Liste des fonctionnalités
+Mise en place du squelette des classes principales.
+Création du modèle de base pour le diagramme UML.
+Implémentation initiale de la vue graphique (VueDiagramme) via JavaFX.
+Définition des relations principales entre les classes (attributs, méthodes, relations).
+
+2. Répartition des tâches
+Luka : Mise en place du squelette des classes principales.
+Nathan : Création de la vue JavaFX (VueDiagramme).
+Joey & Robin : Création des classes pour les différents patrons (Design Patterns).

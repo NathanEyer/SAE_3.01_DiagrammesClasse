@@ -1,0 +1,15 @@
+Itération 5 :
+Liste des fonctionnalités :
+Debug des fonctionnalités existantes.
+Finalisation de l'introspection et réglage des derniers problèmes.
+Finalisation de la génération du code source Java.
+Finalisation de l'implémentation des fonctionnalités liées au clic droit (supprimer une classe, masquer/démasquer des éléments).
+Réglage des bugs liés aux flèches et aux relations.
+Ajout des couleurs et réglage des dimensions des classes.
+
+Répartition des tâches :
+Nathan : Finalisation de l'introspection et réglage des derniers problèmes, réglage des bugs liés aux flèches et relations, ajout des couleurs et réglage des dimensions des classes.
+Luka : Debug, finalisation des fonctionnalités liées au clic droit.
+Robin : Implémentation de la création et modification des classes via le clic droit et via le menu (attributs, méthodes), finalisation de l'export en plantUML.
+Joey : Finalisation de la génération du code source Java.
+Pacôme : Debug, gestion des différents bugs liés aux flèches et aux relations, réglage des bugs liés aux relations lors de l'export en plantUML.

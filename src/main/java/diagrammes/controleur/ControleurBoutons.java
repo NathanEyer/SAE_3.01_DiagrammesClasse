@@ -41,9 +41,6 @@ public class ControleurBoutons implements EventHandler<ActionEvent> {
     public void handle(ActionEvent event) {
         if (event.getSource() instanceof MenuItem control) {
             switch (control.getText()) {
-                case "Importer":
-                    modele.importerFichierClass();
-                    break;
                 case "Exporter en PNG":
                     modele.exporter(stage, vue, "PNG");
                     break;
@@ -53,7 +50,7 @@ public class ControleurBoutons implements EventHandler<ActionEvent> {
                 case "Réinitialiser":
                     modele.reinitialiser();
                     break;
-                case "Créer une nouvelle classe":
+                case "Ajouter une classe":
                     VueCreationClasse vueCreation = new VueCreationClasse();
                     Classe nouvelleClasse = vueCreation.afficher();
                     if (nouvelleClasse != null) {

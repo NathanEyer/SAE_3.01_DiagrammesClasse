@@ -67,28 +67,6 @@ public class ModeleDiagramme implements Diagramme {
     }
 
     /**
-     * Ouvre un explorateur pour sélectionner un fichier class
-     * et lance l'analyse introspective du fichier
-     */
-    public void importerFichierClass() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Importer un fichier .class");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Fichiers Class", "*.class")
-        );
-
-        File fichierSelectionne = fileChooser.showOpenDialog(null);
-        if (fichierSelectionne != null) {
-            String cheminClasse = fichierSelectionne.getPath()
-                    .replace("\\", ".")
-                    .replace(".class", "")
-                    .replace("src.main.java.", ""); // Adapter le chemin pour la structure des packages
-
-            analyserFichierClass(cheminClasse);
-        }
-    }
-
-    /**
      * Analyse un fichier class grâce à l'introspection pour extraire
      * les attributs et les méthodes.
      *

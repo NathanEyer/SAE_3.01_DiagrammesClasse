@@ -22,10 +22,6 @@ public class Interface {
         // Menu Fichier
         Menu fichier = new Menu("Fichier");
 
-        // Bouton Importer
-        MenuItem importer = new MenuItem("Importer");
-        importer.setOnAction(controleurBoutons);
-
         // Menu Exporter
         Menu exporter = new Menu("Exporter");
         MenuItem exporterPng = new MenuItem("Exporter en PNG");
@@ -40,13 +36,9 @@ public class Interface {
         Menu editer  = new Menu("Éditer");
         MenuItem reinitialiser = new MenuItem("Réinitialiser");
         reinitialiser.setOnAction(controleurBoutons);
-        editer.getItems().addAll(reinitialiser);
-
-        Menu creer = new Menu("Créer");
-        MenuItem creerNvClasse = new MenuItem("Créer une nouvelle classe");
-        creerNvClasse.setOnAction(controleurBoutons);
-        creer.getItems().add(creerNvClasse);
-
+        MenuItem creer = new MenuItem("Ajouter une classe");
+        creer.setOnAction(controleurBoutons);
+        editer.getItems().addAll(creer, reinitialiser);
 
         Menu aide = new Menu("Aide");
         MenuItem afficherAide = new MenuItem("Afficher l'aide");
@@ -54,8 +46,8 @@ public class Interface {
 
         aide.getItems().add(afficherAide);
 
-        fichier.getItems().addAll(importer, exporter);
-        menu.getMenus().addAll(fichier, editer, creer , aide);
+        fichier.getItems().addAll(exporter);
+        menu.getMenus().addAll(fichier, editer, aide);
         return menu;
     }
 

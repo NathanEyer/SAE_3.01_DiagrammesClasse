@@ -50,17 +50,9 @@ public class ExporterUml implements Exporter {
 
             // Export des relations
             for (Relation relation : ((Diagramme) diagramme).getRelations()) {
-                //debug//
-                if (relation.getDestination() == null) {
-                    System.out.println("Relation avec destination null : " + relation);
-                } else {
-                    System.out.println("Relation valide : " + relation.getDepart().getNom() + " -> " + relation.getDestination().getNom());
-                }
-                ////
                 String source = relation.getDepart().getNom();
                 String target = relation.getDestination().getNom();
                 String type = getRelationArrow(relation.getType());
-                System.out.println(relation.getType());
                 writer.write(source + " " + type + " " + target + "\n");
             }
 

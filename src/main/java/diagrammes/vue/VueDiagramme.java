@@ -37,7 +37,6 @@ public class VueDiagramme extends Canvas implements Observateur {
     private final HashMap<Classe, Boolean> methodesMasquees = new HashMap<>();
     private final HashMap<Relation, Boolean> relationsMasquees = new HashMap<>();
     private static Label messageLabel;
-    private int e = 0;
 
 
     /**
@@ -53,7 +52,13 @@ public class VueDiagramme extends Canvas implements Observateur {
         this.setOnMousePressed(this::gererMousePressed);
         this.setOnMouseDragged(this::gererMouseDragged);
         this.setOnMouseReleased(this::gererMouseReleased);
-        this.setOnMouseClicked(this::gererClicDroit);
+        this.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1) {
+                gererClicDroit(event);
+            } else {
+                gererDoubleClic(event);
+            }
+        });
     }
 
     /**
@@ -200,10 +205,6 @@ public class VueDiagramme extends Canvas implements Observateur {
                 currentY += hauteurSection;
             }
         }
-
-
-        e++;
-        System.out.println("Dessin" + e);
     }
 
     /**
@@ -493,6 +494,21 @@ public class VueDiagramme extends Canvas implements Observateur {
                         contextMenu.getItems().add(masquerMethodes);
                     }
 
+                    // Ajouter le bouton Modifier
+                    MenuItem modifier = new MenuItem("Modifier");
+                    modifier.setOnAction(e -> {
+                        VueModifier vueModifier = new VueModifier(classeCible);
+                        Classe classeModifiee = vueModifier.afficher();
+
+                        // Mettre à jour la classe modifiée dans le modèle
+                        int indexClasse = modele.getClasses().indexOf(classeCible);
+                        if (indexClasse >= 0) {
+                            modele.getClasses().set(indexClasse, classeModifiee);
+                            dessinerDiagramme(); // Redessiner le diagramme
+                            setMessage("Classe modifiée : " + classeModifiee.getNom());
+                        }
+                    });
+
                     // Masquer/Démasquer les relations
                     boolean relationsMasqueesActuelles = modele.getRelations().stream()
                             .filter(relation -> relation.getDepart().equals(classeCible) || relation.getDestination().equals(classeCible))
@@ -510,9 +526,8 @@ public class VueDiagramme extends Canvas implements Observateur {
                         dessinerDiagramme();
                         setMessage(relationsMasqueesActuelles ? "Relations démasquées pour : " + classeCible.getNom() : "Relations masquées pour : " + classeCible.getNom());
                     });
-                    contextMenu.getItems().add(masquerDemasquerRelations);
 
-                    contextMenu.getItems().add(supprimer);
+                    contextMenu.getItems().addAll(modifier, masquerDemasquerRelations, supprimer);
                     contextMenu.show(this, event.getScreenX(), event.getScreenY());
 
                     this.getProperties().put("activeMenu", contextMenu);
@@ -521,6 +536,7 @@ public class VueDiagramme extends Canvas implements Observateur {
             }
         }
     }
+
 
 
 
@@ -546,6 +562,29 @@ public class VueDiagramme extends Canvas implements Observateur {
         positionsClasses.clear();
     }
 
+
+
+    private void gererDoubleClic(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            double mouseX = event.getX();
+            double mouseY = event.getY();
+            for (var entry : positionsClasses.entrySet()) {
+                Rectangle rect = entry.getValue();
+                if (rect.contains(mouseX, mouseY)) {
+                    Classe classeCible = entry.getKey();
+                    boolean attributsMasquesActuels = attributsMasques.getOrDefault(classeCible, false);
+                    boolean methodesMasqueesActuelles = methodesMasquees.getOrDefault(classeCible, false);
+                    attributsMasques.put(classeCible, !attributsMasquesActuels);
+                    methodesMasquees.put(classeCible, !methodesMasqueesActuelles);
+                    dessinerDiagramme();
+                    setMessage((attributsMasquesActuels ? "Attributs démasqués" : "Attributs masqués") +
+                            " et " + (methodesMasqueesActuelles ? "méthodes démasquées" : "méthodes masquées") +
+                            " pour : " + classeCible.getNom());
+                    return;
+                }
+            }
+        }
+    }
 
 
 

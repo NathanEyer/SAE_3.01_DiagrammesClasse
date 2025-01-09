@@ -475,6 +475,7 @@ public class VueDiagramme extends Canvas implements Observateur {
         return maxLength + 35;
     }
 
+
     /**
      * Renvoie la hauteur de la classe à dessiner
      * @param classe classe concernée

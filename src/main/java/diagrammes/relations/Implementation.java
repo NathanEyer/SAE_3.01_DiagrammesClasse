@@ -11,9 +11,6 @@ public class Implementation implements RelationStrategy {
     @Override
     public void creerLien(String nomClasse)throws ClassNotFoundException {
         Class<?> classe = Class.forName(nomClasse);
-        if(classe.isInterface()){
-        }
-
     }
 
     /**

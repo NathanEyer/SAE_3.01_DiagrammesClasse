@@ -105,7 +105,19 @@ public class Classe {
     }
 
 
+    /**
+     * Permet de set le nom de la classe
+     * @param nom
+     */
     public void setNom(String nom) { this.nom = nom; }
+
+
+    /**
+     * redefinition de la méthode equals
+     * @param obj
+     * @return
+     */
+
     //REDEFINITION DU EQUALS ET DU HASHCODE POUR COMPARER LES CLASSES CORRECTEMENT
     @Override
     public boolean equals(Object obj) {
@@ -115,12 +127,21 @@ public class Classe {
         return nom != null && nom.equals(classe.nom); // Compare uniquement les noms
     }
 
+
+    /**
+     *
+     * @return génère un hashCode
+     */
     @Override
     public int hashCode() {
-        return Objects.hash(nom); // Générer un hashCode basé uniquement sur le nom
+        return Objects.hash(nom);
     }
 
 
+    /**
+     * méthode toString
+     * @return
+     */
     @Override
     public String toString() {
         return nom;

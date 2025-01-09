@@ -61,6 +61,7 @@ public class  Methode {
      */
     public List<String> getParametres() { return parametres; }
 
+
     /**
      * Retourne la visibilité
      * @return modificateur

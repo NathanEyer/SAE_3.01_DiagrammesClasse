@@ -11,6 +11,13 @@ import java.util.List;
 
 public class ExporterJava implements Exporter {
 
+
+    /**
+     * Méthpde exporterClasse qui permet de d'exporter la classe en java
+     * @param classe
+     * @param outputFile
+     * @throws IOException
+     */
     private void exporterClasse(Classe classe, File outputFile) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
             // Début de la classe

@@ -196,12 +196,6 @@ public class ModeleDiagramme implements Diagramme {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        for (Classe classe : classes) {
-            System.out.println("- " + classe.getNom());
-        }
-
-
     }
 
     private Classe chargerOuCreerClasse(String nomClasse) throws ClassNotFoundException {

@@ -1,0 +1,14 @@
+Itération 3 :
+Liste des fonctionnalités :
+Amélioration du Drag and Drop.
+Importation des points classes.
+Conversion des diagrammes en image.
+Création de répertoires pour organiser les fichiers générés.
+Ajout de tests unitaires.
+Gestion des exceptions.
+
+Répartition des tâches :
+Nathan : Amélioration du Drag and Drop, importation des points classes.
+Robin : Conversion des diagrammes en image, tests unitaires.
+Luka : Création de répertoires.
+Joey : Tests unitaires, gestion des exceptions.

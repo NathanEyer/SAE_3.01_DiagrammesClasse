@@ -1,0 +1,12 @@
+Itération 2 :
+Liste des fonctionnalités :
+Introspection et analyse des classes.
+Dessin du visuel des classes en version UML.
+Mise en place du modèle MVC.
+Importation des données dans le diagramme.
+
+Répartition des tâches :
+Nathan : Introspection et analyse des classes.
+Nathan : Importation des données dans le diagramme.
+Robin : Dessin du visuel des classes en version UML, mise en place du modèle MVC.
+Pacôme : Mise en place du modèle MVC.

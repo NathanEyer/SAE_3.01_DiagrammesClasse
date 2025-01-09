@@ -1,0 +1,15 @@
+Itération 4 :
+Liste des fonctionnalités :
+Mouvement des classes avec un nouveau Drag and Drop.
+Suppression des diagrammes.
+Affichage et masquage d'éléments (attributs, méthodes, relations).
+Gestion du clic droit sur les classes.
+Amélioration du positionnement des flèches pour éviter les croisements.
+Génération des diagrammes des itérations.
+
+Répartition des tâches :
+Robin : Mouvement des classes avec un nouveau Drag and Drop, génération des diagrammes des itérations, implémentation de l'export en plantUML.
+Luka : Suppression des diagrammes, affichage et masquage des éléments, gestion du clic droit.
+Joey : Mouvement des flèches pour éviter les croisements, génération du code source java (début)
+Pacôme : Affichage des différentes flèches.
+Nathan : Correction des bugs (important), placement aléatoire es classes importées.

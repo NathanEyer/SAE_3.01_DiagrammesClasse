@@ -13,10 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VueCreationClasse {
-    private Classe nouvelleClasse;
-    private final List<Attribut> attributs = new ArrayList<>();
-    private final List<Methode> methodes = new ArrayList<>();
-
     public Classe afficher() {
         Stage stage = new Stage();
         VBox root = new VBox(10);
@@ -127,85 +123,31 @@ public class VueCreationClasse {
             }
 
             // Ajouter les méthodes
-            for (String methode : listMethodes.getItems()) {
-                String[] parts = methode.split(" ");
+            for (String methodeString : listMethodes.getItems()) {
+                String[] parts = methodeString.split(" ");
                 String modificateur = parts[0];
                 String retour = parts[1];
                 String nom = parts[2];
-                String parametres = methode.substring(methode.indexOf("(") + 1, methode.indexOf(")"));
+                int type = 0;
+                if(retour.equalsIgnoreCase("abstract")){
+                    type = 1;
+                    retour = parts[3];
+                    nom = parts[4];
+                }else if(retour.equalsIgnoreCase("static")){
+                    type = 2;
+                    retour = parts[3];
+                    nom = parts[4];
+                }
+
+                String parametres = methodeString.substring(methodeString.indexOf("(") + 1, methodeString.indexOf(")"));
                 List<String> parametresListe = parametres.isEmpty() ? new ArrayList<>() : List.of(parametres.split(","));
-                classe.ajouterMethode(new Methode(nom, retour, parametresListe, modificateur));
+                classe.ajouterMethode(new Methode(nom, retour, parametresListe, modificateur, type));
+                System.out.println(nom);
             }
 
             return classe;
         }
         return null;
-    }
-
-    private Attribut afficherFormulaireAttribut() {
-        Stage stage = new Stage();
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(10));
-
-        TextField nomField = new TextField();
-        nomField.setPromptText("Nom de l'attribut");
-
-        TextField typeField = new TextField();
-        typeField.setPromptText("Type de l'attribut");
-
-        ComboBox<String> modificateurBox = new ComboBox<>();
-        modificateurBox.getItems().addAll("private", "public", "protected");
-        modificateurBox.setPromptText("Modificateur d'accès");
-
-        Button valider = new Button("Valider");
-        valider.setOnAction(e -> stage.close());
-
-        layout.getChildren().addAll(
-                new Label("Nom :"), nomField,
-                new Label("Type :"), typeField,
-                new Label("Modificateur :"), modificateurBox,
-                valider
-        );
-
-        stage.setScene(new Scene(layout, 300, 200));
-        stage.showAndWait();
-
-        return (nomField.getText() != null && typeField.getText() != null && modificateurBox.getValue() != null)
-                ? new Attribut(nomField.getText(), typeField.getText(), modificateurBox.getValue())
-                : null;
-    }
-
-    private Methode afficherFormulaireMethode() {
-        Stage stage = new Stage();
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(10));
-
-        TextField nomField = new TextField();
-        nomField.setPromptText("Nom de la méthode");
-
-        TextField retourField = new TextField();
-        retourField.setPromptText("Type de retour");
-
-        ComboBox<String> modificateurBox = new ComboBox<>();
-        modificateurBox.getItems().addAll("private", "public", "protected");
-        modificateurBox.setPromptText("Modificateur");
-
-        Button valider = new Button("Valider");
-        valider.setOnAction(e -> stage.close());
-
-        layout.getChildren().addAll(
-                new Label("Nom :"), nomField,
-                new Label("Type de retour :"), retourField,
-                new Label("Modificateur :"), modificateurBox,
-                valider
-        );
-
-        stage.setScene(new Scene(layout, 300, 200));
-        stage.showAndWait();
-
-        return (nomField.getText() != null && retourField.getText() != null && modificateurBox.getValue() != null)
-                ? new Methode(nomField.getText(), retourField.getText(), new ArrayList<>(), modificateurBox.getValue())
-                : null;
     }
 }
 

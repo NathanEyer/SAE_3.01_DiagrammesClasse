@@ -169,12 +169,22 @@ public class ModeleDiagramme implements Diagramme {
                 for (Class<?> paramType : method.getParameterTypes()) {
                     parametres.add(paramType.getSimpleName());
                 }
-                String modificateur = Modifier.toString(method.getModifiers()); // Récupération du modificateur
+
+                int typeMethode;
+                if (Modifier.isAbstract(method.getModifiers())) {
+                    typeMethode = 1; // Méthode abstraite
+                } else if (Modifier.isStatic(method.getModifiers())) {
+                    typeMethode = 2; // Méthode statique
+                } else {
+                    typeMethode = 0; // Méthode normale
+                }
+
+                String modificateur = Modifier.toString(method.getModifiers()).split(" ")[0]; // Récupération du modificateur
                 nouvelleClasse.ajouterMethode(new Methode(
                         method.getName(),
                         method.getReturnType().getSimpleName(),
                         parametres,
-                        modificateur // Ajout du modificateur
+                        modificateur, typeMethode
                 ));
             }
 

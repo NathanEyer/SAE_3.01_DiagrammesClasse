@@ -32,7 +32,7 @@ public class TestClasse {
     public void test_ajouterMethode(){
         Classe c = new Classe("Classe1");
         List<String> parametres = List.of("param1","param2");
-        Methode m = new Methode("methode1","void", parametres, "public");
+        Methode m = new Methode("methode1","void", parametres, "public", 1);
         c.ajouterMethode(m);
         assertEquals(1, c.getMethodes().size());
     }
@@ -41,7 +41,7 @@ public class TestClasse {
     public void test_supprimerMethode(){
         Classe c = new Classe("Classe1");
         List<String> parametres = List.of("param1","param2");
-        Methode m = new Methode("methode1","void", parametres, "public");
+        Methode m = new Methode("methode1","void", parametres, "public", 1);
         c.ajouterMethode(m);
         c.supprimerMethode(m);
         assertEquals(0, c.getMethodes().size());

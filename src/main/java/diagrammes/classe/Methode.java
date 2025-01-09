@@ -13,6 +13,7 @@ public class  Methode {
     private final String typeRetour;
     List<String> parametres;
     private final String modificateur;
+    private final int abstractStatic; //0 rien, 1 si abstract, 2 si static
 
     /**
      * Construit une méthode à partir de son nom, du type de retour et des parametres
@@ -20,11 +21,12 @@ public class  Methode {
      * @param typeRetour type
      * @param parametres paramètres
      */
-    public Methode(String nomMethode, String typeRetour, List<String> parametres, String modificateur) {
+    public Methode(String nomMethode, String typeRetour, List<String> parametres, String modificateur, int abstractStatic) {
         this.nomMethode = nomMethode;
         this.typeRetour = typeRetour;
         this.parametres = parametres;
         this.modificateur = modificateur;
+        this.abstractStatic = abstractStatic;
     }
 
     /**
@@ -67,4 +69,7 @@ public class  Methode {
         return modificateur;
     }
 
+    public int getAbstractStatic() {
+        return abstractStatic;
+    }
 }

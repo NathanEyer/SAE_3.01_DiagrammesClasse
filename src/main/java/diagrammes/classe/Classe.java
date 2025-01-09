@@ -33,7 +33,7 @@ public class Classe {
      * @param attribut à ajouter
      */
     public void ajouterAttribut(Attribut attribut) {
-        if(attribut != null) {
+        if(attribut != null && !this.attributs.contains(attribut)) {
             attributs.add(attribut);
         }
     }
@@ -51,7 +51,7 @@ public class Classe {
      * @param methode à ajouter
      */
     public void ajouterMethode(Methode methode) {
-        if(methode != null){
+        if(methode != null && !this.methodes.contains(methode)) {
             methodes.add(methode);
         }
     }

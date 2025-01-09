@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,56 +26,30 @@ public class VueModifier {
         this.classe = classe;
     }
 
+    /**
+     * Affichage de l'interface de modification
+     * @param relations liste des relations
+     * @param autresClasses liste des classes
+     * @return classe
+     */
     public Classe afficher(List<Relation> relations, List<Classe> autresClasses) {
+        //Initialisations
         Stage stage = new Stage();
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
 
-        // Section pour modifier le nom de la classe
+        //SECTIONS
+        //Section pour modifier le nom de la classe
         Label lblNomClasse = new Label("Nom de la classe :");
         TextField txtNomClasse = new TextField(classe.getNom());
 
-        // Section pour les attributs
-        Label lblAttributs = new Label("Attributs :");
-        ListView<String> listAttributs = new ListView<>();
-        for (Attribut attribut : classe.getAttributs()) {
-            listAttributs.getItems().add(formatAttribut(attribut));
-        }
-        listAttributs.setPrefHeight(100);
-
-        Button btnModifierAttribut = new Button("Modifier Attribut");
-        Button btnSupprimerAttribut = new Button("Supprimer Attribut");
-        Button btnAjouterAttribut = new Button("Ajouter Attribut");
-
-        btnModifierAttribut.setOnAction(e -> modifierAttribut(listAttributs));
-        btnSupprimerAttribut.setOnAction(e -> {
-            String selectedAttribut = listAttributs.getSelectionModel().getSelectedItem();
-            if (selectedAttribut != null) {
-                listAttributs.getItems().remove(selectedAttribut);
-            }
-        });
-        btnAjouterAttribut.setOnAction(e -> ajouterAttribut(listAttributs));
-
-        // Section pour les méthodes
+        //Section pour les méthodes
         Label lblMethodes = new Label("Méthodes :");
         ListView<String> listMethodes = new ListView<>();
         for (Methode methode : classe.getMethodes()) {
             listMethodes.getItems().add(formatMethode(methode));
         }
         listMethodes.setPrefHeight(100);
-
-        Button btnModifierMethode = new Button("Modifier Méthode");
-        Button btnSupprimerMethode = new Button("Supprimer Méthode");
-        Button btnAjouterMethode = new Button("Ajouter Méthode");
-
-        btnModifierMethode.setOnAction(e -> modifierMethode(listMethodes));
-        btnSupprimerMethode.setOnAction(e -> {
-            String selectedMethode = listMethodes.getSelectionModel().getSelectedItem();
-            if (selectedMethode != null) {
-                listMethodes.getItems().remove(selectedMethode);
-            }
-        });
-        btnAjouterMethode.setOnAction(e -> ajouterMethode(listMethodes));
 
         // Section pour les relations
         Label lblRelations = new Label("Relations :");
@@ -86,20 +61,73 @@ public class VueModifier {
         );
         listRelations.setPrefHeight(100);
 
-        Button btnModifierRelation = new Button("Modifier Relation");
-        Button btnSupprimerRelation = new Button("Supprimer Relation");
-        Button btnAjouterRelation = new Button("Ajouter Relation");
+        //Section pour les attributs
+        Label lblAttributs = new Label("Attributs :");
+        ListView<String> listAttributs = new ListView<>();
+        for (Attribut attribut : classe.getAttributs()) {
+            listAttributs.getItems().add(formatAttribut(attribut));
+        }
+        listAttributs.setPrefHeight(100);
 
+
+        //ATTRIBUT
+        //Modifier Attribut
+        Button btnModifierAttribut = new Button("Modifier Attribut");
+        btnModifierAttribut.setOnAction(e -> modifierAttribut(listAttributs));
+
+        //Supprimer Attribut
+        Button btnSupprimerAttribut = new Button("Supprimer Attribut");
+        btnSupprimerAttribut.setOnAction(e -> {
+            String selectedAttribut = listAttributs.getSelectionModel().getSelectedItem();
+            if (selectedAttribut != null) {
+                listAttributs.getItems().remove(selectedAttribut);
+            }
+        });
+
+        //Ajouter Attribut
+        Button btnAjouterAttribut = new Button("Ajouter Attribut");
+        btnAjouterAttribut.setOnAction(e -> ajouterAttribut(listAttributs));
+
+
+        //METHODE
+        //Modifier Methode
+        Button btnModifierMethode = new Button("Modifier Méthode");
+        btnModifierMethode.setOnAction(e -> modifierMethode(listMethodes));
+
+        //Supprimer Methode
+        Button btnSupprimerMethode = new Button("Supprimer Méthode");
+        btnSupprimerMethode.setOnAction(e -> {
+            String selectedMethode = listMethodes.getSelectionModel().getSelectedItem();
+            if (selectedMethode != null) {
+                listMethodes.getItems().remove(selectedMethode);
+            }
+        });
+
+        //Ajouter Methode
+        Button btnAjouterMethode = new Button("Ajouter Méthode");
+        btnAjouterMethode.setOnAction(e -> ajouterMethode(listMethodes));
+
+
+        //RELATION
+        //Modifier Relation
+        Button btnModifierRelation = new Button("Modifier Relation");
         btnModifierRelation.setOnAction(e -> modifierRelation(listRelations, autresClasses));
+
+        //Supprimer Relation
+        Button btnSupprimerRelation = new Button("Supprimer Relation");
         btnSupprimerRelation.setOnAction(e -> {
             Relation selectedRelation = listRelations.getSelectionModel().getSelectedItem();
             if (selectedRelation != null) {
                 listRelations.getItems().remove(selectedRelation);
             }
         });
+
+        //Ajouter Relation
+        Button btnAjouterRelation = new Button("Ajouter Relation");
         btnAjouterRelation.setOnAction(e -> ajouterRelation(listRelations, autresClasses));
 
-        // Bouton de validation
+
+        //VALIDER
         Button btnValider = new Button("Valider");
         btnValider.setOnAction(e -> {
             classe.setNom(txtNomClasse.getText());
@@ -120,10 +148,21 @@ public class VueModifier {
                 String[] parts = methodeString.split(" ");
                 String modificateur = parts[0];
                 String retour = parts[1];
-                String nom = parts[2];
+                String nom = parts[2].replace("(","");
+                int type = 0;
+                if(retour.equalsIgnoreCase("abstract")){
+                    type = 1;
+                    retour = parts[2];
+                    nom = parts[3].substring(0, parts[3].length() - 1);
+                }else if(retour.equalsIgnoreCase("static")){
+                    type = 2;
+                    retour = parts[2];
+                    nom = parts[3].substring(0, parts[3].length() - 1);
+                }
+
                 String parametres = methodeString.substring(methodeString.indexOf("(") + 1, methodeString.indexOf(")"));
-                List<String> parametresListe = parametres.isEmpty() ? new ArrayList<>() : List.of(parametres.split(","));
-                classe.ajouterMethode(new Methode(nom, retour, parametresListe, modificateur));
+                List<String> parametresListe = parametres.isEmpty() ? new ArrayList<>() : List.of(parametres.replaceAll("\\s+", "").split(","));
+                classe.ajouterMethode(new Methode(nom, retour, parametresListe, modificateur, type));
             }
 
             // Mettre à jour les relations
@@ -132,6 +171,7 @@ public class VueModifier {
 
             stage.close();
         });
+
 
         // Organisation des éléments dans le layout
         root.getChildren().addAll(
@@ -142,6 +182,7 @@ public class VueModifier {
                 btnValider
         );
 
+        //Affichage
         Scene scene = new Scene(root, 800, 600);
         stage.setScene(scene);
         stage.setTitle("Modifier une classe");
@@ -149,13 +190,21 @@ public class VueModifier {
 
         return classe;
     }
+
     private void modifierMethode(ListView<String> listMethodes) {
         String selectedMethode = listMethodes.getSelectionModel().getSelectedItem();
         if (selectedMethode != null) {
             String[] parts = selectedMethode.split(" ");
             String modificateur = parts[0];
             String retour = parts[1];
-            String nom = parts[2];
+            String nom = parts[2].replace("(","");
+            if(retour.equalsIgnoreCase("abstract")){
+                retour = parts[2];
+                nom = parts[3].substring(0, parts[3].length() - 1);
+            }else if(retour.equalsIgnoreCase("static")){
+                retour = parts[2];
+                nom = parts[3].substring(0, parts[3].length() - 1);
+            }
             String parametres = selectedMethode.substring(selectedMethode.indexOf("(") + 1, selectedMethode.indexOf(")"));
 
             // Fenêtre pour modifier la méthode
@@ -163,7 +212,11 @@ public class VueModifier {
             VBox root = new VBox(10);
             root.setPadding(new Insets(10));
 
+            if (nom.endsWith("(")) {
+                nom = nom.substring(0, nom.length() - 1);
+            }
             TextField txtNom = new TextField(nom);
+
             ComboBox<String> comboRetour = new ComboBox<>();
             comboRetour.getItems().addAll("void", "String", "int", "double", "boolean", "float");
             comboRetour.setValue(retour);
@@ -272,9 +325,11 @@ public class VueModifier {
 
         Button btnValider = new Button("Valider");
         btnValider.setOnAction(e -> {
+            System.out.println(comboModificateur.getValue() + " " + comboRetour.getValue() + " " + txtNom.getText() +
+                    "(" + txtParametres.getText() + ")");
             listMethodes.getItems().add(
                     comboModificateur.getValue() + " " + comboRetour.getValue() + " " + txtNom.getText() +
-                            "(" + txtParametres.getText() + ")"
+                            " (" + txtParametres.getText() + ")"
             );
             methodeStage.close();
         });
@@ -349,8 +404,18 @@ public class VueModifier {
     }
 
     private String formatMethode(Methode methode) {
-        return methode.getModificateur() + " " + methode.getTypeRetour() + " " + methode.getNomMethode() +
-                "(" + String.join(", ", methode.getParametres()) + ")";
+        String type = " ";
+        switch(methode.getAbstractStatic()){
+            case 1:
+                type = " abstract ";
+                break;
+            case 2:
+                type = " static ";
+                break;
+        }
+        String s = methode.getModificateur() + type + methode.getTypeRetour() + " " + methode.getNomMethode() +
+                "( " + String.join(", ", methode.getParametres()) + ")";
+        return s;
     }
 }
 

@@ -207,11 +207,19 @@ public class VueDiagramme extends Canvas implements Observateur {
                 // Convertir le modificateur en signe et afficher les paramètres
                 String modificateur = convertirModificateur(methode.getModificateur());
                 String params = String.join(", ", methode.getParametres());
+                String abstractStatic = " ";
+                switch(methode.getAbstractStatic()){
+                    case 1:
+                        abstractStatic += "abstract ";
+                        break;
+                    case 2:
+                        abstractStatic += "static ";
+                        break;
+                }
 
-                // Évitez de rajouter des parenthèses si elles existent déjà
                 String parametresAvecParentheses = "(" + params + ")";
 
-                gc.fillText(modificateur + " " + methode.getNomMethode() + parametresAvecParentheses + " : " + methode.getTypeRetour(),
+                gc.fillText(modificateur + abstractStatic + methode.getNomMethode() + parametresAvecParentheses + " : " + methode.getTypeRetour(),
                         x + padding, currentY + 15);
                 currentY += hauteurSection;
             }
@@ -459,7 +467,7 @@ public class VueDiagramme extends Canvas implements Observateur {
             for(String p: methode.getParametres()){
                 s.append(p).append(",");
             }
-            s.append("): ").append(methode.getTypeRetour());
+            s.append("): ").append(methode.getTypeRetour()).append(methode.getAbstractStatic());
             text = new Text(s.toString());
             maxLength = Math.max(maxLength, text.getLayoutBounds().getWidth());
         }

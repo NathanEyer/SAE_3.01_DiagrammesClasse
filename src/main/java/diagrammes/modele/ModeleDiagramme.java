@@ -188,11 +188,9 @@ public class ModeleDiagramme implements Diagramme {
             if (classeDestination != null) {
                 Relation association;
                 if (incomplete.isCollection()) {
-                    // Si c'est une collection
                     association = new Relation(incomplete.getSource(), classeDestination, new Association());
-                    association.setAttribut(incomplete.getAttribut() + " (Collection)");
+                    association.setAttribut(incomplete.getAttribut());
                 } else {
-                    // Si ce n'est pas une collection
                     association = new Relation(incomplete.getSource(), classeDestination, new Association());
                     association.setAttribut(incomplete.getAttribut());
                 }

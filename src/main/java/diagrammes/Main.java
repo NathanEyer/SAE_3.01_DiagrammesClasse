@@ -59,7 +59,7 @@ public class Main extends Application {
 
         // Création et affichage de la scène
         Scene scene = new Scene(root, SCREEN_WIDTH / 1.5, SCREEN_HEIGHT * 0.95);
-        primaryStage.setTitle("Commencez par ajouter des fichiers .class");
+        primaryStage.setTitle("BanalUML");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

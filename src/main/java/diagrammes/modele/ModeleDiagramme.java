@@ -96,7 +96,19 @@ public class ModeleDiagramme implements Diagramme {
             Classe nouvelleClasse = new Classe(classe.getSimpleName());
 
             for (Field field : classe.getDeclaredFields()) {
-                String modificateur = Modifier.toString(field.getModifiers()); // Récupération du modificateur
+                String modificateur = Modifier.toString(field.getModifiers());// Récupération du modificateur
+                String modificateur2 = "";
+                switch (modificateur) {
+                    case "public":
+                        modificateur2 = "+";
+                        break;
+                    case "private":
+                        modificateur2 = "-";
+                        break;
+                    case "protected":
+                        modificateur2 = "#";
+                        break;
+                }
                 nouvelleClasse.ajouterAttribut(new Attribut(
                         field.getName(),
                         field.getType().getSimpleName(),
@@ -116,7 +128,7 @@ public class ModeleDiagramme implements Diagramme {
                                 collectionRelation.setAttribut(field.getName());
                                 addRelation(collectionRelation);
                             } else {
-                                associationsIncompletes.add(new AssociationIncomplete(nouvelleClasse, nomSimpl, field.getName(),true));
+                                associationsIncompletes.add(new AssociationIncomplete(nouvelleClasse, nomSimpl, modificateur2 + field.getName(),true));
                             }
                         }
                     }
@@ -130,7 +142,7 @@ public class ModeleDiagramme implements Diagramme {
                         association.setAttribut(field.getName());
                         addRelation(association);
                     } else {
-                        associationsIncompletes.add(new AssociationIncomplete(nouvelleClasse, field.getType().getSimpleName(), field.getName(), false));
+                        associationsIncompletes.add(new AssociationIncomplete(nouvelleClasse, field.getType().getSimpleName(), modificateur2 + field.getName(), false));
                     }
 
                 }
@@ -189,7 +201,7 @@ public class ModeleDiagramme implements Diagramme {
                 Relation association;
                 if (incomplete.isCollection()) {
                     association = new Relation(incomplete.getSource(), classeDestination, new Association());
-                    association.setAttribut(incomplete.getAttribut());
+                    association.setAttribut( incomplete.getAttribut());
                 } else {
                     association = new Relation(incomplete.getSource(), classeDestination, new Association());
                     association.setAttribut(incomplete.getAttribut());

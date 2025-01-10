@@ -1,0 +1,266 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class Association {
+  + Association(): 
+  + type(): String
+  + creerLien(String): void
+}
+class AssociationIncomplete {
+  + AssociationIncomplete(Classe, String, String, boolean): 
+  - source: Classe
+  - nomClasseAssociee: String
+  - attribut: String
+  - isCollection: boolean
+   nomClasseAssociee: String
+   attribut: String
+   isCollection: boolean
+   source: Classe
+}
+class Attribut {
+  + Attribut(String, String, String): 
+  - nomAttribut: String
+  - modificateur: String
+  - typeAttribut: String
+  + toString(): String
+   typeAttribut: String
+   modificateur: String
+   nomAttribut: String
+}
+class ChargementClasse {
+  + ChargementClasse(Path): 
+  # findClass(String): Class<?>
+  + getGoodName(Path, URLClassLoader): String?
+}
+class Classe {
+  + Classe(String): 
+  - attributs: List<Attribut>
+  - methodes: List<Methode>
+  - nom: String
+  + ajouterAttribut(Attribut): void
+  + supprimerAttribut(Attribut): void
+  + toString(): String
+  + supprimerMethode(Methode): void
+  + hashCode(): int
+  + ajouterMethode(Methode): void
+  + equals(Object): boolean
+   nom: String
+   attributs: List<Attribut>
+   methodes: List<Methode>
+}
+class ControleurBoutons {
+  + ControleurBoutons(ModeleDiagramme, Stage, VueDiagramme): 
+  + handle(ActionEvent): void
+}
+class ControleurDragDrop {
+  + ControleurDragDrop(ModeleDiagramme): 
+  + handleDragOver(DragEvent): void
+  + handleDragDropped(DragEvent): void
+}
+class ControleurSouris {
+  + ControleurSouris(VueDiagramme, ModeleDiagramme): 
+  - getMasquerMethodes(boolean, Classe): MenuItem
+  - getMasquerAttributs(boolean, Classe): MenuItem
+  + gererDoubleClic(MouseEvent): void
+  - gererClicDroit(MouseEvent): void
+  - getModifier(Classe): MenuItem
+  + gererMouseDragged(MouseEvent): void
+  + getMasquerDemasquerRelations(boolean, Classe): MenuItem
+  + gererMousePressed(MouseEvent): void
+  + gererMouseReleased(MouseEvent): void
+}
+interface Diagramme << interface >> {
+  + notifierObservateur(): void
+  + enregistrerObservateur(Observateur): void
+   classes: List<Classe>
+   relations: List<Relation>
+}
+interface Exporter << interface >> {
+  + exporter(String, Object): void
+}
+class ExporterImage {
+  + ExporterImage(): 
+  + exporter(String, Object): void
+  - convertirImageBuffered(WritableImage): BufferedImage
+}
+class ExporterJava {
+  + ExporterJava(): 
+  + exporter(String, Object): void
+  - exporterClasse(Classe, File): void
+}
+class ExporterUml {
+  + ExporterUml(): 
+  + exporter(String, Object): void
+  - getVisibility(String): String
+  - getRelationArrow(RelationStrategy): String
+}
+class Heritage {
+  + Heritage(): 
+  + type(): String
+  + creerLien(String): void
+}
+class Implementation {
+  + Implementation(): 
+  + type(): String
+  + creerLien(String): void
+}
+class Interface {
+  + Interface(): 
+  + createMenuBar(ControleurBoutons): MenuBar
+  + createTopBar(MenuBar): HBox
+  + afficherAide(): void
+}
+class Main {
+  + Main(): 
+  + main(String[]): void
+  + start(Stage): void
+  - getHBox(VueDiagramme): HBox
+}
+class Methode {
+  + Methode(String, String, List<String>, String, int): 
+  - typeRetour: String
+  - modificateur: String
+  ~ parametres: List<String>
+  - abstractStatic: int
+  - nomMethode: String
+  + toString(): String
+   parametres: List<String>
+   nomMethode: String
+   modificateur: String
+   typeRetour: String
+   abstractStatic: int
+}
+class ModeleDiagramme {
+  + ModeleDiagramme(): 
+  - classes: List<Classe>
+  - relations: List<Relation>
+  + analyserFichierClass(String): void
+  - reevaluerAssociations(): void
+  + reinitialiser(): void
+  + addRelation(Relation): void
+  + notifierObservateur(): void
+  + exporter(Stage, VueDiagramme, String): void
+  + enregistrerObservateur(Observateur): void
+  + addClass(Classe): void
+  + getClasseParNom(String): Classe
+   classes: List<Classe>
+   relations: List<Relation>
+}
+interface Observateur << interface >> {
+  + actualiser(Diagramme): void
+}
+class Relation {
+  + Relation(Classe, Classe, RelationStrategy): 
+  - destination: Classe
+  - depart: Classe
+  - type: RelationStrategy
+  - attribut: String
+  + toString(): String
+   attribut: String
+   destination: Classe
+   depart: Classe
+   type: RelationStrategy
+}
+interface RelationStrategy << interface >> {
+  + creerLien(String): void
+}
+class RelationStrategyFactory {
+  + RelationStrategyFactory(): 
+  + create(String): RelationStrategy
+}
+class VueCreationClasse {
+  + VueCreationClasse(): 
+  + afficher(): Classe
+}
+class VueDiagramme {
+  + VueDiagramme(ModeleDiagramme): 
+  - messageLabel: Label
+  - dessinerFlecheAssociation(GraphicsContext, Relation): void
+  - estInterface(Classe): boolean
+  - dessinerClasse(GraphicsContext, Classe, double, double): void
+  - estParente(Classe): boolean
+  - convertirModificateur(String): String
+  - dessinerFlecheImplementation(GraphicsContext, Relation): void
+  + actualiser(Diagramme): void
+  - getLargeurClasse(Classe): double
+  + getHauteurClasse(Classe): double
+  + dessinerDiagramme(): void
+  - getClosestPoint(Rectangle, Rectangle): double[]
+  - dessinerRelation(GraphicsContext, Relation): void
+  - dessinerFlecheHeritage(GraphicsContext, Relation): void
+  + reinitialiser(): void
+   message: String
+   messageLabel: Label
+}
+class VueModifier {
+  + VueModifier(Classe): 
+  - ajouterMethode(ListView<String>): void
+  - modifierRelation(ListView<Relation>, List<Classe>): void
+  - formatMethode(Methode): String
+  - formatAttribut(Attribut): String
+  - modifierAttribut(ListView<String>): void
+  - ajouterRelation(ListView<Relation>, List<Classe>): void
+  - ajouterAttribut(ListView<String>): void
+  + afficher(List<Relation>, List<Classe>): Classe
+  - modifierMethode(ListView<String>): void
+}
+
+Association              -[#008200,dashed]-^  RelationStrategy        
+AssociationIncomplete   "1" *-[#595959,plain]-> "source\n1" Classe                  
+AssociationIncomplete    +-[#820000,plain]-  ModeleDiagramme         
+Classe                  "1" *-[#595959,plain]-> "attributs\n*" Attribut                
+Classe                  "1" *-[#595959,plain]-> "methodes\n*" Methode                 
+ControleurBoutons       "1" *-[#595959,plain]-> "modele\n1" ModeleDiagramme         
+ControleurBoutons        -[#595959,dashed]->  VueCreationClasse       : "«create»"
+ControleurBoutons       "1" *-[#595959,plain]-> "vue\n1" VueDiagramme            
+ControleurDragDrop      "1" *-[#595959,plain]-> "modele\n1" ModeleDiagramme         
+ControleurSouris        "1" *-[#595959,plain]-> "classeSelectionnee\n1" Classe                  
+ControleurSouris        "1" *-[#595959,plain]-> "modele\n1" ModeleDiagramme         
+ControleurSouris        "1" *-[#595959,plain]-> "vueDiagramme\n1" VueDiagramme            
+ControleurSouris         -[#595959,dashed]->  VueModifier             : "«create»"
+ExporterImage            -[#008200,dashed]-^  Exporter                
+ExporterJava             -[#008200,dashed]-^  Exporter                
+ExporterUml              -[#008200,dashed]-^  Exporter                
+Heritage                 -[#008200,dashed]-^  RelationStrategy        
+Implementation           -[#008200,dashed]-^  RelationStrategy        
+Main                     -[#595959,dashed]->  ControleurBoutons       : "«create»"
+Main                     -[#595959,dashed]->  ControleurDragDrop      : "«create»"
+Main                     -[#595959,dashed]->  ControleurSouris        : "«create»"
+Main                     -[#595959,dashed]->  ModeleDiagramme         : "«create»"
+Main                     -[#595959,dashed]->  VueDiagramme            : "«create»"
+ModeleDiagramme          -[#595959,dashed]->  Association             : "«create»"
+ModeleDiagramme          -[#595959,dashed]->  AssociationIncomplete   : "«create»"
+ModeleDiagramme         "1" *-[#595959,plain]-> "associationsIncompletes\n*" AssociationIncomplete   
+ModeleDiagramme          -[#595959,dashed]->  Attribut                : "«create»"
+ModeleDiagramme          -[#595959,dashed]->  Classe                  : "«create»"
+ModeleDiagramme         "1" *-[#595959,plain]-> "classes\n*" Classe                  
+ModeleDiagramme          -[#008200,dashed]-^  Diagramme               
+ModeleDiagramme          -[#595959,dashed]->  ExporterImage           : "«create»"
+ModeleDiagramme          -[#595959,dashed]->  ExporterJava            : "«create»"
+ModeleDiagramme          -[#595959,dashed]->  ExporterUml             : "«create»"
+ModeleDiagramme          -[#595959,dashed]->  Heritage                : "«create»"
+ModeleDiagramme          -[#595959,dashed]->  Implementation          : "«create»"
+ModeleDiagramme          -[#595959,dashed]->  Methode                 : "«create»"
+ModeleDiagramme         "1" *-[#595959,plain]-> "observateurs\n*" Observateur             
+ModeleDiagramme         "1" *-[#595959,plain]-> "relations\n*" Relation                
+ModeleDiagramme          -[#595959,dashed]->  Relation                : "«create»"
+Relation                "1" *-[#595959,plain]-> "depart\n1" Classe                  
+Relation                "1" *-[#595959,plain]-> "type\n1" RelationStrategy        
+RelationStrategyFactory  -[#595959,dashed]->  Association             : "«create»"
+RelationStrategyFactory  -[#595959,dashed]->  Heritage                : "«create»"
+RelationStrategyFactory  -[#595959,dashed]->  Implementation          : "«create»"
+VueCreationClasse        -[#595959,dashed]->  Attribut                : "«create»"
+VueCreationClasse        -[#595959,dashed]->  Classe                  : "«create»"
+VueCreationClasse        -[#595959,dashed]->  Methode                 : "«create»"
+VueDiagramme            "1" *-[#595959,plain]-> "positionsClasses\n*" Classe                  
+VueDiagramme            "1" *-[#595959,plain]-> "modele\n1" ModeleDiagramme         
+VueDiagramme             -[#008200,dashed]-^  Observateur             
+VueDiagramme            "1" *-[#595959,plain]-> "relationsMasquees\n*" Relation                
+VueModifier              -[#595959,dashed]->  Attribut                : "«create»"
+VueModifier             "1" *-[#595959,plain]-> "classe\n1" Classe                  
+VueModifier              -[#595959,dashed]->  Methode                 : "«create»"
+VueModifier              -[#595959,dashed]->  Relation                : "«create»"
+@enduml

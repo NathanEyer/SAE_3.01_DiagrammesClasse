@@ -6,9 +6,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-import static diagrammes.Main.SCREEN_HEIGHT;
-import static diagrammes.Main.SCREEN_WIDTH;
-
 /**
  * Permet de raccourcir le Main.java
  */

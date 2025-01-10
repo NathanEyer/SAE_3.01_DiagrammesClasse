@@ -39,17 +39,6 @@ public class Main extends Application {
         ControleurDragDrop dragDrop = new ControleurDragDrop(modele);
 
 
-//        vue.setOnMousePressed(this::gererMousePressed);
-//        vue.setOnMouseDragged(this::gererMouseDragged);
-//        vue.setOnMouseReleased(this::gererMouseReleased);
-//        vue.setOnMouseClicked(event -> {
-//            if (event.getClickCount() == 1) {
-//                gererClicDroit(event);
-//            } else {
-//                gererDoubleClic(event);
-//            }
-//        });
-
         // Conteneur principal
         BorderPane root = new BorderPane();
         root.getChildren().add(vue);

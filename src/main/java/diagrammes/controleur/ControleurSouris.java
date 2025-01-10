@@ -55,7 +55,6 @@ public class ControleurSouris {
 
         for (var entry : positionsClasses.entrySet()) {
             Rectangle rect = entry.getValue();
-            System.out.println("Clic à (" + mouseX + ", " + mouseY + "), Rectangle : (" + rect.getX() + ", " + rect.getY() + ")");
             if (rect.contains(mouseX, mouseY)) {
                 classeSelectionnee = entry.getKey();
                 offsetX = mouseX - rect.getX();
@@ -63,7 +62,7 @@ public class ControleurSouris {
                 break;
             }
         }
-        System.out.println("Souris pressée à la position : " + event.getX() + ", " + event.getY());
+
     }
 
     /**
@@ -89,7 +88,7 @@ public class ControleurSouris {
      */
     public void gererMouseReleased(MouseEvent event) {
         classeSelectionnee = null;
-        System.out.println("Souris relâchée à la position : " + event.getX() + ", " + event.getY());
+
     }
 
     /**
@@ -251,12 +250,11 @@ public class ControleurSouris {
             double mouseX = event.getX();
             double mouseY = event.getY();
 
-            System.out.println("Double clic détecté à : (" + mouseX + ", " + mouseY + ")");
+
 
             for (var entry : positionsClasses.entrySet()) {
                 Rectangle rect = entry.getValue();
-                System.out.println("Rectangle : (" + rect.getX() + ", " + rect.getY() + ", "
-                        + rect.getWidth() + ", " + rect.getHeight() + ")");
+
 
                 if (rect.contains(mouseX, mouseY)) {
                     Classe classeCible = entry.getKey();
@@ -271,13 +269,10 @@ public class ControleurSouris {
                     setMessage((attributsMasquesActuels ? "Attributs démasqués" : "Attributs masqués") +
                             " et " + (methodesMasqueesActuelles ? "Méthodes démasquées" : "Méthodes masquées") +
                             " pour : " + classeCible.getNom());
-
-                    System.out.println("Double clic traité pour la classe : " + classeCible.getNom());
                     return;
                 }
             }
 
-            System.out.println("Aucune classe trouvée pour ce double clic.");
         }
     }
 

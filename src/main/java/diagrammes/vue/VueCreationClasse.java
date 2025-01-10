@@ -150,7 +150,7 @@ public class VueCreationClasse {
                 String parametres = methodeString.substring(methodeString.indexOf("(") + 1, methodeString.indexOf(")"));
                 List<String> parametresListe = parametres.isEmpty() ? new ArrayList<>() : List.of(parametres.split(","));
                 classe.ajouterMethode(new Methode(nom, retour, parametresListe, modificateur, type));
-                System.out.println(nom);
+
             }
 
             return classe;

@@ -345,8 +345,7 @@ public class VueModifier {
 
         Button btnValider = new Button("Valider");
         btnValider.setOnAction(e -> {
-            System.out.println(comboModificateur.getValue() + " " + comboRetour.getValue() + " " + txtNom.getText() +
-                    "(" + txtParametres.getText() + ")");
+
             listMethodes.getItems().add(
                     comboModificateur.getValue() + " " + comboRetour.getValue() + " " + txtNom.getText() +
                             " (" + txtParametres.getText() + ")"

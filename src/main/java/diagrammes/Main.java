@@ -2,6 +2,7 @@ package diagrammes;
 
 import diagrammes.controleur.ControleurBoutons;
 import diagrammes.controleur.ControleurDragDrop;
+import diagrammes.controleur.ControleurSouris;
 import diagrammes.modele.ModeleDiagramme;
 import diagrammes.vue.VueDiagramme;
 import javafx.application.Application;
@@ -34,13 +35,16 @@ public class Main extends Application {
         modele.enregistrerObservateur(vue);
 
         ControleurBoutons controleurBoutons = new ControleurBoutons(modele, primaryStage, vue);
+        ControleurSouris controleurSouris = new ControleurSouris(vue , modele);
         ControleurDragDrop dragDrop = new ControleurDragDrop(modele);
+
 
         // Conteneur principal
         BorderPane root = new BorderPane();
         root.getChildren().add(vue);
 
         // Configuration des contrôleurs Drag and Drop
+
         root.setOnDragOver(dragDrop::handleDragOver);
         root.setOnDragDropped(dragDrop::handleDragDropped);
 

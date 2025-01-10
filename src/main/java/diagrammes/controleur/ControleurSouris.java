@@ -1,7 +1,6 @@
 package diagrammes.controleur;
 
 import diagrammes.classe.Classe;
-import diagrammes.modele.Diagramme;
 import diagrammes.modele.ModeleDiagramme;
 import diagrammes.relations.Relation;
 import diagrammes.vue.VueDiagramme;
@@ -11,8 +10,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
-
-import java.util.HashMap;
 import java.util.List;
 
 import static diagrammes.vue.VueDiagramme.positionsClasses;
@@ -27,7 +24,7 @@ public class ControleurSouris {
 
 
     /**
-     *
+     *Constructeur de ControleurSouris
      * @param vueDiagramme
      * @param modele
      */
@@ -48,7 +45,7 @@ public class ControleurSouris {
     }
 
     /**
-     *
+     *Méthode gererMousePressed pour voir ou la souris a été préssée
      * @param event
      */
     public void gererMousePressed(MouseEvent event) {
@@ -70,7 +67,7 @@ public class ControleurSouris {
     }
 
     /**
-     *
+     *Méthode gererMouseDragged
      * @param event
      */
     public void gererMouseDragged(MouseEvent event) {
@@ -87,7 +84,7 @@ public class ControleurSouris {
     }
 
     /**
-     *
+     *Méthode gererMouseReleased permet de voir ou la souris a été relachée
      * @param event
      */
     public void gererMouseReleased(MouseEvent event) {
@@ -96,7 +93,7 @@ public class ControleurSouris {
     }
 
     /**
-     *
+     *Méthode GererClicDroit qui permet d'afficher le menu du clic droit ainsi que de faire toutes ses fonctionnalités
      * @param event
      */
     private void gererClicDroit(MouseEvent event) {
@@ -246,7 +243,7 @@ public class ControleurSouris {
 
 
     /**
-     *
+     *Méthode gererDoubleClic qui permet de faire en sorte que lorsqu'on double clic sur une classe, cette dernière masque ses attributs
      * @param event
      */
     public void gererDoubleClic(MouseEvent event) {

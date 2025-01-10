@@ -1,0 +1,41 @@
+@startuml
+actor Utilisateur
+participant Main
+participant ControleurBoutons
+participant VueCreationClasse
+participant ModeleDiagramme
+participant Classe
+participant Relation
+participant RelationStrategyFactory
+participant VueDiagramme
+
+Utilisateur -> Main : démarre()
+Main -> ControleurBoutons : initialiser()
+Main -> VueDiagramme : initialiser()
+
+Utilisateur -> ControleurBoutons : clic sur "Créer Classe"
+ControleurBoutons -> VueCreationClasse : afficher()
+Utilisateur -> VueCreationClasse : saisit nom de classe, attributs, méthodes
+VueCreationClasse -> Classe : créer instance de Classe
+VueCreationClasse -> ModeleDiagramme : ajouter Classe
+ModeleDiagramme -> Classe : ajouter aux classes existantes
+
+Utilisateur -> VueDiagramme : demande affichage du diagramme
+VueDiagramme -> ModeleDiagramme : récupérer classes et relations
+VueDiagramme <-- ModeleDiagramme : liste des classes et relations
+VueDiagramme -> VueDiagramme : dessiner diagramme
+
+Utilisateur -> VueDiagramme : clic droit sur une classe
+VueDiagramme -> ControleurBoutons : menu contextuel
+Utilisateur -> ControleurBoutons : ajouter relation
+ControleurBoutons -> RelationStrategyFactory : créer stratégie ("Heritage")
+RelationStrategyFactory -> Relation : créer instance Relation
+ControleurBoutons -> ModeleDiagramme : ajouter Relation
+ModeleDiagramme -> Relation : associer classes
+ControleurBoutons -> VueDiagramme : redessiner diagramme
+
+note right of VueDiagramme
+Diagramme mis à jour avec la
+classe et la nouvelle relation
+end note
+@enduml
